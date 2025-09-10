@@ -19,6 +19,7 @@ namespace IPhysicsEngine
         void ComponentProductUpdate(const Vector3& _vector);
         real ScalarProduct(const Vector3& _vector);
         Vector3 VectorProduct(const Vector3& _vector);
+        void Clear();
 
         void MakeOrthonormalBasis(Vector3* _vectorA, Vector3* _vectorB, Vector3* _vectorC);
 
@@ -52,4 +53,6 @@ namespace IPhysicsEngine
     real RealSqrt(real _value);
 
     real RealPow(real _value, real _power);
+
+    const inline static Vector3 Origin(0,0,0);
 }

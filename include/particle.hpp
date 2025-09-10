@@ -7,6 +7,7 @@ namespace IPhysicsEngine{
             Vector3 m_position;
             Vector3 m_velocity;
             Vector3 m_acceleration;
+            Vector3 m_forceAccumulated;
             real m_damping;
             real m_inverseMass;
 
@@ -16,8 +17,11 @@ namespace IPhysicsEngine{
 
             void SetMass(real _mass);
             void SetInverseMass(real _inverseMass);
+            void SetVelocity(Vector3 _velocity);
             void SetAcceleration(Vector3 _acceleration);
-            void Integrate(real _duration);
+            void AddForce(Vector3 _force);
+            virtual bool Integrate(real _duration);
+
 
             real GetKineticEnergy();
             Vector3 GetPosition();

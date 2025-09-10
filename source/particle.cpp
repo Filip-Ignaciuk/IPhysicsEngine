@@ -23,23 +23,32 @@ namespace IPhysicsEngine
         }
         m_inverseMass = _inverseMass;
     }
+    void IPhysicsEngine::Particle::SetVelocity(Vector3 _velocity){
+        m_velocity = _velocity;
+    }
 
     void IPhysicsEngine::Particle::SetAcceleration(Vector3 _acceleration){
         m_acceleration = _acceleration;
     }
 
-    void IPhysicsEngine::Particle::Integrate(real _duration){
+    bool IPhysicsEngine::Particle::Integrate(real _duration){
         if (m_inverseMass <= 0.0f){
-            return;
+            return false;
         }
 
         m_position.AddScaledVector(m_velocity, _duration);
 
         Vector3 resultingAcceleration = m_acceleration;
+        resultingAcceleration.AddScaledVector(m_forceAccumulated, m_inverseMass);
+
+
+        m_velocity *= RealPow(m_damping, _duration);
 
         m_velocity.AddScaledVector(resultingAcceleration, _duration);
 
-        m_velocity *= RealPow(m_damping, _duration);
+        m_forceAccumulated.Clear();
+
+        return true;
 
     }
 
@@ -61,6 +70,10 @@ namespace IPhysicsEngine
 
     Vector3 IPhysicsEngine::Particle::GetAcceleration(){
         return m_acceleration;
+    }
+
+    void IPhysicsEngine::Particle::AddForce(Vector3 _force){
+        m_forceAccumulated += _force;
     }
     
 }

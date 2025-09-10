@@ -2,5 +2,5 @@
 
 namespace IPhysicsEngine
 {
-    typedef long double real;
+    typedef float real;
 }

@@ -61,6 +61,12 @@ IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::VectorProduct(const Vector3& _v
     return Vector3(m_y * _vector.m_z - m_z * _vector.m_y, m_z * _vector.m_x - m_x * _vector.m_z, m_x * _vector.m_y - m_y * _vector.m_x);
 }
 
+void IPhysicsEngine::Vector3::Clear(){
+    m_x = 0;
+    m_y = 0;
+    m_z = 0;
+}
+
 void IPhysicsEngine::Vector3::MakeOrthonormalBasis(Vector3* _vectorA, Vector3* _vectorB, Vector3* _vectorC){
     _vectorA->Normalise();
     *_vectorC = (*_vectorA) % (*_vectorB);
