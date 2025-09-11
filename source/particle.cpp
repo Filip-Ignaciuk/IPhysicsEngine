@@ -23,6 +23,15 @@ namespace IPhysicsEngine
         }
         m_inverseMass = _inverseMass;
     }
+
+    void IPhysicsEngine::Particle::SetDamping(real _damping){
+        m_damping = _damping;
+    }
+
+    void IPhysicsEngine::Particle::SetPosition(Vector3 _position){
+        m_position = _position;
+    }
+
     void IPhysicsEngine::Particle::SetVelocity(Vector3 _velocity){
         m_velocity = _velocity;
     }
@@ -46,13 +55,17 @@ namespace IPhysicsEngine
 
         m_velocity.AddScaledVector(resultingAcceleration, _duration);
 
-        m_forceAccumulated.Clear();
+        ClearAccumulator();
 
         return true;
 
     }
 
-    real IPhysicsEngine::Particle::GetKineticEnergy(){
+    void IPhysicsEngine::Particle::ClearAccumulator(){
+        m_forceAccumulated.Clear();
+    }
+
+    real IPhysicsEngine::Particle::GetKineticEnergy() const{
         if (m_inverseMass <= 0.0f){
             return 0;
         }
@@ -60,15 +73,15 @@ namespace IPhysicsEngine
         return 0.5 * (1 / m_inverseMass) * m_velocity.SquareMagnitude();
     }
 
-    Vector3 IPhysicsEngine::Particle::GetPosition(){
+    Vector3 IPhysicsEngine::Particle::GetPosition() const{
         return m_position;
     }
 
-    Vector3 IPhysicsEngine::Particle::GetVelocity(){
+    Vector3 IPhysicsEngine::Particle::GetVelocity() const{
         return m_velocity;
     }
 
-    Vector3 IPhysicsEngine::Particle::GetAcceleration(){
+    Vector3 IPhysicsEngine::Particle::GetAcceleration() const{
         return m_acceleration;
     }
 

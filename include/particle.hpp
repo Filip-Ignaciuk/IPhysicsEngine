@@ -17,16 +17,20 @@ namespace IPhysicsEngine{
 
             void SetMass(real _mass);
             void SetInverseMass(real _inverseMass);
+            void SetDamping(real _damping);
+            void SetPosition(Vector3 _position);
             void SetVelocity(Vector3 _velocity);
             void SetAcceleration(Vector3 _acceleration);
             void AddForce(Vector3 _force);
             virtual bool Integrate(real _duration);
+            void ClearAccumulator();
+        
+            real GetKineticEnergy() const;
+            Vector3 GetPosition() const;
+            Vector3 GetVelocity() const;
+            Vector3 GetAcceleration() const;
 
-
-            real GetKineticEnergy();
-            Vector3 GetPosition();
-            Vector3 GetVelocity();
-            Vector3 GetAcceleration();
+            
 
     };
 }

@@ -1,7 +1,8 @@
+#pragma once
 #include "particle.hpp"
 
 namespace IPhysicsEngine{
-    class BallisticParticle : private Particle{
+    class BallisticParticle : public Particle{
     public:
         BallisticParticle();
         BallisticParticle(Vector3 _position, real _damping, real _inverseMass);

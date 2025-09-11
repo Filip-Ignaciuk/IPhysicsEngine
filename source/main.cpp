@@ -30,23 +30,26 @@ int main(void)
 
 
     SetTargetFPS(60);
+
+    bool physicsState = true;
     
 
 
 
 
-
+    IPhysicsEngine::Vector3 high(0,20,0);
     IPhysicsEngine::Vector3 projectileVelocity(10.0f, 0, 0);
     IPhysicsEngine::Vector3 down(0,-9.81f,0);
     std::vector<IPhysicsEngine::Particle*> particles;
 
-    IPhysicsEngine::Particle* particle1 = new IPhysicsEngine::Particle(IPhysicsEngine::Origin, 0.1f, 1);
-    particle1->SetVelocity(projectileVelocity);
-    particle1->SetAcceleration(down);
-    particles.emplace_back(particle1);
-    IPhysicsEngine::Particle particle2(IPhysicsEngine::Origin, 0.1f, 1);
-    particles.emplace_back(&particle2);
-
+    IPhysicsEngine::BallisticParticle* particle2 = new IPhysicsEngine::BallisticParticle(high, 0.1f, 1);
+    particle2->SetVelocity(projectileVelocity);
+    particle2->SetAcceleration(down);
+    particles.push_back(particle2);
+    IPhysicsEngine::BallisticParticle* particle3 = new IPhysicsEngine::BallisticParticle(high, 0.5f, 1);
+    particle2->SetVelocity(projectileVelocity);
+    particle3->SetAcceleration(down);
+    particles.push_back(particle3);
     
  
 
@@ -55,6 +58,10 @@ int main(void)
     // Main game loop
     while (!WindowShouldClose())
     {
+        if (IsKeyPressed(KEY_SPACE)) {
+            physicsState = !physicsState;
+        }
+
         if (IsKeyPressed('Z')) {
             if(cameraState){
                 DisableCursor();             
@@ -72,17 +79,20 @@ int main(void)
         else{
             UpdateCamera(&camera, CAMERA_FREE);
         }
-        particles.erase(std::remove_if(particles.begin(), particles.end(), 
+        if(physicsState){
+            particles.erase(std::remove_if(particles.begin(), particles.end(), 
             [duration](const auto& element) {
                 return !element->Integrate(duration); // your condition function
             }), particles.end());
+        }
+        
       
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
 
             BeginMode3D(camera);
-
+                
                 for (int i = 0; i < particles.size(); i++)
                 {
                     

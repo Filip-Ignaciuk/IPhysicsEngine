@@ -1,5 +1,7 @@
 #pragma once
-#include "cmath"
+#include <cmath>
+#include <random>
+
 
 #include "precision.hpp"
 
@@ -12,8 +14,7 @@ namespace IPhysicsEngine
         real m_y;
         real m_z;
     public:
-        real Magnitude();
-        real SquareMagnitude();
+
         void Normalise();
         void AddScaledVector(const Vector3& _vector,  real scale);
         void ComponentProductUpdate(const Vector3& _vector);
@@ -28,9 +29,11 @@ namespace IPhysicsEngine
         Vector3(real _x, real _y, real _z);
         ~Vector3();
 
-        real GetX();
-        real GetY();
-        real GetZ();
+        real Magnitude() const;
+        real SquareMagnitude() const;
+        real GetX() const;
+        real GetY() const;
+        real GetZ() const;
 
         Vector3 ComponentProduct(const Vector3& _vector);
 
@@ -50,9 +53,22 @@ namespace IPhysicsEngine
 
     };
 
+    const inline static Vector3 Origin(0,0,0);
+    const inline static Vector3 Gravity(0,-9.81f,0);
+
+
+    std::random_device randomDevice;
+    std::mt19937 generator(randomDevice());
+
+
     real RealSqrt(real _value);
 
     real RealPow(real _value, real _power);
 
-    const inline static Vector3 Origin(0,0,0);
+    Vector3 RandomVector3(real _lowerBound, real _upperbound);
+
+    real RandomReal(real _lowerBound, real _upperbound);
+
+    int RandomInt(int _lowerBound, int _upperbound);
+
 }

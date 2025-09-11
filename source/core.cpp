@@ -1,11 +1,11 @@
 #include "core.hpp"
 #include "precision.hpp"
 
-IPhysicsEngine::real IPhysicsEngine::Vector3::Magnitude(){
+IPhysicsEngine::real IPhysicsEngine::Vector3::Magnitude() const{
     return IPhysicsEngine::RealSqrt(m_x*m_x+m_y*m_y+m_z*m_z);
 }
 
-IPhysicsEngine::real IPhysicsEngine::Vector3::SquareMagnitude(){
+IPhysicsEngine::real IPhysicsEngine::Vector3::SquareMagnitude() const{
     return m_x*m_x + m_y * m_y + m_z * m_z;
 };
 
@@ -41,15 +41,15 @@ IPhysicsEngine::Vector3::Vector3(real _x, real _y, real _z) : m_x(_x), m_y(_y), 
 
 IPhysicsEngine::Vector3::~Vector3() = default;
 
-IPhysicsEngine::real IPhysicsEngine::Vector3::GetX(){
+IPhysicsEngine::real IPhysicsEngine::Vector3::GetX() const{
     return m_x;
 }
 
-IPhysicsEngine::real IPhysicsEngine::Vector3::GetY(){
+IPhysicsEngine::real IPhysicsEngine::Vector3::GetY() const{
     return m_y;
 }
 
-IPhysicsEngine::real IPhysicsEngine::Vector3::GetZ(){
+IPhysicsEngine::real IPhysicsEngine::Vector3::GetZ() const{
     return m_z;
 }
 
@@ -121,4 +121,24 @@ IPhysicsEngine::real IPhysicsEngine::RealSqrt(real _value){
 
 IPhysicsEngine::real IPhysicsEngine::RealPow(real _value, real _power){
     return pow(_value, _power);
+}
+
+IPhysicsEngine::Vector3 IPhysicsEngine::RandomVector3(real _lowerBound, real _upperbound){
+    return Vector3(RandomReal(_lowerBound, _upperbound), RandomReal(_lowerBound, _upperbound), RandomReal(_lowerBound, _upperbound));
+}
+
+IPhysicsEngine::real IPhysicsEngine::RandomReal(real _lowerBound, real _upperbound){
+    
+
+    std::uniform_real_distribution<double> doubleDistribution(_lowerBound, _upperbound);
+
+    return doubleDistribution(generator);
+
+}
+
+int IPhysicsEngine::RandomInt(int _lowerBound, int _upperbound){
+
+    std::uniform_real_distribution<double> intDistribution(_lowerBound, _upperbound);
+
+    return intDistribution(generator);
 }
