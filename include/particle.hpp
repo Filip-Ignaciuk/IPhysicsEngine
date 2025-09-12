@@ -29,6 +29,8 @@ namespace IPhysicsEngine{
             Vector3 GetPosition() const;
             Vector3 GetVelocity() const;
             Vector3 GetAcceleration() const;
+            real GetDamping() const;
+
 
             
 

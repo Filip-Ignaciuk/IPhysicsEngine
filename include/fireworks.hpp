@@ -1,9 +1,31 @@
 #pragma once
-
 #include "particle.hpp"
 
 namespace IPhysicsEngine{
 
+    class Firework : public Particle{
+        private:
+            unsigned m_type;
+            real m_age;
+        public:
+        Firework();
+        bool Integrate(real _duration) override;
+        
+        void SetType(unsigned _type);
+        void SetAge(unsigned _age);
+
+        unsigned GetType();
+        real GetAge();
+
+    };
+    struct Payload{
+            unsigned type;
+            unsigned count;
+            void Set(unsigned _type, unsigned _count){
+                Payload::type = _type;
+                Payload::count = _count;
+            }
+    };
     struct FireworkRule
     {
         unsigned type;
@@ -14,58 +36,41 @@ namespace IPhysicsEngine{
         Vector3 maxVelocity;
         real damping;
 
-        struct Payload{
-            unsigned type;
-            unsigned count;
-            void set(unsigned _type, unsigned _count){
-                Payload::type = _type;
-                Payload::count = _count;
-            }
-        };
-
-        void Create(Firework* _firework, const Firework* _parent = NULL) const{
-            _firework->SetType(type);
-            _firework->SetAge(RandomReal(minAge, maxAge));
-
-            Vector3 velocity;
-            if (_parent){
-                _firework->SetPosition(_parent->GetPosition());
-                velocity += _parent->GetVelocity();
-            }
-            else{
-                int positionx = RandomInt(0, 3) - 1;
-                Vector3 start(positionx * 5.0f, 0,0);
-                _firework->SetPosition(start);
-
-            }
-            velocity += RandomVector3(minVelocity.Magnitude(), maxVelocity.Magnitude());
-            _firework->SetVelocity(velocity);
-
-            _firework->SetMass(1);
-            _firework->SetDamping(damping);
-            _firework->SetAcceleration(Gravity);
-            _firework->ClearAccumulator();
-        }
+        
 
         unsigned payloadCount;
 
         Payload* payloads;
+    
+
+        FireworkRule();
+
+        void Initialise(unsigned _payloadCount);
+        void SetParameters(unsigned _type, real _minAge, real _maxAge, const Vector3& _minVelocity, const Vector3& _maxVelocity, real _damping);
+        void Create(Firework* _firework, const Firework* _parent = NULL) const;
     };
     
 
 
-    class Firework : public Particle{
+    
+
+    class FireworkManager{
         private:
-            unsigned m_type;
-            real m_age;
+            const static inline unsigned maxFireworks = 1024;
+            static inline Firework fireworks[maxFireworks];
+            static inline unsigned nextFirework = 0;
+            const static unsigned ruleCount = 9;
+            static inline FireworkRule fireworkRules[ruleCount];
+            
+
         public:
-        bool Integrate(real _duration) override;
-        
-        void SetType(unsigned _type);
-        void SetAge(unsigned _age);
+            static void Initialise();
+            static void Update(real _duration);
 
-        unsigned GetAge(unsigned _age);
-        unsigned GetType(unsigned _type);
+            static unsigned GetMaxFireworks();
+            static Firework* GetFireworks();
 
+            static void Create(unsigned _type, const Firework* _parent);
+            static void Create(unsigned _type, unsigned _number, const Firework* _parent);
     };
 }

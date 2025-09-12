@@ -56,7 +56,7 @@ namespace IPhysicsEngine
         m_velocity.AddScaledVector(resultingAcceleration, _duration);
 
         ClearAccumulator();
-
+        
         return true;
 
     }
@@ -84,6 +84,11 @@ namespace IPhysicsEngine
     Vector3 IPhysicsEngine::Particle::GetAcceleration() const{
         return m_acceleration;
     }
+
+    real IPhysicsEngine::Particle::GetDamping() const{
+        return m_damping;
+    }
+
 
     void IPhysicsEngine::Particle::AddForce(Vector3 _force){
         m_forceAccumulated += _force;

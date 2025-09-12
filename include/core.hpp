@@ -57,15 +57,18 @@ namespace IPhysicsEngine
     const inline static Vector3 Gravity(0,-9.81f,0);
 
 
-    std::random_device randomDevice;
-    std::mt19937 generator(randomDevice());
+    struct RandomStore{
+        static inline std::random_device randomDevice;
+        static inline std::mt19937 generator;
+        static void Initialise();
+    };
 
 
     real RealSqrt(real _value);
 
     real RealPow(real _value, real _power);
 
-    Vector3 RandomVector3(real _lowerBound, real _upperbound);
+    Vector3 RandomVector3(Vector3 _lowerBound, Vector3 _upperbound);
 
     real RandomReal(real _lowerBound, real _upperbound);
 

@@ -29,7 +29,7 @@ void IPhysicsEngine::Vector3::ComponentProductUpdate(const Vector3& _vector){
 };
 
 IPhysicsEngine::real IPhysicsEngine::Vector3::ScalarProduct(const Vector3& _vector){
-    return m_x * _vector.m_x + m_y * _vector.m_y + _vector.m_z;
+    return m_x * _vector.m_x + m_y * _vector.m_y + m_z * _vector.m_z;
 }
 
 IPhysicsEngine::Vector3::Vector3() : m_x(0), m_y(0), m_z(0){
@@ -123,8 +123,13 @@ IPhysicsEngine::real IPhysicsEngine::RealPow(real _value, real _power){
     return pow(_value, _power);
 }
 
-IPhysicsEngine::Vector3 IPhysicsEngine::RandomVector3(real _lowerBound, real _upperbound){
-    return Vector3(RandomReal(_lowerBound, _upperbound), RandomReal(_lowerBound, _upperbound), RandomReal(_lowerBound, _upperbound));
+void IPhysicsEngine::RandomStore::Initialise(){
+    std::mt19937 newGenerator(randomDevice());
+    generator = newGenerator;
+}
+
+IPhysicsEngine::Vector3 IPhysicsEngine::RandomVector3(Vector3 _lowerBound, Vector3 _upperbound){
+    return Vector3(RandomReal(_lowerBound.GetX(), _upperbound.GetX()), RandomReal(_lowerBound.GetY(), _upperbound.GetY()), RandomReal(_lowerBound.GetZ(), _upperbound.GetZ()));
 }
 
 IPhysicsEngine::real IPhysicsEngine::RandomReal(real _lowerBound, real _upperbound){
@@ -132,7 +137,7 @@ IPhysicsEngine::real IPhysicsEngine::RandomReal(real _lowerBound, real _upperbou
 
     std::uniform_real_distribution<double> doubleDistribution(_lowerBound, _upperbound);
 
-    return doubleDistribution(generator);
+    return doubleDistribution(RandomStore::generator);
 
 }
 
@@ -140,5 +145,5 @@ int IPhysicsEngine::RandomInt(int _lowerBound, int _upperbound){
 
     std::uniform_real_distribution<double> intDistribution(_lowerBound, _upperbound);
 
-    return intDistribution(generator);
+    return intDistribution(RandomStore::generator);
 }
