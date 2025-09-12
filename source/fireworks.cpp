@@ -43,7 +43,7 @@ void IPhysicsEngine::FireworkRule::Create(Firework* _firework, const Firework* _
     _firework->ClearAccumulator();
 }
 
-IPhysicsEngine::Firework::Firework() : Particle(){
+IPhysicsEngine::Firework::Firework() : m_age(0), m_type(0), Particle(){
 
 }
 
@@ -71,8 +71,7 @@ IPhysicsEngine::real IPhysicsEngine::Firework::GetAge(){
 
 void IPhysicsEngine::FireworkManager::Create(unsigned _type, const Firework* _parent){
     FireworkRule* rule = fireworkRules + (_type - 1);
-    IPhysicsEngine::Firework* firework = new IPhysicsEngine::Firework();
-    fireworks[nextFirework] = *firework;
+
     rule->Create(&fireworks[nextFirework], _parent);
 
     nextFirework = (nextFirework + 1) % maxFireworks;
@@ -208,4 +207,8 @@ unsigned IPhysicsEngine::FireworkManager::GetMaxFireworks(){
 
 IPhysicsEngine::Firework* IPhysicsEngine::FireworkManager::GetFireworks(){
     return fireworks;
+}
+
+IPhysicsEngine::FireworkRule* IPhysicsEngine::FireworkManager::GetFireworkRules(){
+    return fireworkRules;
 }

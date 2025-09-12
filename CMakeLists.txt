@@ -8,7 +8,15 @@ include_directories(IPhysicsEngine PRIVATE include)
 
 find_package(raylib REQUIRED)
 
-target_link_libraries(IPhysicsEngine 
-    PRIVATE raylib
+target_link_libraries(IPhysicsEngine
+    PRIVATE
+        "-framework Cocoa"
+        "-framework IOKit"
+        "-framework CoreFoundation"
+        "-framework CoreGraphics"
+        "-framework OpenGL"
+        "-framework Carbon"
+        "-framework Foundation"
+        "-framework AppKit"
+        raylib
 )
-

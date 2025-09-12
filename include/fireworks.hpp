@@ -69,6 +69,7 @@ namespace IPhysicsEngine{
 
             static unsigned GetMaxFireworks();
             static Firework* GetFireworks();
+            static FireworkRule* GetFireworkRules();
 
             static void Create(unsigned _type, const Firework* _parent);
             static void Create(unsigned _type, unsigned _number, const Firework* _parent);

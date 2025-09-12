@@ -2,7 +2,7 @@
 
 namespace IPhysicsEngine
 {
-    IPhysicsEngine::Particle::Particle(){
+    IPhysicsEngine::Particle::Particle() : m_inverseMass(1.0f), m_damping(0.1f), m_acceleration(Origin), m_forceAccumulated(Origin), m_position(Origin), m_velocity(Origin){
 
     }
 

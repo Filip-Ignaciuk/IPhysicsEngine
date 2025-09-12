@@ -18,7 +18,10 @@ int main(void)
     const Vector3 origin = {0,0,0};
     const int screenWidth = 1280;
     const int screenHeight = 720;
-
+    #ifdef __APPLE__
+    SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+    #endif
+    
     InitWindow(screenWidth, screenHeight, "IPhysicsEngine");
 
     bool cameraState = true;
@@ -36,15 +39,25 @@ int main(void)
     
     IPhysicsEngine::RandomStore::Initialise();
 
-        IPhysicsEngine::Vector3 high(0,20,0);
+    IPhysicsEngine::Vector3 high(0,20,0);
     IPhysicsEngine::Vector3 projectileVelocity(10.0f, 0, 0);
     IPhysicsEngine::Vector3 down(0,-9.81f,0);
-
+    IPhysicsEngine::Vector3 five(5,5,5);
 
     IPhysicsEngine::FireworkManager::Initialise();
-    IPhysicsEngine::Firework* fireworks = IPhysicsEngine::FireworkManager::GetFireworks();
-    IPhysicsEngine::FireworkManager::Create(8,1, NULL);
 
+    IPhysicsEngine::Firework firework;
+    /*
+    IPhysicsEngine::Firework* fireworkPointer = new IPhysicsEngine::Firework();
+    fireworkPointer->SetType(8);
+    fireworkPointer->SetAge(5.5f);
+    fireworkPointer->SetMass(1);
+    fireworkPointer->SetVelocity(five);
+    fireworkPointer->SetDamping(0.1f);
+    */
+
+    IPhysicsEngine::Firework* fireworks = IPhysicsEngine::FireworkManager::GetFireworks();
+    IPhysicsEngine::FireworkManager::Create(8,nullptr);
 
     std::vector<IPhysicsEngine::Particle*> particles;
 
@@ -92,6 +105,7 @@ int main(void)
             }), particles.end());
             // Fireworks
             IPhysicsEngine::FireworkManager::Update(duration);
+            //fireworkPointer->Integrate(duration);
         }
         
         Vector3 velocity;
@@ -121,10 +135,10 @@ int main(void)
                 }
 
                 for (IPhysicsEngine::Firework* firework = fireworks; firework < fireworks + IPhysicsEngine::FireworkManager::GetMaxFireworks(); firework++){
-                    if(firework->GetType() == 0){
+                    if (firework->GetType() == 0){
                         continue;
                     }
-                    IPhysicsEngine::Vector3 iPosition = firework->GetPosition();
+                     IPhysicsEngine::Vector3 iPosition = firework->GetPosition();
                     IPhysicsEngine::Vector3 iVelocity = firework->GetVelocity();
                     position = {iPosition.GetX(), iPosition.GetY(), iPosition.GetZ()};
                     velocity = {iVelocity.GetX(), iVelocity.GetY(), iVelocity.GetZ()};
@@ -132,11 +146,12 @@ int main(void)
                     damping = firework->GetDamping();
 
                     DrawCube(position, 2.0f, 2.0f, 2.0f, RED);
+                    
+                    DrawGrid(100, 1.0f);
 
                 }
                 
-                DrawGrid(100, 1.0f);
-
+               
                
 
             EndMode3D();
