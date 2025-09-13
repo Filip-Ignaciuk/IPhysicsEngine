@@ -26,7 +26,7 @@ int main(void)
 
     bool cameraState = true;
     Camera3D camera = { 0 };
-    camera.position = (Vector3){ 20.0f, 20.0f, 20.0f }; // Camera position
+    camera.position = (Vector3){ 50.0f, 50.0f, 50.0f }; // Camera position
     camera.target = origin;                             // Camera looking at point
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 45.0f;                                // Camera field-of-view Y
@@ -57,7 +57,7 @@ int main(void)
     */
 
     IPhysicsEngine::Firework* fireworks = IPhysicsEngine::FireworkManager::GetFireworks();
-    IPhysicsEngine::FireworkManager::Create(8,nullptr);
+    IPhysicsEngine::FireworkManager::Create(5,nullptr);
 
     std::vector<IPhysicsEngine::Particle*> particles;
 
@@ -72,10 +72,11 @@ int main(void)
     */
 
     const IPhysicsEngine::real duration = 1.0L / 60.0L;
-
+    int pay = 0;
     // Main game loop
     while (!WindowShouldClose())
     {
+        int count = 0;
         if (IsKeyPressed(KEY_SPACE)) {
             physicsState = !physicsState;
         }
@@ -104,7 +105,13 @@ int main(void)
                 return !element->Integrate(duration);
             }), particles.end());
             // Fireworks
-            IPhysicsEngine::FireworkManager::Update(duration);
+            if (pay == 0){
+                pay = IPhysicsEngine::FireworkManager::Update(duration);
+
+            }
+            else{
+                IPhysicsEngine::FireworkManager::Update(duration);
+            }
             //fireworkPointer->Integrate(duration);
         }
         
@@ -138,32 +145,26 @@ int main(void)
                     if (firework->GetType() == 0){
                         continue;
                     }
-                     IPhysicsEngine::Vector3 iPosition = firework->GetPosition();
+                    IPhysicsEngine::Vector3 iPosition = firework->GetPosition();
                     IPhysicsEngine::Vector3 iVelocity = firework->GetVelocity();
                     position = {iPosition.GetX(), iPosition.GetY(), iPosition.GetZ()};
                     velocity = {iVelocity.GetX(), iVelocity.GetY(), iVelocity.GetZ()};
                     age = firework->GetAge();
                     damping = firework->GetDamping();
 
-                    DrawCube(position, 2.0f, 2.0f, 2.0f, RED);
+                    DrawSphere(position, 0.25f, RED);
                     
-                    DrawGrid(100, 1.0f);
-
+                    count++;
                 }
                 
                
-               
+                DrawGrid(100, 1.0f);
+
 
             EndMode3D();
 
-            DrawText(std::to_string(velocity.x).c_str(), 100, 100, 20, BLACK);
-            DrawText(std::to_string(velocity.y).c_str(), 300, 100, 20, BLACK);
-            DrawText(std::to_string(velocity.z).c_str(), 500, 100, 20, BLACK);
-            DrawText(std::to_string(age).c_str(), 700, 100, 20, BLACK);
-            DrawText(std::to_string(damping).c_str(), 900, 100, 20, BLACK);
-            DrawText(std::to_string(position.x).c_str(), 100, 200, 20, BLACK);
-            DrawText(std::to_string(position.y).c_str(), 300, 200, 20, BLACK);
-            DrawText(std::to_string(position.z).c_str(), 500, 200, 20, BLACK);
+            DrawText(std::to_string(count).c_str(), 100, 100, 20, BLACK);
+
 
 
 

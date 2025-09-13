@@ -8,6 +8,14 @@ include_directories(IPhysicsEngine PRIVATE include)
 
 find_package(raylib REQUIRED)
 
+if(UNIX AND NOT APPLE)
+target_link_libraries(IPhysicsEngine
+    PRIVATE
+        raylib
+)
+endif()
+
+if(APPLE)
 target_link_libraries(IPhysicsEngine
     PRIVATE
         "-framework Cocoa"
@@ -20,3 +28,5 @@ target_link_libraries(IPhysicsEngine
         "-framework AppKit"
         raylib
 )
+endif()
+

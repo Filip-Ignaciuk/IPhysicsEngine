@@ -21,6 +21,7 @@ namespace IPhysicsEngine{
     struct Payload{
             unsigned type;
             unsigned count;
+            Payload() : type(0), count(0) {}
             void Set(unsigned _type, unsigned _count){
                 Payload::type = _type;
                 Payload::count = _count;
@@ -42,7 +43,6 @@ namespace IPhysicsEngine{
 
         Payload* payloads;
     
-
         FireworkRule();
 
         void Initialise(unsigned _payloadCount);
@@ -65,7 +65,7 @@ namespace IPhysicsEngine{
 
         public:
             static void Initialise();
-            static void Update(real _duration);
+            static int Update(real _duration);
 
             static unsigned GetMaxFireworks();
             static Firework* GetFireworks();

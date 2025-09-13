@@ -1,12 +1,17 @@
 #include "fireworks.hpp"
 
-IPhysicsEngine::FireworkRule::FireworkRule() : payloadCount(0), payloads(NULL){
+IPhysicsEngine::FireworkRule::FireworkRule() : type(0), minAge(0), maxAge(0), minVelocity(Origin), maxVelocity(Origin), damping(0), payloadCount(0), payloads(nullptr){
 
 }
 
 void IPhysicsEngine::FireworkRule::Initialise(unsigned _payloadCount){
-    FireworkRule::payloadCount = payloadCount;
+    FireworkRule::payloadCount = _payloadCount;
     payloads = new Payload[payloadCount];
+    for (unsigned i = 0; i < payloadCount; i++)
+    {
+        payloads[i] = Payload();   
+    }
+    
 }
 
 void IPhysicsEngine::FireworkRule::SetParameters(unsigned _type, real _minAge, real _maxAge, const Vector3& _minVelocity, const Vector3& _maxVelocity, real _damping){
@@ -118,7 +123,7 @@ void IPhysicsEngine::FireworkManager::Initialise(){
     fireworkRules[2].Initialise(0);
     fireworkRules[2].SetParameters(
         3, // type
-        0.5f, 1.5f, // age range
+        1.5f, 2.5f, // age range
         IPhysicsEngine::Vector3(-5, -5, -5), // min velocity
         IPhysicsEngine::Vector3(5, 5, 5), // max velocity
         0.1 // damping
@@ -136,9 +141,9 @@ void IPhysicsEngine::FireworkManager::Initialise(){
     fireworkRules[4].Initialise(1);
     fireworkRules[4].SetParameters(
         5, // type
-        0.5f, 1.0f, // age range
+        1.5f, 1.75f, // age range
         IPhysicsEngine::Vector3(-20, 2, -5), // min velocity
-        IPhysicsEngine::Vector3(20, 18, 5), // max velocity
+        IPhysicsEngine::Vector3(20, 230, 50), // max velocity
         0.01 // damping
         );
     fireworkRules[4].payloads[0].Set(3, 5);
@@ -158,17 +163,17 @@ void IPhysicsEngine::FireworkManager::Initialise(){
         4, 5, // age range
         IPhysicsEngine::Vector3(-5, 50, -5), // min velocity
         IPhysicsEngine::Vector3(5, 60, 5), // max velocity
-        0.1 // damping
+        0.01 // damping
         );
     fireworkRules[6].payloads[0].Set(8, 10);
 
     fireworkRules[7].Initialise(0);
     fireworkRules[7].SetParameters(
         8, // type
-        5.5f, 6.5f, // age range
-        IPhysicsEngine::Vector3(-10, -10, -10), // min velocity
-        IPhysicsEngine::Vector3(10, 10, 10), // max velocity
-        0.1 // damping
+        0.25f, 0.5f, // age range
+        IPhysicsEngine::Vector3(-1, -1, -1), // min velocity
+        IPhysicsEngine::Vector3(1, 1, 1), // max velocity
+        0.01 // damping
         );
 
     fireworkRules[8].Initialise(0);
@@ -182,14 +187,14 @@ void IPhysicsEngine::FireworkManager::Initialise(){
 }
 
 
-void IPhysicsEngine::FireworkManager::Update(real _duration){
+int IPhysicsEngine::FireworkManager::Update(real _duration){
+    int pay = 0;
     for (Firework* firework = fireworks; firework < fireworks + maxFireworks; firework++){
         if (firework->GetType() > 0){
             if (firework->Integrate(_duration)){
-                FireworkRule* rule = fireworkRules + (firework->GetType()-1);
+                FireworkRule* rule = fireworkRules + (firework->GetType() - 1);
 
                 firework->SetType(0);
-
                 for (unsigned i = 0; i < rule->payloadCount; i++)
                 {
                     Payload* payload = rule->payloads + i;
@@ -199,6 +204,7 @@ void IPhysicsEngine::FireworkManager::Update(real _duration){
             }
         }
     }
+    return pay;
 }
 
 unsigned IPhysicsEngine::FireworkManager::GetMaxFireworks(){
