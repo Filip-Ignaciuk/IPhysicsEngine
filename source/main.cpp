@@ -45,8 +45,6 @@ int main(void)
     IPhysicsEngine::Vector3 five(5,5,5);
 
     IPhysicsEngine::FireworkManager::Initialise();
-
-    IPhysicsEngine::Firework firework;
     /*
     IPhysicsEngine::Firework* fireworkPointer = new IPhysicsEngine::Firework();
     fireworkPointer->SetType(8);
@@ -57,6 +55,11 @@ int main(void)
     */
 
     IPhysicsEngine::Firework* fireworks = IPhysicsEngine::FireworkManager::GetFireworks();
+    IPhysicsEngine::FireworkManager::Create(5,nullptr);
+    IPhysicsEngine::FireworkManager::Create(5,nullptr);
+    IPhysicsEngine::FireworkManager::Create(5,nullptr);
+    IPhysicsEngine::FireworkManager::Create(5,nullptr);
+    IPhysicsEngine::FireworkManager::Create(5,nullptr);
     IPhysicsEngine::FireworkManager::Create(5,nullptr);
 
     std::vector<IPhysicsEngine::Particle*> particles;
