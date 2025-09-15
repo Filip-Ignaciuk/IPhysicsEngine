@@ -10,6 +10,7 @@
 #include "ballistic.hpp"
 #include "raylib.h"
 #include "fireworks.hpp"
+#include "particleforcegenerator.hpp"
 
 
 
@@ -44,16 +45,8 @@ int main(void)
     IPhysicsEngine::Vector3 down(0,-9.81f,0);
     IPhysicsEngine::Vector3 five(5,5,5);
 
-    IPhysicsEngine::FireworkManager::Initialise();
     /*
-    IPhysicsEngine::Firework* fireworkPointer = new IPhysicsEngine::Firework();
-    fireworkPointer->SetType(8);
-    fireworkPointer->SetAge(5.5f);
-    fireworkPointer->SetMass(1);
-    fireworkPointer->SetVelocity(five);
-    fireworkPointer->SetDamping(0.1f);
-    */
-
+    IPhysicsEngine::FireworkManager::Initialise();
     IPhysicsEngine::Firework* fireworks = IPhysicsEngine::FireworkManager::GetFireworks();
     IPhysicsEngine::FireworkManager::Create(5,nullptr);
     IPhysicsEngine::FireworkManager::Create(5,nullptr);
@@ -61,18 +54,14 @@ int main(void)
     IPhysicsEngine::FireworkManager::Create(5,nullptr);
     IPhysicsEngine::FireworkManager::Create(5,nullptr);
     IPhysicsEngine::FireworkManager::Create(5,nullptr);
-
+    */
     std::vector<IPhysicsEngine::Particle*> particles;
 
-    /*
-    IPhysicsEngine::BallisticParticle* particle2 = new IPhysicsEngine::BallisticParticle(high, 0.1f, 1);
-    particle2->SetVelocity(projectileVelocity);
-    particles.push_back(particle2);
-    IPhysicsEngine::BallisticParticle* particle3 = new IPhysicsEngine::BallisticParticle(high, 0.5f, 1);
-    particle2->SetVelocity(projectileVelocity);
-    particle3->SetAcceleration(down);
-    particles.push_back(particle3);
-    */
+    IPhysicsEngine::Particle* particle = new IPhysicsEngine::Particle(high, 1.0f, 1.0f);
+    IPhysicsEngine::ParticleForceRegistry particleForceRegistry;
+    IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::Gravity);
+    particleForceRegistry.Add(particle, particleGravity);
+    particles.emplace_back(particle);
 
     const IPhysicsEngine::real duration = 1.0L / 60.0L;
     int pay = 0;
@@ -103,6 +92,8 @@ int main(void)
         }
         if(physicsState){
             // Particles
+
+            particleForceRegistry.UpdateForces(duration);
             particles.erase(std::remove_if(particles.begin(), particles.end(), 
             [duration](const auto& element) {
                 return !element->Integrate(duration);
@@ -143,7 +134,7 @@ int main(void)
                     
 
                 }
-
+                /*
                 for (IPhysicsEngine::Firework* firework = fireworks; firework < fireworks + IPhysicsEngine::FireworkManager::GetMaxFireworks(); firework++){
                     if (firework->GetType() == 0){
                         continue;
@@ -159,7 +150,7 @@ int main(void)
                     
                     count++;
                 }
-                
+                */
                
                 DrawGrid(100, 1.0f);
 

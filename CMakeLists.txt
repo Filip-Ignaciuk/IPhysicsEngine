@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(IPhysicsEngine)
 
-add_executable(IPhysicsEngine ../source/main.cpp ../source/core.cpp ../source/particle.cpp ../source/ballistic.cpp ../source/fireworks.cpp)
+add_executable(IPhysicsEngine ../source/main.cpp ../source/core.cpp ../source/particle.cpp ../source/ballistic.cpp ../source/fireworks.cpp ../source/particleforcegenerator.cpp)
 
 include_directories(IPhysicsEngine PRIVATE include)
 

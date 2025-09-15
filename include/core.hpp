@@ -48,7 +48,8 @@ namespace IPhysicsEngine
         Vector3 operator-(const Vector3& _vector);
 
         real operator*(const Vector3& _vector);
-
+        Vector3 operator*(const real& _magnitude);
+ 
         Vector3 operator%(const Vector3& _vector);
 
     };

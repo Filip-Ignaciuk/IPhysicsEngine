@@ -88,7 +88,14 @@ namespace IPhysicsEngine
     real IPhysicsEngine::Particle::GetDamping() const{
         return m_damping;
     }
+    
+    real IPhysicsEngine::Particle::GetInverseMass() const{
+        return m_inverseMass;
+    }
 
+    real IPhysicsEngine::Particle::GetMass() const{
+        return 1 / m_inverseMass;
+    }
 
     void IPhysicsEngine::Particle::AddForce(Vector3 _force){
         m_forceAccumulated += _force;

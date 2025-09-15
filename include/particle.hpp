@@ -30,6 +30,8 @@ namespace IPhysicsEngine{
             Vector3 GetVelocity() const;
             Vector3 GetAcceleration() const;
             real GetDamping() const;
+            real GetInverseMass() const;
+            real GetMass() const;
 
 
             
