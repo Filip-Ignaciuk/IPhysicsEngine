@@ -27,7 +27,7 @@ int main(void)
 
     bool cameraState = true;
     Camera3D camera = { 0 };
-    camera.position = (Vector3){ 50.0f, 50.0f, 50.0f }; // Camera position
+    camera.position = (Vector3){ 20.0f, 20.0f, 20.0f }; // Camera position
     camera.target = origin;                             // Camera looking at point
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 45.0f;                                // Camera field-of-view Y
@@ -57,18 +57,32 @@ int main(void)
     */
     std::vector<IPhysicsEngine::Particle*> particles;
 
-    IPhysicsEngine::Particle* particle = new IPhysicsEngine::Particle(high, 1.0f, 1.0f);
+    IPhysicsEngine::Particle* particle1 = new IPhysicsEngine::Particle(high, 1.0f, 1.0f);
+    IPhysicsEngine::Particle* particle2 = new IPhysicsEngine::Particle(five, 1.0f, 1.0f);
+
     IPhysicsEngine::ParticleForceRegistry particleForceRegistry;
-    IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::Gravity);
-    particleForceRegistry.Add(particle, particleGravity);
-    particles.emplace_back(particle);
+    //IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::Gravity);
+    //IPhysicsEngine::ParticleDrag* particleDrag = new IPhysicsEngine::ParticleDrag(0.6f, 0.5f);
+    IPhysicsEngine::ParticleRealGravity* particleRealGravity = new IPhysicsEngine::ParticleRealGravity(particleForceRegistry.GetRegistrations());
+    particleForceRegistry.Add(particle1, particleRealGravity);
+    particleForceRegistry.Add(particle2, particleRealGravity);
+
+    particles.emplace_back(particle1);
+    particles.emplace_back(particle2);
+
 
     const IPhysicsEngine::real duration = 1.0L / 60.0L;
-    int pay = 0;
     // Main game loop
     while (!WindowShouldClose())
     {
         int count = 0;
+        int x1 = 0;
+        int y1 = 0;
+        int z1 = 0;
+        int x2 = 0;
+        int y2 = 0;
+        int z2 = 0;
+
         if (IsKeyPressed(KEY_SPACE)) {
             physicsState = !physicsState;
         }
@@ -98,15 +112,8 @@ int main(void)
             [duration](const auto& element) {
                 return !element->Integrate(duration);
             }), particles.end());
-            // Fireworks
-            if (pay == 0){
-                pay = IPhysicsEngine::FireworkManager::Update(duration);
-
-            }
-            else{
-                IPhysicsEngine::FireworkManager::Update(duration);
-            }
             //fireworkPointer->Integrate(duration);
+            count = particles.size();
         }
         
         Vector3 velocity;
@@ -125,7 +132,16 @@ int main(void)
                     
                     IPhysicsEngine::Vector3 iPosition = particles[i]->GetPosition();
                     Vector3 position = {iPosition.GetX(), iPosition.GetY(), iPosition.GetZ()};
-
+                    if (i == 1){
+                        x1 = iPosition.GetX();
+                        y1 = iPosition.GetY();
+                        z1 = iPosition.GetZ();
+                    }
+                    if (i == 2){
+                        x2 = iPosition.GetX();
+                        y2 = iPosition.GetY();
+                        z2 = iPosition.GetZ();
+                    }
                     DrawCube(position, 2.0f, 2.0f, 2.0f, RED);
                     DrawCubeWires(position, 2.0f, 2.0f, 2.0f, MAROON);
 
@@ -158,6 +174,12 @@ int main(void)
             EndMode3D();
 
             DrawText(std::to_string(count).c_str(), 100, 100, 20, BLACK);
+            DrawText(std::to_string(x1).c_str(), 100, 100, 20, BLACK);
+            DrawText(std::to_string(y1).c_str(), 100, 100, 20, BLACK);
+            DrawText(std::to_string(z1).c_str(), 100, 100, 20, BLACK);
+            DrawText(std::to_string(x2).c_str(), 100, 100, 20, BLACK);
+            DrawText(std::to_string(y2).c_str(), 100, 100, 20, BLACK);
+            DrawText(std::to_string(z2).c_str(), 100, 100, 20, BLACK);
 
 
 
