@@ -53,12 +53,53 @@ namespace IPhysicsEngine{
 
     class ParticleRealGravity: public ParticleForceGenerator{
         private:
-        const real gravitationalConstant = 0.000000000066743015;
+        real gravitationalConstant;
         std::vector<ParticleForceRegistration>* registrations;
         public:
-        ParticleRealGravity(std::vector<ParticleForceRegistration>* _registrations);
+        ParticleRealGravity(std::vector<ParticleForceRegistration>* _registrations, real _gravitationalConstant);
         void UpdateForce(Particle* _particle, real _duration) override;
     };
+
+    class ParticleSpring: public ParticleForceGenerator{
+        private:
+        Particle* otherParticle;
+        real springConstant;
+        real restLength;
+        public:
+        ParticleSpring(Particle* _otherParticle, real _springConsant, real _restLength);
+        void UpdateForce(Particle* _particle, real _duration) override;
+    };
+
+    class ParticleAnchoredSpring: public ParticleForceGenerator{
+        private:
+        Vector3 anchoredPosition;
+        real springConstant;
+        real restLength;
+        public:
+        ParticleAnchoredSpring(Vector3 _anchoredPosition, real _springConsant, real _restLength);
+        void UpdateForce(Particle* _particle, real _duration) override;
+    };
+
+    class ParticleBungee: public ParticleForceGenerator{
+        private:
+        Particle* otherParticle;
+        real springConstant;
+        real restLength;
+        public:
+        ParticleBungee(Particle* _otherParticle, real _springConsant, real _restLength);
+        void UpdateForce(Particle* _particle, real _duration) override;
+    };
+
+    class ParticleAnchoredBungee: public ParticleForceGenerator{
+        private:
+        Vector3 anchoredPosition;
+        real springConstant;
+        real restLength;
+        public:
+        ParticleAnchoredBungee(Vector3 _anchoredPosition, real _springConsant, real _restLength);
+        void UpdateForce(Particle* _particle, real _duration) override;
+    };
+
 
     
 
