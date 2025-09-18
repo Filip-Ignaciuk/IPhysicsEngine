@@ -157,3 +157,25 @@ void IPhysicsEngine::ParticleAnchoredBungee::UpdateForce(Particle* _particle, re
     _particle->AddForce(force);
 
 }
+
+IPhysicsEngine::ParticleBuoyancy::ParticleBuoyancy(real _maxDepth, real _volume, real _waterHeight, real _liquidDensity){
+    maxDepth = _maxDepth;
+    volume = _volume;
+    waterHeight = _waterHeight;
+    liquidDensity = _liquidDensity;
+}
+
+void IPhysicsEngine::ParticleBuoyancy::UpdateForce(Particle* _particle, real _duration){
+    real depth = _particle->GetPosition().GetY();
+    if (depth <= waterHeight - maxDepth){
+        _particle->AddForce(Vector3(0, volume * liquidDensity, 0));
+    }
+    else if (depth >= waterHeight + maxDepth){
+        return;
+    }
+    else{
+        _particle->AddForce(Vector3(0, ((depth - maxDepth - waterHeight) / 2 * maxDepth) * volume * liquidDensity, 0));
+    }
+
+
+}

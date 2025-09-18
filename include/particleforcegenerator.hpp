@@ -51,7 +51,7 @@ namespace IPhysicsEngine{
         void UpdateForce(Particle* _particle, real _duration) override;
     };
 
-    class ParticleRealGravity: public ParticleForceGenerator{
+    class ParticleRealGravity : public ParticleForceGenerator{
         private:
         real gravitationalConstant;
         std::vector<ParticleForceRegistration>* registrations;
@@ -60,7 +60,7 @@ namespace IPhysicsEngine{
         void UpdateForce(Particle* _particle, real _duration) override;
     };
 
-    class ParticleSpring: public ParticleForceGenerator{
+    class ParticleSpring : public ParticleForceGenerator{
         private:
         Particle* otherParticle;
         real springConstant;
@@ -70,7 +70,7 @@ namespace IPhysicsEngine{
         void UpdateForce(Particle* _particle, real _duration) override;
     };
 
-    class ParticleAnchoredSpring: public ParticleForceGenerator{
+    class ParticleAnchoredSpring : public ParticleForceGenerator{
         private:
         Vector3 anchoredPosition;
         real springConstant;
@@ -80,7 +80,7 @@ namespace IPhysicsEngine{
         void UpdateForce(Particle* _particle, real _duration) override;
     };
 
-    class ParticleBungee: public ParticleForceGenerator{
+    class ParticleBungee : public ParticleForceGenerator{
         private:
         Particle* otherParticle;
         real springConstant;
@@ -90,7 +90,7 @@ namespace IPhysicsEngine{
         void UpdateForce(Particle* _particle, real _duration) override;
     };
 
-    class ParticleAnchoredBungee: public ParticleForceGenerator{
+    class ParticleAnchoredBungee : public ParticleForceGenerator{
         private:
         Vector3 anchoredPosition;
         real springConstant;
@@ -100,7 +100,16 @@ namespace IPhysicsEngine{
         void UpdateForce(Particle* _particle, real _duration) override;
     };
 
-
+    class ParticleBuoyancy : public ParticleForceGenerator{
+        private:
+        real maxDepth;
+        real volume;
+        real waterHeight;
+        real liquidDensity;
+        public:
+        ParticleBuoyancy(real _maxDepth, real _volume, real _waterHeight, real _liquidDensity);
+        void UpdateForce(Particle* _particle, real _duration) override;
+    };
     
 
 
