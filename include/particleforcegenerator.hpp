@@ -111,6 +111,14 @@ namespace IPhysicsEngine{
         void UpdateForce(Particle* _particle, real _duration) override;
     };
     
-
+    class ParticleFakeAnchoredSpring : public ParticleForceGenerator{
+        private:
+        Vector3 anchoredPosition;
+        real springConstant;
+        real damping;
+        public:
+        ParticleFakeAnchoredSpring(Vector3 _anchoredPosition, real _springConstant, real _damping);
+        void UpdateForce(Particle* _particle, real _duration) override;
+    };
 
 }

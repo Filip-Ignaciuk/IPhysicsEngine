@@ -176,6 +176,25 @@ void IPhysicsEngine::ParticleBuoyancy::UpdateForce(Particle* _particle, real _du
     else{
         _particle->AddForce(Vector3(0, ((depth - maxDepth - waterHeight) / 2 * maxDepth) * volume * liquidDensity, 0));
     }
+}
 
+IPhysicsEngine::ParticleFakeAnchoredSpring::ParticleFakeAnchoredSpring(Vector3 _anchoredPosition, real _springConstant, real _damping){
+    anchoredPosition = _anchoredPosition;
+    springConstant = _springConstant;
+    damping = _damping;
+}
 
+void IPhysicsEngine::ParticleFakeAnchoredSpring::UpdateForce(Particle* _particle, real _duration){
+    Vector3 position = _particle->GetPosition() - anchoredPosition;
+    real gamma = 0.5f * RealSqrt(4 * springConstant - damping * damping);
+    if (!gamma){
+        return;
+    }
+    Vector3 c = position * (damping / ( 2.0f * gamma)) + _particle->GetVelocity() * (1.0f / gamma);
+
+    Vector3 target = position * RealCos(gamma * _duration) + c * RealSin(gamma * _duration);
+    target *= RealExp(-0.5f * _duration * damping);
+
+    Vector3 acceleration = (target - position) * ( 1.0f / _duration * _duration ) - _particle->GetVelocity() * _duration;
+    _particle->AddForce(acceleration * _particle->GetMass());
 }
