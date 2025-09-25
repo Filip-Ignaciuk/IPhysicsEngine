@@ -80,20 +80,22 @@ int main(void)
     IPhysicsEngine::ParticleSpring* particleSpring1 = new IPhysicsEngine::ParticleSpring(particle2, 2.0f, 2.0f);
     IPhysicsEngine::ParticleSpring* particleSpring2 = new IPhysicsEngine::ParticleSpring(particle1, 2.0f, 2.0f);
 
-    IPhysicsEngine::ParticleAnchoredBungee* particleanchoredSpring1 = new IPhysicsEngine::ParticleAnchoredBungee(high, 2.0f, 2.0f);
+    IPhysicsEngine::ParticleAnchoredBungee* particleanchoredSpring1 = new IPhysicsEngine::ParticleAnchoredBungee(high, 10.0f, 2.0f);
     IPhysicsEngine::ParticleBuoyancy* particleBuoyancy = new IPhysicsEngine::ParticleBuoyancy(0.1,0.15,1,1000);
 
-    //particleForceRegistry.Add(particle1, particleSpring1);
-    //particleForceRegistry.Add(particle2, particleSpring2);
-    particleForceRegistry.Add(particle3, particleanchoredSpring1);
-    particleForceRegistry.Add(particle3, particleGravity);
-    particleForceRegistry.Add(particle4, particleBuoyancy);
-    particleForceRegistry.Add(particle4, particleGravity);
+    particleForceRegistry.Add(particle1, particleSpring1);
+    particleForceRegistry.Add(particle2, particleSpring2);
+    //particleForceRegistry.Add(particle4, particleanchoredSpring1);
+    //particleForceRegistry.Add(particle4, particleGravity);
 
-    //particles.emplace_back(particle1);
-    //particles.emplace_back(particle2);
+    //particleForceRegistry.Add(particle3, particleGravity);
+    //particleForceRegistry.Add(particle4, particleBuoyancy);
+    //particleForceRegistry.Add(particle4, particleGravity);
+
+    particles.emplace_back(particle1);
+    particles.emplace_back(particle2);
     //particles.emplace_back(particle3);
-    particles.emplace_back(particle4);
+    //particles.emplace_back(particle4);
 
 
 
