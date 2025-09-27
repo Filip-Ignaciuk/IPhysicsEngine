@@ -2,17 +2,7 @@
 #include "particle.hpp"
 
 namespace IPhysicsEngine{
-
-     class ParticleContactResolver{
-        protected:
-        unsigned iterations;
-        unsigned iterationsUsed;
-        public:
-        ParticleContactResolver(unsigned iterations);
-        void SetIterations(unsigned iterations);
-        void ResolveContacts(ParticleContact* _contactArray, unsigned numberOfContacts, real _duration);
-
-    };
+    class ParticleContactResolver;
 
     class ParticleContact{
 
@@ -38,11 +28,24 @@ namespace IPhysicsEngine{
         void ResolveInterpretation(real _duration);
     };
 
+    class ParticleContactResolver{
+        protected:
+        unsigned iterations;
+        unsigned iterationsUsed;
+        public:
+        ParticleContactResolver(unsigned iterations);
+        void SetIterations(unsigned iterations);
+        void ResolveContacts(ParticleContact* _contactArray, unsigned numberOfContacts, real _duration);
+
+    };
+
     class ParticleContactGenerator
     {
         public:
-        virtual unsigned addContact(ParticleContact* _contact, unsigned _limit) const = 0;
+        virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) const = 0;
     };
+
+
 
 
 }

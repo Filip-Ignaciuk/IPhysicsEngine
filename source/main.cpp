@@ -13,6 +13,7 @@
 #include "raylib.h"
 #include "fireworks.hpp"
 #include "particleforcegenerator.hpp"
+#include "particleworld.hpp"
 
 
 int main(void)
@@ -37,79 +38,29 @@ int main(void)
     camera.fovy = 45.0f;                                // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
 
+    const IPhysicsEngine::real duration = 1.0L / 60.0L;
     bool showMessageBox = false;
     SetTargetFPS(60);
 
     bool physicsState = true;
-    
-    IPhysicsEngine::RandomStore::Initialise();
-    IPhysicsEngine::FireworkManager::Initialise();
-    IPhysicsEngine::ParticleForceRegistry particleForceRegistry;
 
-    // Particle Force Generators
+    IPhysicsEngine::Vector3 high(0,10.0f,0);
+
+    IPhysicsEngine::ParticleWorld particleWorld(2,2);
+    IPhysicsEngine::Particle* particle = new IPhysicsEngine::Particle(high, 0.5f, 1.0f);
     IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::Gravity);
-    IPhysicsEngine::ParticleDrag* particleDrag = new IPhysicsEngine::ParticleDrag(0.6f, 0.5f);
-    IPhysicsEngine::ParticleRealGravity* particleRealGravity = new IPhysicsEngine::ParticleRealGravity(particleForceRegistry.GetRegistrations(), 0.000000000066743015f);
-    
+    particleWorld.GetParticles().push_back(particle);
 
-    IPhysicsEngine::Vector3 high(0,10,0);
-    IPhysicsEngine::Vector3 left(0,1,0);
-    IPhysicsEngine::Vector3 right(0,-1,0);
-    IPhysicsEngine::Vector3 projectileVelocity(10.0f, 0, 0);
-    IPhysicsEngine::Vector3 down(0,-9.81f,0);
-    IPhysicsEngine::Vector3 five(5,5,5);
-    IPhysicsEngine::Vector3 ten(15,10,4);
+    particleWorld.GetParticleForceRegistry().Add(particle, particleGravity);
 
-    /*
-    IPhysicsEngine::Firework* fireworks = IPhysicsEngine::FireworkManager::GetFireworks();
-    IPhysicsEngine::FireworkManager::Create(5,nullptr);
-    IPhysicsEngine::FireworkManager::Create(5,nullptr);
-    IPhysicsEngine::FireworkManager::Create(5,nullptr);
-    IPhysicsEngine::FireworkManager::Create(5,nullptr);
-    IPhysicsEngine::FireworkManager::Create(5,nullptr);
-    IPhysicsEngine::FireworkManager::Create(5,nullptr);
-    */
-    std::vector<IPhysicsEngine::Particle*> particles;
+    IPhysicsEngine::ParticleGroundContactGenerator* particleGroundContactGenerator = new IPhysicsEngine::ParticleGroundContactGenerator();
+    particleGroundContactGenerator->Init(&particleWorld.GetParticles());
+    particleWorld.GetParticleContactGenerator().push_back(particleGroundContactGenerator);
 
-    IPhysicsEngine::Particle* particle1 = new IPhysicsEngine::Particle(left, 0.8f, 1.0f);
-    IPhysicsEngine::Particle* particle2 = new IPhysicsEngine::Particle(five, 0.8f, 1.0f);
-    IPhysicsEngine::Particle* particle3 = new IPhysicsEngine::Particle(ten, 0.8f, 1.0f);
-    IPhysicsEngine::Particle* particle4 = new IPhysicsEngine::Particle(ten, 0.8f, 0.1f);
-
-
-    IPhysicsEngine::ParticleSpring* particleSpring1 = new IPhysicsEngine::ParticleSpring(particle2, 2.0f, 2.0f);
-    IPhysicsEngine::ParticleSpring* particleSpring2 = new IPhysicsEngine::ParticleSpring(particle1, 2.0f, 2.0f);
-
-    IPhysicsEngine::ParticleAnchoredBungee* particleanchoredSpring1 = new IPhysicsEngine::ParticleAnchoredBungee(high, 10.0f, 2.0f);
-    IPhysicsEngine::ParticleBuoyancy* particleBuoyancy = new IPhysicsEngine::ParticleBuoyancy(0.1,0.15,1,1000);
-
-    particleForceRegistry.Add(particle1, particleSpring1);
-    particleForceRegistry.Add(particle2, particleSpring2);
-    //particleForceRegistry.Add(particle4, particleanchoredSpring1);
-    //particleForceRegistry.Add(particle4, particleGravity);
-
-    //particleForceRegistry.Add(particle3, particleGravity);
-    //particleForceRegistry.Add(particle4, particleBuoyancy);
-    //particleForceRegistry.Add(particle4, particleGravity);
-
-    particles.emplace_back(particle1);
-    particles.emplace_back(particle2);
-    //particles.emplace_back(particle3);
-    //particles.emplace_back(particle4);
-
-
-
-    const IPhysicsEngine::real duration = 1.0L / 60.0L;
-    // Main game loop
+    // Main loop
     while (!WindowShouldClose())
     {
-        int count = 0;
-        int x1 = 0;
-        int y1 = 0;
-        int z1 = 0;
-        int x2 = 0;
-        int y2 = 0;
-        int z2 = 0;
+        particleWorld.StartFrame();
 
         if (IsKeyPressed(KEY_SPACE)) {
             physicsState = !physicsState;
@@ -134,20 +85,8 @@ int main(void)
         }
         if(physicsState){
             // Particles
-
-            particleForceRegistry.UpdateForces(duration);
-            particles.erase(std::remove_if(particles.begin(), particles.end(), 
-            [duration](const auto& element) {
-                return !element->Integrate(duration);
-            }), particles.end());
-            //fireworkPointer->Integrate(duration);
-            count = particles.size();
+            particleWorld.RunPhysics(duration);
         }
-        
-        Vector3 velocity;
-        Vector3 position;
-        IPhysicsEngine::real age; 
-        IPhysicsEngine::real damping; 
 
         BeginDrawing();
 
@@ -155,24 +94,12 @@ int main(void)
 
             BeginMode3D(camera);
                 
-                for (int i = 0; i < particles.size(); i++)
+                for (int i = 0; i < particleWorld.GetParticles().size(); i++)
                 {
                     
-                    IPhysicsEngine::Vector3 iPosition = particles[i]->GetPosition();
+                    IPhysicsEngine::Vector3 iPosition =  particleWorld.GetParticles()[i]->GetPosition();
                     Vector3 position = {iPosition.GetX(), iPosition.GetY(), iPosition.GetZ()};
-                    Vector3 high = {0,10,0};
-                    if (i == 0){
-                        x1 = iPosition.GetX();
-                        y1 = iPosition.GetY();
-                        z1 = iPosition.GetZ();
-                    }
-                    if (i == 1){
-                        x2 = iPosition.GetX();
-                        y2 = iPosition.GetY();
-                        z2 = iPosition.GetZ();
-                    }
                     DrawSphere(position, 1.0f, RED);
-                    DrawLine3D(high, position, BLUE);
                     
                     
 

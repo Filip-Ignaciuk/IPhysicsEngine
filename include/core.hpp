@@ -55,6 +55,8 @@ namespace IPhysicsEngine
     };
 
     const inline static Vector3 Origin(0,0,0);
+    const inline static Vector3 Up(0,1,0);
+    const inline static Vector3 Down(0,-1,0);
     const inline static Vector3 Gravity(0,-9.81f,0);
 
 
