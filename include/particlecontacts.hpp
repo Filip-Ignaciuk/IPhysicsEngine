@@ -33,9 +33,9 @@ namespace IPhysicsEngine{
         unsigned iterations;
         unsigned iterationsUsed;
         public:
-        ParticleContactResolver(unsigned iterations);
-        void SetIterations(unsigned iterations);
-        void ResolveContacts(ParticleContact* _contactArray, unsigned numberOfContacts, real _duration);
+        ParticleContactResolver(unsigned _iterations);
+        void SetIterations(unsigned _iterations);
+        void ResolveContacts(ParticleContact* _contactArray, unsigned _numberOfContacts, real _duration);
 
     };
 

@@ -48,8 +48,9 @@ namespace IPhysicsEngine
     class ParticleGroundContactGenerator : public IPhysicsEngine::ParticleContactGenerator{
         private:
         std::vector<IPhysicsEngine::Particle *>* particles;
+        real restitution;
         public:
-        void Init(std::vector<IPhysicsEngine::Particle *>* _particles);
+        void Init(std::vector<IPhysicsEngine::Particle *>* _particles, real _restitution);
         virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) const;
     };
 }

@@ -14,6 +14,7 @@
 #include "fireworks.hpp"
 #include "particleforcegenerator.hpp"
 #include "particleworld.hpp"
+#include "particlepointers.hpp"
 
 
 int main(void)
@@ -46,15 +47,14 @@ int main(void)
 
     IPhysicsEngine::Vector3 high(0,10.0f,0);
 
-    IPhysicsEngine::ParticleWorld particleWorld(2,2);
+    IPhysicsEngine::ParticleWorld particleWorld(100,10);
     IPhysicsEngine::Particle* particle = new IPhysicsEngine::Particle(high, 0.5f, 1.0f);
-    IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::Gravity);
     particleWorld.GetParticles().push_back(particle);
+    IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::Gravity);
 
     particleWorld.GetParticleForceRegistry().Add(particle, particleGravity);
-
     IPhysicsEngine::ParticleGroundContactGenerator* particleGroundContactGenerator = new IPhysicsEngine::ParticleGroundContactGenerator();
-    particleGroundContactGenerator->Init(&particleWorld.GetParticles());
+    particleGroundContactGenerator->Init(&particleWorld.GetParticles(), 0.8f);
     particleWorld.GetParticleContactGenerator().push_back(particleGroundContactGenerator);
 
     // Main loop
@@ -181,3 +181,4 @@ int main(void)
 
     return 0;
 }
+
