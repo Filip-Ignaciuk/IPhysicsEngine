@@ -2,7 +2,8 @@
 #include <algorithm>
 
 IPhysicsEngine::ParticleForceRegistry::ParticleForceRegistry(){
-    registrations = new std::vector<ParticleForceRegistration>;
+    std::vector<ParticleForceRegistration> temporary;
+    registrations = temporary;
 }
 
 
@@ -10,30 +11,33 @@ void IPhysicsEngine::ParticleForceRegistry::Add(Particle* _particle, ParticleFor
     ParticleForceRegistration particleForceRegistration{};
     particleForceRegistration.particle = _particle;
     particleForceRegistration.particleForceGenerator = _particleForceGenerator;
-    registrations->emplace_back(particleForceRegistration);
+    registrations.emplace_back(particleForceRegistration);
 }
 
 void IPhysicsEngine::ParticleForceRegistry::Remove(Particle* _particle, ParticleForceGenerator* _particleForceGenerator){
     ParticleForceRegistration particleForceRegistration{};
     particleForceRegistration.particle = _particle;
     particleForceRegistration.particleForceGenerator = _particleForceGenerator;
-    registrations->erase(std::remove(registrations->begin(), registrations->end(), particleForceRegistration), registrations->end());
+    registrations.erase(std::remove(registrations.begin(), registrations.end(), particleForceRegistration), registrations.end());
 }
 
 std::vector<IPhysicsEngine::ParticleForceRegistration>* IPhysicsEngine::ParticleForceRegistry::GetRegistrations(){    
-    return registrations;
+    return &registrations;
 }
 
 void IPhysicsEngine::ParticleForceRegistry::Clear(){
-    registrations->clear();
+    registrations.clear();
 }
 
 void IPhysicsEngine::ParticleForceRegistry::UpdateForces(real _duration){
-
-    for (unsigned i = 0; i < registrations->size(); i++)
+    std::vector<ParticleForceRegistration>::iterator iterator = registrations.begin();
+    while (iterator != registrations.end())
     {
-        (*registrations)[i].particleForceGenerator->UpdateForce((*registrations)[i].particle, _duration);
+        ParticleForceRegistration particleForceRegistery = *iterator;
+        particleForceRegistery.particleForceGenerator->UpdateForce(particleForceRegistery.particle, _duration);
+        ++iterator;
     }
+    
     
 }
 

@@ -24,4 +24,3 @@ namespace IPhysicsEngine{
         virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) const;
     };
 }
-

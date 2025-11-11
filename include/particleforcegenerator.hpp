@@ -22,16 +22,16 @@ namespace IPhysicsEngine{
         protected:
         
 
-        std::vector<ParticleForceRegistration>* registrations;
+        std::vector<ParticleForceRegistration> registrations;
         public:
+
         ParticleForceRegistry();
         void Add(Particle* _particle, ParticleForceGenerator* _particleForceGenerator);
         void Remove(Particle* _particle, ParticleForceGenerator* _particleForceGenerator);
-
-        std::vector<ParticleForceRegistration>* GetRegistrations();
-
         void Clear();
         void UpdateForces(real _duration);
+    
+        std::vector<ParticleForceRegistration>* GetRegistrations();
     };
 
     class ParticleGravity : public ParticleForceGenerator{
