@@ -9,18 +9,18 @@
 #include "raylib.h"
 
 #include "core.hpp"
-
+/*
 #include "rigidbody.hpp"
 #include "forcegenerator.hpp"
 #include "world.hpp"
+*/
 
-/*
 #include "particle.hpp"
 #include "ballistic.hpp"
 #include "fireworks.hpp"
 #include "particleforcegenerator.hpp"
 #include "particleworld.hpp"
-*/
+
 
 int main(void)
 {
@@ -51,7 +51,7 @@ int main(void)
     bool physicsState = true;
 
     IPhysicsEngine::Vector3 high(0,10.0f,0);
-
+    /*
     IPhysicsEngine::World world;
 
     IPhysicsEngine::World::Rigidbodies& rigidbodies = world.GetRigidBodies();
@@ -64,26 +64,31 @@ int main(void)
     IPhysicsEngine::RigidBody* rigidbody = new IPhysicsEngine::RigidBody(high, *quaternion, 1.0f, 0.99f, 0.98f, *inverseInertiaTensor);
     IPhysicsEngine::Gravity* gravity = new IPhysicsEngine::Gravity(IPhysicsEngine::GravityEarth);
 
+
     world.GetRigidBodies().emplace_back(rigidbody);
     world.GetParticleForceRegistry().Add(rigidbody, gravity);
-
-    /*
+    */
+    
     IPhysicsEngine::ParticleWorld particleWorld(100,10);
     IPhysicsEngine::Particle* particle = new IPhysicsEngine::Particle(high, 0.5f, 1.0f);
     particleWorld.GetParticles().push_back(particle);
-    IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::Gravity);
+    IPhysicsEngine::ParticleGravity* particleGravity = new IPhysicsEngine::ParticleGravity(IPhysicsEngine::GravityEarth);
+    IPhysicsEngine::Firework* firework = new IPhysicsEngine::Firework();
+    IPhysicsEngine::FireworkManager* fireworkManager = new IPhysicsEngine::FireworkManager();
+       
 
     particleWorld.GetParticleForceRegistry().Add(particle, particleGravity);
     IPhysicsEngine::ParticleGroundContactGenerator* particleGroundContactGenerator = new IPhysicsEngine::ParticleGroundContactGenerator();
     particleGroundContactGenerator->Init(&particleWorld.GetParticles(), 0.8f);
     particleWorld.GetParticleContactGenerator().push_back(particleGroundContactGenerator);
-    */
+    
 
 
     // Main loop
     while (!WindowShouldClose())
     {
-        world.StartFrame();
+        particleWorld.StartFrame();
+        //world.StartFrame();
 
         if (IsKeyPressed(KEY_SPACE)) {
             physicsState = !physicsState;
@@ -108,16 +113,25 @@ int main(void)
         }
         if(physicsState){
             // Particles
-            world.RunPhysics(duration);
+            particleWorld.RunPhysics(duration);
+            //world.RunPhysics(duration);
         }
 
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
-           IPhysicsEngine::Vector3 iPosition;
+            IPhysicsEngine::Vector3 iPosition;
 
             BeginMode3D(camera);
                 
+                IPhysicsEngine::ParticleWorld::Particles::iterator iterator = particleWorld.GetParticles().begin();
+                while (iterator != particleWorld.GetParticles().end()){
+                    iPosition =  (*iterator)->GetPosition();
+                    Vector3 position = {iPosition.GetX(), iPosition.GetY(), iPosition.GetZ()};
+                    DrawSphere(position, 1.0f, RED);
+                    ++iterator;
+                }
+                /*
                 IPhysicsEngine::World::Rigidbodies::iterator iterator = rigidbodies.begin();
                 while (iterator != rigidbodies.end()){
                     iPosition =  (*iterator)->GetPosition();
@@ -125,7 +139,7 @@ int main(void)
                     DrawSphere(position, 1.0f, RED);
                     ++iterator;
                 }
-                
+                */
                 /*
                 for (IPhysicsEngine::Firework* firework = fireworks; firework < fireworks + IPhysicsEngine::FireworkManager::GetMaxFireworks(); firework++){
                     if (firework->GetType() == 0){

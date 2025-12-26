@@ -28,15 +28,6 @@ namespace IPhysicsEngine{
         virtual void UpdateForce(RigidBody* _rigidBody, real _duration);
     };
 
-    struct ForceRegistration{
-        RigidBody* rigidBody;
-        ForceGenerator* forceGenerator;
-
-        bool operator==(const ForceRegistration& _other) const {
-            return rigidBody == _other.rigidBody && forceGenerator == _other.forceGenerator;
-        }
-    };
-
     class Aero : public ForceGenerator{
     protected:
         Matrix3 tensor;

@@ -59,6 +59,7 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "ranges": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "__split_buffer": "cpp"
     }
 }
