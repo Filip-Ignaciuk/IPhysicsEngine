@@ -472,6 +472,21 @@ IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::TransformInverseDirection(const
     );
 }
 
+IPhysicsEngine::Vector3 IPhysicsEngine::LocalToWorld(const Vector3& _local, const Matrix4& _transform){
+    return _transform.Transform(_local);
+}
+
+IPhysicsEngine::Vector3 IPhysicsEngine::WorldToLocal(const Vector3& _world, const Matrix4& _transform){
+    return _transform.TransformInverse(_world);
+}
+
+IPhysicsEngine::Vector3 IPhysicsEngine::LocalToWorldDirection(const Vector3& _local, const Matrix4& _transform){
+    return _transform.TransformDirection(_local);
+}
+
+IPhysicsEngine::Vector3 IPhysicsEngine::WorldToLocalDirection(const Vector3& _world, const Matrix4& _transform){
+    return _transform.TransformInverseDirection(_world);
+}
 
 IPhysicsEngine::real IPhysicsEngine::RealSqrt(real _value){
     return sqrt(_value);

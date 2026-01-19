@@ -151,6 +151,11 @@ namespace IPhysicsEngine
         static void Initialise();
     };
 
+    Vector3 LocalToWorld(const Vector3& _local, const Matrix4& _transform);
+    Vector3 WorldToLocal(const Vector3& _world, const Matrix4& _transform);
+
+    Vector3 LocalToWorldDirection(const Vector3& _local, const Matrix4& _transform);
+    Vector3 WorldToLocalDirection(const Vector3& _world, const Matrix4& _transform);
 
     real RealSqrt(real _value);
 
