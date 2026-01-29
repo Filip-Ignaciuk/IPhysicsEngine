@@ -18,13 +18,13 @@ namespace IPhysicsEngine{
     };
 
     class Spring : public ForceGenerator{
-        Vector3 m_connectionPoint;
-        Vector3 m_otherConnectionPoint;
+        Vector3 m_localConnectionPoint;
+        Vector3 m_localOtherConnectionPoint;
         RigidBody* m_other;
         real m_springConstant;
         real m_restLength;
     public:
-        Spring(const Vector3& _localConnectionPoint, RigidBody* _other, const Vector3& _otherConnectionPoint, real _springConstant, real _restLength);
+        Spring(const Vector3& _localConnectionPoint, RigidBody* _other, const Vector3& _otherLocalConnectionPoint, real _springConstant, real _restLength);
         virtual void UpdateForce(RigidBody* _rigidBody, real _duration);
     };
 

@@ -15,8 +15,8 @@ void IPhysicsEngine::Gravity::UpdateForce(RigidBody* _rigidBody, real _duration)
 }
 
 IPhysicsEngine::Spring::Spring(const Vector3& _localConnectionPoint, RigidBody* _other, const Vector3& _otherConnectionPoint, real _springConstant, real _restLength) : 
-    m_connectionPoint(_localConnectionPoint),
-    m_otherConnectionPoint(_otherConnectionPoint),
+    m_localConnectionPoint(_localConnectionPoint),
+    m_localOtherConnectionPoint(_otherLocalConnectionPoint),
     m_springConstant(_springConstant),
     m_restLength(_restLength)
 {
@@ -24,8 +24,8 @@ IPhysicsEngine::Spring::Spring(const Vector3& _localConnectionPoint, RigidBody* 
 
 
 void IPhysicsEngine::Spring::UpdateForce(RigidBody* _rigidBody, real _duration){
-    Vector3 lws = _rigidBody->GetPointInWorldSpace(m_connectionPoint);
-    Vector3 ows = _rigidBody->GetPointInWorldSpace(m_otherConnectionPoint);
+    Vector3 lws = _rigidBody->GetPointInWorldSpace(m_localConnectionPoint);
+    Vector3 ows = _rigidBody->GetPointInWorldSpace(m_localOtherConnectionPoint);
 
     Vector3 force = lws - ows;
 
