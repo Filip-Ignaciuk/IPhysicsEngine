@@ -287,15 +287,24 @@ void IPhysicsEngine::Matrix3::SetOrientation(const Quaternion& _quaternion){
     data[8] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.j*_quaternion.j);
 }
 
+IPhysicsEngine::Matrix3 IPhysicsEngine::Matrix3::Inverse() const{
+    Matrix3 result;
+    result.SetInverse(*this);
+    return result;
+}
+
 IPhysicsEngine::Matrix3 IPhysicsEngine::Matrix3::Transpose() const{
     Matrix3 result;
     result.SetTranspose(*this);
     return result;
 }
 
-IPhysicsEngine::Matrix3 IPhysicsEngine::Matrix3::Inverse() const{
+IPhysicsEngine::Matrix3 IPhysicsEngine::Matrix3::LinearInterpolate(const Matrix3& _startMatrix, const Matrix3& _endMatrix, real _proportion){
     Matrix3 result;
-    result.SetInverse(*this);
+    real omp = 1.0f - _proportion;
+    for (unsigned i = 0; i < 9; i++){
+        result.data[i] = _startMatrix.data[i] * omp + _endMatrix.data[i] * _proportion;
+    }
     return result;
 }
 

@@ -24,20 +24,34 @@ namespace IPhysicsEngine{
         real m_springConstant;
         real m_restLength;
     public:
-        Spring(const Vector3& _localConnectionPoint, RigidBody* _other, const Vector3& _otherLocalConnectionPoint, real _springConstant, real _restLength);
+        Spring(const Vector3& _localConnectionPoint, RigidBody* _other, const Vector3&, real _springConstant, real _restLength);
         virtual void UpdateForce(RigidBody* _rigidBody, real _duration);
     };
 
     class Aero : public ForceGenerator{
     protected:
-        Matrix3 tensor;
-        Vector3 position;
-        const Vector3* windspeed;
+        Matrix3 m_tensor;
+        Vector3 m_localPosition;
+        const Vector3* m_windspeed;
 
         void UpdateForceFromTensor(RigidBody* _body, real _duration, const Matrix3& _tensor);
     public:
-        Aero(const Matrix3& _tensor, const Vector3& _position, const Vector3* _windspeed);
+        Aero(const Matrix3& _tensor, const Vector3& _localPosition, const Vector3* _windspeed);
         virtual void UpdateForce(RigidBody* _rigidBody, real _duration);
+    };
+
+    class AeroControl : public Aero{
+    private:
+        Matrix3 GetTensor();
+    protected:
+        Matrix3 m_maxTensor;
+        Matrix3 m_minTensor;
+        real m_controlSetting;
+    public:
+        AeroControl(const Matrix3& _base, const Matrix3& _minimumTensor, const Matrix3& _maximumTensor, const Vector3& _localPosition, const Vector3* _windspeed);
+        void SetControl(real _value);
+        virtual void UpdateForce(RigidBody* _rigidBody, real _duration);
+        
     };
 
     struct ForceRegistration{

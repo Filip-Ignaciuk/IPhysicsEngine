@@ -53,6 +53,10 @@ namespace IPhysicsEngine
 
         Vector3& GetPosition();
 
+        Vector3 GetVelocity();
+
+        Matrix4 GetTransformMatrix();
+
         bool HasFiniteMass();
 
     private:

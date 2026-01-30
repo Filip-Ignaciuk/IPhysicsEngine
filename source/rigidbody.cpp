@@ -84,6 +84,14 @@ IPhysicsEngine::Vector3& IPhysicsEngine::RigidBody::GetPosition(){
     return m_position;
 }
 
+IPhysicsEngine::Vector3 IPhysicsEngine::RigidBody::GetVelocity(){
+    return m_velocity;
+}
+
+IPhysicsEngine::Matrix4 IPhysicsEngine::RigidBody::GetTransformMatrix(){
+    return m_transformMatrix;
+}
+
 bool IPhysicsEngine::RigidBody::HasFiniteMass(){
     return m_inverseMass >= 0.0f;
 }

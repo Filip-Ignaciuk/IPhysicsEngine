@@ -103,6 +103,8 @@ namespace IPhysicsEngine
 
         Matrix3 Transpose() const;
 
+        static Matrix3 LinearInterpolate(const Matrix3& _startMatrix, const Matrix3& _endMatrix, real _proportion);
+
         void Invert();
 
         Vector3 operator*(const Vector3& _vector3) const;
