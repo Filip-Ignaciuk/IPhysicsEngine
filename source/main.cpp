@@ -6,21 +6,22 @@
 #include <memory>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
+#include "raymath.h"
 #include "raylib.h"
 
 #include "core.hpp"
-/*
+
 #include "rigidbody.hpp"
 #include "forcegenerator.hpp"
 #include "world.hpp"
-*/
 
+/*
 #include "particle.hpp"
 #include "ballistic.hpp"
 #include "fireworks.hpp"
 #include "particleforcegenerator.hpp"
 #include "particleworld.hpp"
-
+*/
 
 int main(void)
 {
@@ -35,7 +36,6 @@ int main(void)
     std::string pauseButtonText = "#132#";
 
     InitWindow(screenWidth, screenHeight, "IPhysicsEngine");
-
     bool cameraState = true;
     Camera3D camera = { 0 };
     camera.position = (Vector3){ 30.0f, 30.0f, 30.0f }; // Camera position
@@ -51,7 +51,10 @@ int main(void)
     bool physicsState = true;
 
     IPhysicsEngine::Vector3 high(0,10.0f,0);
-    /*
+
+
+
+
     IPhysicsEngine::World world;
 
     IPhysicsEngine::World::Rigidbodies& rigidbodies = world.GetRigidBodies();
@@ -64,11 +67,16 @@ int main(void)
     IPhysicsEngine::RigidBody* rigidbody = new IPhysicsEngine::RigidBody(high, *quaternion, 1.0f, 0.99f, 0.98f, *inverseInertiaTensor);
     IPhysicsEngine::Gravity* gravity = new IPhysicsEngine::Gravity(IPhysicsEngine::GravityEarth);
 
+    const IPhysicsEngine::Vector3* force = new IPhysicsEngine::Vector3(1.0f, 0.0f, 0.0f);
+    const IPhysicsEngine::Vector3* point = new IPhysicsEngine::Vector3(0.5f, 0.5f, 0.0f);
+
+
 
     world.GetRigidBodies().emplace_back(rigidbody);
     world.GetParticleForceRegistry().Add(rigidbody, gravity);
-    */
+
     
+    /*
     IPhysicsEngine::ParticleWorld particleWorld(100,10);
     IPhysicsEngine::Particle* particle = new IPhysicsEngine::Particle(high, 0.5f, 1.0f);
     particleWorld.GetParticles().push_back(particle);
@@ -81,14 +89,17 @@ int main(void)
     IPhysicsEngine::ParticleGroundContactGenerator* particleGroundContactGenerator = new IPhysicsEngine::ParticleGroundContactGenerator();
     particleGroundContactGenerator->Init(&particleWorld.GetParticles(), 0.8f);
     particleWorld.GetParticleContactGenerator().push_back(particleGroundContactGenerator);
-    
+    */
 
 
     // Main loop
     while (!WindowShouldClose())
     {
-        particleWorld.StartFrame();
-        //world.StartFrame();
+        //particleWorld.StartFrame();
+        world.StartFrame();
+
+        rigidbody->AddForceAtBodyPoint(*force, *point);
+
 
         if (IsKeyPressed(KEY_SPACE)) {
             physicsState = !physicsState;
@@ -113,17 +124,18 @@ int main(void)
         }
         if(physicsState){
             // Particles
-            particleWorld.RunPhysics(duration);
-            //world.RunPhysics(duration);
+            //particleWorld.RunPhysics(duration);
+            // RigidBodies
+            world.RunPhysics(duration);
         }
 
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
             IPhysicsEngine::Vector3 iPosition;
-
+            IPhysicsEngine::Quaternion iQuaternion;
             BeginMode3D(camera);
-                
+                /*
                 IPhysicsEngine::ParticleWorld::Particles::iterator iterator = particleWorld.GetParticles().begin();
                 while (iterator != particleWorld.GetParticles().end()){
                     iPosition =  (*iterator)->GetPosition();
@@ -131,15 +143,27 @@ int main(void)
                     DrawSphere(position, 1.0f, RED);
                     ++iterator;
                 }
-                /*
+                */
+                
                 IPhysicsEngine::World::Rigidbodies::iterator iterator = rigidbodies.begin();
                 while (iterator != rigidbodies.end()){
                     iPosition =  (*iterator)->GetPosition();
-                    Vector3 position = {iPosition.GetX(), iPosition.GetY(), iPosition.GetZ()};
-                    DrawSphere(position, 1.0f, RED);
+                    iQuaternion =  (*iterator)->GetOrientation();
+                    Matrix position = MatrixTranslate(iPosition.GetX(), iPosition.GetY(), iPosition.GetZ());
+                    Vector4 quaternion{iQuaternion.i, iQuaternion.j, iQuaternion.k, iQuaternion.r};
+                    Matrix rotation = QuaternionToMatrix(quaternion);
+
+
+
+
+                    Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
+                    Model cube = LoadModelFromMesh(cubeMesh);
+                    cube.transform = MatrixMultiply(rotation, position);
+                    DrawModel(cube, (Vector3){0,0,0}, 1.0f, RED);
+                   
                     ++iterator;
                 }
-                */
+                
                 /*
                 for (IPhysicsEngine::Firework* firework = fireworks; firework < fireworks + IPhysicsEngine::FireworkManager::GetMaxFireworks(); firework++){
                     if (firework->GetType() == 0){
@@ -166,6 +190,11 @@ int main(void)
             DrawText(std::to_string(iPosition.GetX()).c_str(), 300, 200, 10, BLACK);
             DrawText(std::to_string(iPosition.GetY()).c_str(), 400, 200, 10, BLACK);
             DrawText(std::to_string(iPosition.GetZ()).c_str(), 500, 200, 10, BLACK);
+
+            DrawText(std::to_string(iQuaternion.i).c_str(), 300, 400, 10, BLACK);
+            DrawText(std::to_string(iQuaternion.j).c_str(), 400, 400, 10, BLACK);
+            DrawText(std::to_string(iQuaternion.k).c_str(), 500, 400, 10, BLACK);
+            DrawText(std::to_string(iQuaternion.r).c_str(), 600, 400, 10, BLACK);
 
             // Pause Button
             if (GuiButton((Rectangle){ 340, 10, 30, 30 }, pauseButtonText.c_str())){

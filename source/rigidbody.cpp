@@ -84,6 +84,10 @@ IPhysicsEngine::Vector3& IPhysicsEngine::RigidBody::GetPosition(){
     return m_position;
 }
 
+IPhysicsEngine::Quaternion IPhysicsEngine::RigidBody::GetOrientation(){
+    return m_orientation;
+}
+
 IPhysicsEngine::Vector3 IPhysicsEngine::RigidBody::GetVelocity(){
     return m_velocity;
 }

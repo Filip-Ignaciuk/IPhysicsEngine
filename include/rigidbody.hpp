@@ -53,6 +53,8 @@ namespace IPhysicsEngine
 
         Vector3& GetPosition();
 
+        Quaternion GetOrientation();
+
         Vector3 GetVelocity();
 
         Matrix4 GetTransformMatrix();
