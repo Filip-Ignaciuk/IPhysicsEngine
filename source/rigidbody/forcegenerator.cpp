@@ -1,4 +1,4 @@
-#include "forcegenerator.hpp"
+#include "rigidbody/forcegenerator.hpp"
 #include <algorithm>
 
 IPhysicsEngine::Gravity::Gravity(const Vector3& _gravity){

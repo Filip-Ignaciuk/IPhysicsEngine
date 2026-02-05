@@ -6,7 +6,8 @@ namespace IPhysicsEngine{
     private:
         
     public:
-        Component(/* args */);
+        Component();
+        virtual ~Component() = default;
     };
     
 }

@@ -1,4 +1,8 @@
-#include "rigidbody.hpp"
+#include "rigidbody/rigidbody.hpp"
+
+IPhysicsEngine::RigidBody::RigidBody(){
+
+}
 
 IPhysicsEngine::RigidBody::RigidBody(const Vector3& _originalPosition, const Quaternion& _originalOrientation, const real& _inverseMass, const real& _linearDamping, const real& _angularDamping, const Matrix3& _inverseInertiaTensor) : m_position(_originalPosition), m_orientation(_originalOrientation), m_inverseMass(_inverseMass), m_linearDamping(_linearDamping), m_inverseInertiaTensor(_inverseInertiaTensor){
 
@@ -57,10 +61,6 @@ void IPhysicsEngine::RigidBody::ClearAccumulators(){
     m_torqueAccumulated.Clear();
 }
 
-void IPhysicsEngine::RigidBody::SetInertiaTensor(const Matrix3& _inertiaTensor){
-    m_inverseInertiaTensor.SetInverse(_inertiaTensor);
-}
-
 void IPhysicsEngine::RigidBody::CalculateDerivedData(){
     m_orientation.Normalise();
 
@@ -98,6 +98,34 @@ IPhysicsEngine::Matrix4 IPhysicsEngine::RigidBody::GetTransformMatrix(){
 
 bool IPhysicsEngine::RigidBody::HasFiniteMass(){
     return m_inverseMass >= 0.0f;
+}
+
+void IPhysicsEngine::RigidBody::SetPosition(Vector3& _position){
+    m_position = _position;
+}
+
+void IPhysicsEngine::RigidBody::SetOrientation(Quaternion& _quaternion){
+    m_orientation = _quaternion;
+}
+
+void IPhysicsEngine::RigidBody::SetMass(real& _mass){
+    m_inverseMass = 1 / _mass;
+}
+
+void IPhysicsEngine::RigidBody::SetInverseMass(real& _inverseMass){
+    m_inverseMass = _inverseMass;
+}
+
+void IPhysicsEngine::RigidBody::SetLinearDamping(real& _linearDamping){
+    m_linearDamping = _linearDamping;
+}
+
+void IPhysicsEngine::RigidBody::SetAngularDamping(real& _angularDamping){
+    m_angularDamping = _angularDamping;
+}
+
+void IPhysicsEngine::RigidBody::SetInertiaTensor(const Matrix3& _inertiaTensor){
+    m_inverseInertiaTensor.SetInverse(_inertiaTensor);
 }
 
 void IPhysicsEngine::RigidBody::CalculateTransformMatrix(Matrix4& _transformMatrix, const Vector3& _position, const Quaternion& _orientation){

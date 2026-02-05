@@ -4,16 +4,22 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include "raylib.h"
+#include "raymath.h"
+
+#define RAYGUI_ICONS
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
-#include "raymath.h"
-#include "raylib.h"
 
 #include "core.hpp"
 
-#include "rigidbody.hpp"
-#include "forcegenerator.hpp"
-#include "world.hpp"
+#include "rigidbody/rigidbody.hpp"
+#include "rigidbody/forcegenerator.hpp"
+#include "rigidbody/world.hpp"
+
+#include "object.hpp"
+#include "component.hpp"
+#include "geometry.hpp"
 
 /*
 #include "particle.hpp"
@@ -36,6 +42,7 @@ int main(void)
     std::string pauseButtonText = "#132#";
 
     InitWindow(screenWidth, screenHeight, "IPhysicsEngine");
+    GuiLoadStyleDefault();
     bool cameraState = true;
     Camera3D camera = { 0 };
     camera.position = (Vector3){ 30.0f, 30.0f, 30.0f }; // Camera position
@@ -45,35 +52,54 @@ int main(void)
     camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
 
     const IPhysicsEngine::real duration = 1.0L / 60.0L;
-    bool showMessageBox = false;
+
+    bool showAddBox = false;
+
+
     SetTargetFPS(60);
 
     bool physicsState = true;
 
-    IPhysicsEngine::Vector3 high(0,10.0f,0);
+    IPhysicsEngine::Vector3* high = new IPhysicsEngine::Vector3(0,10.0f,0);
 
 
 
 
     IPhysicsEngine::World world;
 
-    IPhysicsEngine::World::Rigidbodies& rigidbodies = world.GetRigidBodies();
 
     IPhysicsEngine::Quaternion* quaternion = new IPhysicsEngine::Quaternion();
     quaternion->r = 1.0f;
 
     IPhysicsEngine::Matrix3* inverseInertiaTensor = new IPhysicsEngine::Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f);
 
-    IPhysicsEngine::RigidBody* rigidbody = new IPhysicsEngine::RigidBody(high, *quaternion, 1.0f, 0.99f, 0.98f, *inverseInertiaTensor);
     IPhysicsEngine::Gravity* gravity = new IPhysicsEngine::Gravity(IPhysicsEngine::GravityEarth);
 
     const IPhysicsEngine::Vector3* force = new IPhysicsEngine::Vector3(1.0f, 0.0f, 0.0f);
     const IPhysicsEngine::Vector3* point = new IPhysicsEngine::Vector3(0.5f, 0.5f, 0.0f);
 
 
+    IPhysicsEngine::Object* object = new IPhysicsEngine::Object();
+    IPhysicsEngine::RigidBody* rigidbody = object->AddComponent<IPhysicsEngine::RigidBody>();
+    IPhysicsEngine::Geometry* geometry = object->AddComponent<IPhysicsEngine::Geometry>();
+    rigidbody->SetPosition(*high);
+    rigidbody->SetOrientation(*quaternion);
+    IPhysicsEngine::real mass = 1.0f;
+    IPhysicsEngine::real linearDamping = 0.99f;
+    IPhysicsEngine::real angularDamping = 0.98f;
+    
+    rigidbody->SetMass(mass);
+    rigidbody->SetLinearDamping(linearDamping);
+    rigidbody->SetAngularDamping(angularDamping);
+    rigidbody->SetInertiaTensor(*inverseInertiaTensor);
 
-    world.GetRigidBodies().emplace_back(rigidbody);
-    world.GetParticleForceRegistry().Add(rigidbody, gravity);
+    Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
+    geometry->SetMesh(cubeMesh);
+    geometry->SetScale(1.0f);
+    geometry->SetColor(RED);
+    
+    world.AddObject(object);
+    world.AddForceRegistry(object, gravity);
 
     
     /*
@@ -134,6 +160,8 @@ int main(void)
             ClearBackground(RAYWHITE);
             IPhysicsEngine::Vector3 iPosition;
             IPhysicsEngine::Quaternion iQuaternion;
+            IPhysicsEngine::real iMass;
+            IPhysicsEngine::Vector3 iVelocity;
             BeginMode3D(camera);
                 /*
                 IPhysicsEngine::ParticleWorld::Particles::iterator iterator = particleWorld.GetParticles().begin();
@@ -145,10 +173,15 @@ int main(void)
                 }
                 */
                 
-                IPhysicsEngine::World::Rigidbodies::iterator iterator = rigidbodies.begin();
-                while (iterator != rigidbodies.end()){
-                    iPosition =  (*iterator)->GetPosition();
-                    iQuaternion =  (*iterator)->GetOrientation();
+                IPhysicsEngine::World::Objects::iterator iterator = world.GetObjects().begin();
+                while (iterator != world.GetObjects().end()){
+                    IPhysicsEngine::Object* object = *iterator;
+                    IPhysicsEngine::RigidBody* rigidbody = object->GetComponent<IPhysicsEngine::RigidBody>();
+                    IPhysicsEngine::Geometry* geometry = object->GetComponent<IPhysicsEngine::Geometry>();
+                    iPosition =  rigidbody->GetPosition();
+                    iQuaternion =  rigidbody->GetOrientation();
+                    iMass = rigidbody->GetMass();
+                    iVelocity = rigidbody->GetVelocity();
                     Matrix position = MatrixTranslate(iPosition.GetX(), iPosition.GetY(), iPosition.GetZ());
                     Vector4 quaternion{iQuaternion.i, iQuaternion.j, iQuaternion.k, iQuaternion.r};
                     Matrix rotation = QuaternionToMatrix(quaternion);
@@ -156,10 +189,9 @@ int main(void)
 
 
 
-                    Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
-                    Model cube = LoadModelFromMesh(cubeMesh);
-                    cube.transform = MatrixMultiply(rotation, position);
-                    DrawModel(cube, (Vector3){0,0,0}, 1.0f, RED);
+                    Model model = LoadModelFromMesh(geometry->GetMesh());
+                    model.transform = MatrixMultiply(rotation, position);
+                    DrawModel(model, (Vector3){0,0,0}, geometry->GetScale(), geometry->GetColor());
                    
                     ++iterator;
                 }
@@ -187,14 +219,7 @@ int main(void)
 
             EndMode3D();
 
-            DrawText(std::to_string(iPosition.GetX()).c_str(), 300, 200, 10, BLACK);
-            DrawText(std::to_string(iPosition.GetY()).c_str(), 400, 200, 10, BLACK);
-            DrawText(std::to_string(iPosition.GetZ()).c_str(), 500, 200, 10, BLACK);
 
-            DrawText(std::to_string(iQuaternion.i).c_str(), 300, 400, 10, BLACK);
-            DrawText(std::to_string(iQuaternion.j).c_str(), 400, 400, 10, BLACK);
-            DrawText(std::to_string(iQuaternion.k).c_str(), 500, 400, 10, BLACK);
-            DrawText(std::to_string(iQuaternion.r).c_str(), 600, 400, 10, BLACK);
 
             // Pause Button
             if (GuiButton((Rectangle){ 340, 10, 30, 30 }, pauseButtonText.c_str())){
@@ -207,18 +232,20 @@ int main(void)
                     physicsState = true;
                 }
             }
-            
+            /*
             // Add Button
-            if (GuiButton((Rectangle){ 380, 10, 30, 30 }, "#80#")) showMessageBox = true;
+            if (GuiButton((Rectangle){ 480, 10, 30, 30 }, "awdwaad")) {
+                showAddBox = true;
+            }
 
-            if (showMessageBox)
+            if (showAddBox)
             {
                 Rectangle box = {10, 113, 400, 300}; // Position and size of the popup
                 GuiGroupBox(box, "");
                 DrawRectangle(box.x, box.y, box.width , box.height, Fade(GRAY, 0.5f));
                 DrawRectangleLines(box.x, box.y, box.width , box.height, DARKGRAY);
                 GuiLabel((Rectangle){ box.x + 10, box.y , 90, 30 }, "Add an Object");
-                // Example widgets inside the box
+
                 static bool toggle = false;
                 static float volume = 0.5f;
                 GuiCheckBox((Rectangle){box.x + 20, box.y + 40, 20, 20}, "Enable Feature", &toggle);
@@ -226,12 +253,12 @@ int main(void)
 
                 // Close button
                 if (GuiButton((Rectangle){box.x + box.width - 40, box.y + 10, 30, 30}, "#113#")) {
-                    showMessageBox = false;
+                    showAddBox = false;
                 }
             }
 
 
-
+            /*
             DrawRectangle( 10, 10, 320, 93, Fade(GRAY, 0.5f));
             DrawRectangleLines( 10, 10, 320, 93, DARKGRAY);
 
@@ -239,7 +266,7 @@ int main(void)
             DrawText("Press Spacebar to toggle physics simulation on and off", 20, 40, 10, DARKGRAY);
             DrawText("- Mouse Wheel Pressed to Pan", 20, 60, 10, DARKGRAY);
             DrawText("- Z to zoom to (0, 0, 0)", 20, 80, 10, DARKGRAY);
-
+            */
 
 
 

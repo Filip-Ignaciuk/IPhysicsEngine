@@ -17,14 +17,17 @@ namespace IPhysicsEngine{
         Object();
 
         template<typename T>
-        void GetComponent(){
-            // TODO
+        T* AddComponent(){
+            std::unique_ptr<T> componentPointer = std::make_unique<T>();
+            T* pointer = componentPointer.get();
+            components.emplace(std::type_index(typeid(T)), std::unique_ptr<Component>(std::move(componentPointer)));
+            return pointer;
         }
 
         template<typename T>
         T* GetComponent(){
             Map::iterator componentIterator = components.find(std::type_index(typeid(T)));
-        
+                
             if (componentIterator != components.end()){
                 return dynamic_cast<T*>(componentIterator->second.get());
             }
@@ -38,12 +41,6 @@ namespace IPhysicsEngine{
         }
 
 
-
-        template<typename T>
-        T* AddComponent(){
-            std::make_unique<T>()
-            typeid(T)
-        }
 
     };
 

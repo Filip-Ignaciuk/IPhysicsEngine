@@ -1,10 +1,10 @@
 #pragma once
 #include "precision.hpp"
 #include "core.hpp"
-
+#include "component.hpp"
 namespace IPhysicsEngine
 {
-    class RigidBody{
+    class RigidBody : public Component{
     protected:
         real m_inverseMass;
         real m_linearDamping;
@@ -29,6 +29,8 @@ namespace IPhysicsEngine
         Vector3 m_lastFrameAcceleration;
 
     public:
+        RigidBody();
+
         RigidBody(const Vector3& _originalPosition, const Quaternion& _originalOrientation, const real& _inverseMass, const real& _linearDamping, const real& _angularDamping, const Matrix3& _inverseInertiaTensor);
 
         void Integrate(real _duration);
@@ -38,8 +40,6 @@ namespace IPhysicsEngine
         void AddForceAtPoint(const Vector3& _vector, const Vector3& _point);
 
         void AddForceAtBodyPoint(const Vector3& _vector, const Vector3& _point);
-
-        void SetInertiaTensor(const Matrix3& _inertiaTensor);
 
         void ClearAccumulators();
 
@@ -60,6 +60,19 @@ namespace IPhysicsEngine
         Matrix4 GetTransformMatrix();
 
         bool HasFiniteMass();
+
+        void SetPosition(Vector3& _position);
+
+        void SetOrientation(Quaternion& _quaternion);
+
+        void SetMass(real& _mass);
+
+        void SetInverseMass(real& _inverseMass);
+        void SetLinearDamping(real& _linearDamping);
+        void SetAngularDamping(real& _angularDamping);
+
+        void SetInertiaTensor(const Matrix3& _inertiaTensor);
+
 
     private:
         static void CalculateTransformMatrix(Matrix4& _transformMatrix, const Vector3& _position, const Quaternion& _orientation);
