@@ -32,7 +32,7 @@
 int main(void)
 {
     const Vector3 origin = {0,0,0};
-    const int screenWidth = 1280;
+    const int screenWidth = 1272;
     const int screenHeight = 720;
 
     #ifdef __APPLE__
@@ -51,55 +51,17 @@ int main(void)
     camera.fovy = 45.0f;                                // Camera field-of-view Y
     camera.projection = CAMERA_PERSPECTIVE;             // Camera projection type
 
-    const IPhysicsEngine::real duration = 1.0L / 60.0L;
-
-    bool showAddBox = false;
 
 
     SetTargetFPS(60);
 
     bool physicsState = true;
 
-    IPhysicsEngine::Vector3* high = new IPhysicsEngine::Vector3(0,10.0f,0);
-
-
 
 
     IPhysicsEngine::World world;
 
-
-    IPhysicsEngine::Quaternion* quaternion = new IPhysicsEngine::Quaternion();
-    quaternion->r = 1.0f;
-
-    IPhysicsEngine::Matrix3* inverseInertiaTensor = new IPhysicsEngine::Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f);
-
-    IPhysicsEngine::Gravity* gravity = new IPhysicsEngine::Gravity(IPhysicsEngine::GravityEarth);
-
-    const IPhysicsEngine::Vector3* force = new IPhysicsEngine::Vector3(1.0f, 0.0f, 0.0f);
-    const IPhysicsEngine::Vector3* point = new IPhysicsEngine::Vector3(0.5f, 0.5f, 0.0f);
-
-
-    IPhysicsEngine::Object* object = new IPhysicsEngine::Object();
-    IPhysicsEngine::RigidBody* rigidbody = object->AddComponent<IPhysicsEngine::RigidBody>();
-    IPhysicsEngine::Geometry* geometry = object->AddComponent<IPhysicsEngine::Geometry>();
-    rigidbody->SetPosition(*high);
-    rigidbody->SetOrientation(*quaternion);
-    IPhysicsEngine::real mass = 1.0f;
-    IPhysicsEngine::real linearDamping = 0.99f;
-    IPhysicsEngine::real angularDamping = 0.98f;
     
-    rigidbody->SetMass(mass);
-    rigidbody->SetLinearDamping(linearDamping);
-    rigidbody->SetAngularDamping(angularDamping);
-    rigidbody->SetInertiaTensor(*inverseInertiaTensor);
-
-    Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
-    geometry->SetMesh(cubeMesh);
-    geometry->SetScale(1.0f);
-    geometry->SetColor(RED);
-    
-    world.AddObject(object);
-    world.AddForceRegistry(object, gravity);
 
     
     /*
@@ -117,6 +79,22 @@ int main(void)
     particleWorld.GetParticleContactGenerator().push_back(particleGroundContactGenerator);
     */
 
+    // GUI state
+    bool showAddObjectBox = false;
+    bool showAddMeshBox = false;
+    bool showPreviewBox = false;
+    bool showHelpBox = false;
+
+    // Information associated with add object window
+    IPhysicsEngine::Vector3* position;
+    IPhysicsEngine::Quaternion* orientation;
+    IPhysicsEngine::real mass;
+    IPhysicsEngine::real linearDamping;
+    IPhysicsEngine::real angularDamping;
+    IPhysicsEngine::Matrix3* inverseInertiaTensor;
+    Mesh mesh;
+    Color color;
+    IPhysicsEngine::real scale;
 
     // Main loop
     while (!WindowShouldClose())
@@ -124,11 +102,14 @@ int main(void)
         //particleWorld.StartFrame();
         world.StartFrame();
 
-        rigidbody->AddForceAtBodyPoint(*force, *point);
-
-
         if (IsKeyPressed(KEY_SPACE)) {
             physicsState = !physicsState;
+            if(physicsState){
+                pauseButtonText = "#131#";
+            }
+            else{
+                pauseButtonText = "#132#";
+            }
         }
 
         if (IsKeyPressed('Z')) {
@@ -152,7 +133,7 @@ int main(void)
             // Particles
             //particleWorld.RunPhysics(duration);
             // RigidBodies
-            world.RunPhysics(duration);
+            world.RunPhysics();
         }
 
         BeginDrawing();
@@ -189,7 +170,7 @@ int main(void)
 
 
 
-                    Model model = LoadModelFromMesh(geometry->GetMesh());
+                    Model model = LoadModelFromMesh(*geometry->GetMesh());
                     model.transform = MatrixMultiply(rotation, position);
                     DrawModel(model, (Vector3){0,0,0}, geometry->GetScale(), geometry->GetColor());
                    
@@ -221,8 +202,20 @@ int main(void)
 
 
 
+            
+            
+            // Add Button
+            if (GuiButton((Rectangle){ 24, 24, 24, 24 }, "#80#")) {
+                showAddObjectBox = true;
+            }
+
+            // Add Mesh Button
+            if (GuiButton((Rectangle){ 72, 24, 24, 24 }, "#162#")) {
+
+            }
+
             // Pause Button
-            if (GuiButton((Rectangle){ 340, 10, 30, 30 }, pauseButtonText.c_str())){
+            if (GuiButton((Rectangle){ 120, 24, 24, 24 }, pauseButtonText.c_str())){
                 if (physicsState){
                     pauseButtonText = "#131#";
                     physicsState = false;
@@ -232,13 +225,13 @@ int main(void)
                     physicsState = true;
                 }
             }
-            /*
-            // Add Button
-            if (GuiButton((Rectangle){ 480, 10, 30, 30 }, "awdwaad")) {
-                showAddBox = true;
+
+            // Help Button
+            if (GuiButton((Rectangle){ 168, 24, 24, 24 },"#193#")){
+                showHelpBox = !showHelpBox;
             }
 
-            if (showAddBox)
+            if (showAddObjectBox)
             {
                 Rectangle box = {10, 113, 400, 300}; // Position and size of the popup
                 GuiGroupBox(box, "");
@@ -246,27 +239,61 @@ int main(void)
                 DrawRectangleLines(box.x, box.y, box.width , box.height, DARKGRAY);
                 GuiLabel((Rectangle){ box.x + 10, box.y , 90, 30 }, "Add an Object");
 
-                static bool toggle = false;
-                static float volume = 0.5f;
-                GuiCheckBox((Rectangle){box.x + 20, box.y + 40, 20, 20}, "Enable Feature", &toggle);
-                volume = GuiSlider((Rectangle){box.x + 20, box.y + 80, 200, 20}, "Volume", TextFormat("%.2f", volume), &volume, 0.0f, 1.0f);
+                /*I
+                if(GuiTextBox((Rectangle){ box.x + 10, box.y , 90, 30}), "x"){
 
+                }
+                */
                 // Close button
                 if (GuiButton((Rectangle){box.x + box.width - 40, box.y + 10, 30, 30}, "#113#")) {
-                    showAddBox = false;
+                    showAddObjectBox = false;
+                }
+
+                if (GuiButton((Rectangle){box.x + box.width - 40, box.y + 10, 30, 30}, "#113#")) {
+
+
+                    // Creating the object
+                    IPhysicsEngine::Object* object = new IPhysicsEngine::Object();
+                    IPhysicsEngine::RigidBody* rigidbody = object->AddComponent<IPhysicsEngine::RigidBody>();
+                    IPhysicsEngine::Geometry* geometry = object->AddComponent<IPhysicsEngine::Geometry>();
+                    rigidbody->SetPosition(*position);
+                    rigidbody->SetOrientation(*orientation);
+                    rigidbody->SetMass(mass);
+                    rigidbody->SetLinearDamping(linearDamping);
+                    rigidbody->SetAngularDamping(angularDamping);
+                    rigidbody->SetInverseInertiaTensor(*inverseInertiaTensor);
+
+                    Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
+                    geometry->SetMesh(&cubeMesh);
+                    geometry->SetScale(1.0f);
+                    geometry->SetColor(RED);
+                    
+                    world.AddObject(object);
+                    //world.AddForceRegistry(object, gravity);
+
                 }
             }
+            else if (showAddMeshBox){
 
+            }
 
-            /*
-            DrawRectangle( 10, 10, 320, 93, Fade(GRAY, 0.5f));
-            DrawRectangleLines( 10, 10, 320, 93, DARKGRAY);
+            if(showPreviewBox){
 
-            DrawText("Press Z to toggle camera control on and off", 20, 20, 10, BLACK);
-            DrawText("Press Spacebar to toggle physics simulation on and off", 20, 40, 10, DARKGRAY);
-            DrawText("- Mouse Wheel Pressed to Pan", 20, 60, 10, DARKGRAY);
-            DrawText("- Z to zoom to (0, 0, 0)", 20, 80, 10, DARKGRAY);
-            */
+            }
+
+            if(showHelpBox){
+                DrawRectangle( 936, 600, 312, 96, Fade(GRAY, 0.5f));
+                DrawRectangleLines( 936, 600, 312, 96, DARKGRAY);
+
+                DrawText("Press Z to toggle camera control on and off", 946, 610, 10, BLACK);
+                DrawText("Press Spacebar to toggle physics simulation on and off", 946, 630, 10, DARKGRAY);
+                DrawText("Add objects using the Add button", 946, 650, 10, DARKGRAY);
+                DrawText("- Z to zoom to (0, 0, 0)", 946, 670, 10, DARKGRAY);
+            }
+
+            
+            
+            
 
 
 

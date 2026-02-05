@@ -6,18 +6,18 @@
 namespace IPhysicsEngine{
     class Geometry : public Component{
         private:
-        Mesh m_mesh;
+        Mesh* m_mesh;
         float m_scale;
         Color m_color;
 
         public:
         Geometry();
 
-        Mesh GetMesh();
+        Mesh* GetMesh();
         real GetScale();
         Color GetColor();
 
-        void SetMesh(Mesh _mesh);
+        void SetMesh(Mesh* _mesh);
         void SetScale(float _scale);
         void SetColor(Color _color);
 

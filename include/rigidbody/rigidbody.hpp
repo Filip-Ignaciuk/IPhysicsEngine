@@ -71,7 +71,7 @@ namespace IPhysicsEngine
         void SetLinearDamping(real& _linearDamping);
         void SetAngularDamping(real& _angularDamping);
 
-        void SetInertiaTensor(const Matrix3& _inertiaTensor);
+        void SetInverseInertiaTensor(const Matrix3& _inertiaTensor);
 
 
     private:

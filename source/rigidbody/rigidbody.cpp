@@ -124,7 +124,7 @@ void IPhysicsEngine::RigidBody::SetAngularDamping(real& _angularDamping){
     m_angularDamping = _angularDamping;
 }
 
-void IPhysicsEngine::RigidBody::SetInertiaTensor(const Matrix3& _inertiaTensor){
+void IPhysicsEngine::RigidBody::SetInverseInertiaTensor(const Matrix3& _inertiaTensor){
     m_inverseInertiaTensor.SetInverse(_inertiaTensor);
 }
 

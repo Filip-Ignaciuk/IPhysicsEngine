@@ -4,7 +4,7 @@ IPhysicsEngine::Geometry::Geometry(){
 
 }
 
-Mesh IPhysicsEngine::Geometry::GetMesh(){
+Mesh* IPhysicsEngine::Geometry::GetMesh(){
     return m_mesh;
 }
 
@@ -16,7 +16,7 @@ Color IPhysicsEngine::Geometry::GetColor(){
     return m_color;
 }
 
-void IPhysicsEngine::Geometry::SetMesh(Mesh _mesh){
+void IPhysicsEngine::Geometry::SetMesh(Mesh* _mesh){
     m_mesh = _mesh;
 }
 
