@@ -36,6 +36,14 @@ void IPhysicsEngine::World::AddForceRegistry(Object* _object, ForceGenerator* _f
 void IPhysicsEngine::World::SetTimeStep(real _timestep){
     m_timestep = _timestep;
 }
+
+void IPhysicsEngine::World::SetPhysicsState(bool _state){
+    m_physicsState = _state;
+}
+
+bool IPhysicsEngine::World::GetPhysicsState(){
+    return m_physicsState;
+}
         
 IPhysicsEngine::real IPhysicsEngine::World::GetTimeStep(){
     return m_timestep;

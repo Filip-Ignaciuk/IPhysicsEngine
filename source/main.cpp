@@ -9,7 +9,9 @@
 
 #define RAYGUI_ICONS
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
+
+#include <raylib.h>
+#include <raygui.h>
 
 #include "core.hpp"
 
@@ -36,13 +38,16 @@ int main(void)
     const int screenHeight = 720;
 
     #ifdef __APPLE__
-    SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+        SetConfigFlags(FLAG_WINDOW_HIGHDPI);
+
     #endif
     
     std::string pauseButtonText = "#132#";
 
     InitWindow(screenWidth, screenHeight, "IPhysicsEngine");
+    GuiEnable();
     GuiLoadStyleDefault();
+    
     bool cameraState = true;
     Camera3D camera = { 0 };
     camera.position = (Vector3){ 30.0f, 30.0f, 30.0f }; // Camera position
@@ -54,9 +59,6 @@ int main(void)
 
 
     SetTargetFPS(60);
-
-    bool physicsState = true;
-
 
 
     IPhysicsEngine::World world;
@@ -103,8 +105,8 @@ int main(void)
         world.StartFrame();
 
         if (IsKeyPressed(KEY_SPACE)) {
-            physicsState = !physicsState;
-            if(physicsState){
+            world.SetPhysicsState(!world.GetPhysicsState());
+            if(world.GetPhysicsState()){
                 pauseButtonText = "#131#";
             }
             else{
@@ -129,7 +131,7 @@ int main(void)
         else{
             UpdateCamera(&camera, CAMERA_FREE);
         }
-        if(physicsState){
+        if(world.GetPhysicsState()){
             // Particles
             //particleWorld.RunPhysics(duration);
             // RigidBodies
@@ -216,17 +218,17 @@ int main(void)
 
             // Pause Button
             if (GuiButton((Rectangle){ 120, 24, 24, 24 }, pauseButtonText.c_str())){
-                if (physicsState){
+                if (world.GetPhysicsState()){
                     pauseButtonText = "#131#";
-                    physicsState = false;
+                    world.SetPhysicsState(false);
                 }
-                else if (!physicsState){
+                else{
                     pauseButtonText = "#132#";
-                    physicsState = true;
+                    world.SetPhysicsState(true);
                 }
             }
 
-            // Help Button
+            // Help Button 193
             if (GuiButton((Rectangle){ 168, 24, 24, 24 },"#193#")){
                 showHelpBox = !showHelpBox;
             }

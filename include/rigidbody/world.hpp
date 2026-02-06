@@ -18,6 +18,9 @@ namespace IPhysicsEngine
         void AddForceRegistry(Object* _object, ForceGenerator* _forceGenerator);
 
         void SetTimeStep(real _timestep);
+        void SetPhysicsState(bool _state);
+
+        bool GetPhysicsState();
         real GetTimeStep();
 
         ForceRegistry& GetParticleForceRegistry();
@@ -28,5 +31,6 @@ namespace IPhysicsEngine
         Objects m_objects;
         ForceRegistry m_registery;
         IPhysicsEngine::real m_timestep = 1.0L / 60.0L;
+        bool m_physicsState = true;
     };
 }

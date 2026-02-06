@@ -4,7 +4,7 @@ IPhysicsEngine::MeshManager::MeshManager(){
     Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
     Mesh sphereMesh = GenMeshSphere(1.0f, 32, 64);
     Mesh cylinderMesh = GenMeshSphere(1.0f, 32, 64);
-    meshes.emplace("Cube", cubeMesh);
+    meshes.emplace("Cube", &cubeMesh);
 }
 
 Mesh* IPhysicsEngine::MeshManager::GetMesh(std::string _meshName){
