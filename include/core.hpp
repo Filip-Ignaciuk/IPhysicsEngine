@@ -79,6 +79,8 @@ namespace IPhysicsEngine
         void RotateByVector(const Vector3& _vector3);
 
         void AddScaledVector(const Vector3& _vector3, real _scale);
+
+        void SetFromEuler(real _x, real _y, real _z);
     };
 
     class Matrix3{
@@ -158,6 +160,13 @@ namespace IPhysicsEngine
 
     Vector3 LocalToWorldDirection(const Vector3& _local, const Matrix4& _transform);
     Vector3 WorldToLocalDirection(const Vector3& _world, const Matrix4& _transform);
+
+    struct CharBufferResultStore{
+        static inline bool isValid;
+        static inline real result;
+    };
+
+    CharBufferResultStore* CharBufferToReal(char _buffer[64]);
 
     real RealSqrt(real _value);
 

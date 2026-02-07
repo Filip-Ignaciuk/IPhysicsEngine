@@ -182,6 +182,22 @@ void IPhysicsEngine::Quaternion::AddScaledVector(const Vector3& _vector3, real _
     k += q.k * ((real)0.5);
 }
 
+void IPhysicsEngine::Quaternion::SetFromEuler(real _x, real _y, real _z){
+    // Setting it initially to identity quaternion
+    r = 1;
+    i = 0;
+    j = 0;
+    k = 0;
+
+    Quaternion q1(RealCos(_z/2), 0 , 0 , RealSin(_z/2));
+    Quaternion q2(RealCos(_y/2), 0 , RealSin(_y/2) , 0);
+    Quaternion q3(RealCos(_x/2), RealSin(_x/2) , 0 , 0);
+
+    (*this) *= q1;
+    (*this) *= q2;
+    (*this) *= q3;
+}
+
 IPhysicsEngine::Matrix3::Matrix3(){
     for (size_t i = 0; i < 9; i++)
     {
@@ -495,6 +511,28 @@ IPhysicsEngine::Vector3 IPhysicsEngine::LocalToWorldDirection(const Vector3& _lo
 
 IPhysicsEngine::Vector3 IPhysicsEngine::WorldToLocalDirection(const Vector3& _world, const Matrix4& _transform){
     return _transform.TransformInverseDirection(_world);
+}
+
+IPhysicsEngine::CharBufferResultStore* IPhysicsEngine::CharBufferToReal(char _buffer[64]){
+    CharBufferResultStore* charBufferResultStore = new CharBufferResultStore();
+    charBufferResultStore->isValid = true;
+    std::string stringForm;
+    // Check if is digit
+    for (size_t i = 0; i < 64; i++)
+    {
+
+        if(!(_buffer[i] ==  '.') && !std::isdigit(_buffer[i])){
+            charBufferResultStore->isValid = false;
+            return charBufferResultStore;
+        }
+
+        stringForm = stringForm + _buffer[i];
+    }
+
+    charBufferResultStore->result = std::stod(stringForm);
+    return charBufferResultStore;
+    
+    
 }
 
 IPhysicsEngine::real IPhysicsEngine::RealSqrt(real _value){

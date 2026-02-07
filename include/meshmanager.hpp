@@ -9,13 +9,13 @@ namespace IPhysicsEngine{
     {
     private:
         typedef std::unordered_map<std::string, Mesh*> Map;
-        Map meshes;
+        static Map meshes;
     public:
-        MeshManager();
-        
-        Mesh* GetMesh(std::string _meshName);
-        std::vector<std::string> GetMeshStrings();
-        void SetMesh(std::string& _meshName, Mesh* _mesh);
+        static void LoadDefaults();
+
+        static Mesh* GetMesh(std::string _meshName);
+        static std::vector<std::string> GetMeshStrings();
+        static void SetMesh(std::string& _meshName, Mesh* _mesh);
 
     };
 }

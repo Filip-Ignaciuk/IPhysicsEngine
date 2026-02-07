@@ -12,6 +12,7 @@ add_executable(IPhysicsEngine
     ../source/object.cpp
     ../source/geometry.cpp
     ../source/meshmanager.cpp
+    ../source/languagemanager.cpp
     ../source/rigidbody/world.cpp
     ../source/rigidbody/rigidbody.cpp
     ../source/rigidbody/forcegenerator.cpp

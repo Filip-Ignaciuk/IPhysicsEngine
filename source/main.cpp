@@ -22,6 +22,8 @@
 #include "object.hpp"
 #include "component.hpp"
 #include "geometry.hpp"
+#include "languagemanager.hpp"
+#include "meshmanager.hpp"
 
 /*
 #include "particle.hpp"
@@ -39,7 +41,6 @@ int main(void)
 
     #ifdef __APPLE__
         SetConfigFlags(FLAG_WINDOW_HIGHDPI);
-
     #endif
     
     std::string pauseButtonText = "#132#";
@@ -62,7 +63,9 @@ int main(void)
 
 
     IPhysicsEngine::World world;
-
+    std::string fileDir = "resources/en-gb.json";
+    IPhysicsEngine::LanguageManager::LoadLanguage(fileDir);
+    IPhysicsEngine::MeshManager::LoadDefaults();
     
 
     
@@ -87,13 +90,55 @@ int main(void)
     bool showPreviewBox = false;
     bool showHelpBox = false;
 
+    // Adding Objects Window State
+    static bool isValidData = false;
+
+    static bool isBufferXCoordinateEdited = false;
+    static bool isBufferYCoordinateEdited = false;
+    static bool isBufferZCoordinateEdited = false;
+    
+    static bool isBufferXOrientationEdited = false;
+    static bool isBufferYOrientationEdited = false;
+    static bool isBufferZOrientationEdited = false;
+
+    static bool isBufferMassEdited = false;
+
+    static bool isBufferLinearDampingEdited = false;
+    static bool isBufferAngularDampingEdited = false;
+
+    static bool isMeshDropDownActive = false;
+
+
+    char textBufferXCoordinate[64] = "";
+    char textBufferYCoordinate[64] = "";
+    char textBufferZCoordinate[64] = "";
+    char textBufferXOrientation[64] = "";
+    char textBufferYOrientation[64] = "";
+    char textBufferZOrientation[64] = "";
+    char textBufferMass[64] = "";
+    char textBufferLinearDamping[64] = "";
+    char textBufferAngularDamping[64] = "";
+
+    char textBuffer1InverseInertiaTensor[64] = "";
+    char textBuffer2InverseInertiaTensor[64] = "";
+    char textBuffer3InverseInertiaTensor[64] = "";
+    char textBuffer4InverseInertiaTensor[64] = "";
+    char textBuffer5InverseInertiaTensor[64] = "";
+    char textBuffer6InverseInertiaTensor[64] = "";
+    char textBuffer7InverseInertiaTensor[64] = "";
+    char textBuffer8InverseInertiaTensor[64] = "";
+    char textBuffer9InverseInertiaTensor[64] = "";
+
+    int dropDownSelectedMesh = 0;
+
     // Information associated with add object window
-    IPhysicsEngine::Vector3* position;
-    IPhysicsEngine::Quaternion* orientation;
+
+    IPhysicsEngine::Vector3 position;
+    IPhysicsEngine::Quaternion orientation;
     IPhysicsEngine::real mass;
     IPhysicsEngine::real linearDamping;
     IPhysicsEngine::real angularDamping;
-    IPhysicsEngine::Matrix3* inverseInertiaTensor;
+    IPhysicsEngine::Matrix3 inverseInertiaTensor;
     Mesh mesh;
     Color color;
     IPhysicsEngine::real scale;
@@ -213,7 +258,7 @@ int main(void)
 
             // Add Mesh Button
             if (GuiButton((Rectangle){ 72, 24, 24, 24 }, "#162#")) {
-
+                showAddMeshBox = true;
             }
 
             // Pause Button
@@ -235,47 +280,228 @@ int main(void)
 
             if (showAddObjectBox)
             {
-                Rectangle box = {10, 113, 400, 300}; // Position and size of the popup
-                GuiGroupBox(box, "");
-                DrawRectangle(box.x, box.y, box.width , box.height, Fade(GRAY, 0.5f));
-                DrawRectangleLines(box.x, box.y, box.width , box.height, DARKGRAY);
-                GuiLabel((Rectangle){ box.x + 10, box.y , 90, 30 }, "Add an Object");
+                Rectangle box = {24, 72, 408, 408}; // Position and size of the popup
+                showAddObjectBox = !GuiWindowBox(box, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.title").c_str());
 
-                /*I
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);
+
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+
+                GuiLabel((Rectangle){ box.x + 24, box.y + 24, 96, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.positiontitle").c_str());
+
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+
+
+                GuiLabel((Rectangle){ box.x + 24, box.y + 48, 24, 24 }, "X");
+                if(GuiTextBox((Rectangle){ box.x + 48, box.y + 48, 96, 24 }, textBufferXCoordinate, 64, isBufferXCoordinateEdited)){
+                    isBufferXCoordinateEdited = !isBufferXCoordinateEdited;
+                }
+                
+                GuiLabel((Rectangle){ box.x + 144, box.y + 48, 24, 24 }, "Y");
+                if(GuiTextBox((Rectangle){ box.x + 168, box.y + 48, 96, 24 }, textBufferYCoordinate, 64, isBufferYCoordinateEdited)){
+                    isBufferYCoordinateEdited = !isBufferYCoordinateEdited;
+                }
+
+                GuiLabel((Rectangle){ box.x + 264, box.y + 48, 24, 24 }, "Z");
+                if(GuiTextBox((Rectangle){ box.x + 288, box.y + 48, 96, 24 }, textBufferZCoordinate, 64, isBufferZCoordinateEdited)){
+                    isBufferZCoordinateEdited = !isBufferZCoordinateEdited;
+                }
+                
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+
+                GuiLabel((Rectangle){ box.x + 24, box.y + 72, 96, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.orientationtitle").c_str());
+
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+
+                GuiLabel((Rectangle){ box.x + 24, box.y + 96, 24, 24 }, "X");
+                if(GuiTextBox((Rectangle){ box.x + 48, box.y + 96, 96, 24 }, textBufferXOrientation, 64, isBufferXOrientationEdited)){
+                    isBufferXOrientationEdited = !isBufferXOrientationEdited;
+                }
+                                
+                GuiLabel((Rectangle){ box.x + 144, box.y + 96, 24, 24 }, "Y");
+                if(GuiTextBox((Rectangle){ box.x + 168, box.y + 96, 96, 24 }, textBufferYOrientation, 64, isBufferYOrientationEdited)){
+                    isBufferYOrientationEdited = !isBufferYOrientationEdited;
+                }
+
+                GuiLabel((Rectangle){ box.x + 264, box.y + 96, 24, 24 }, "Z");
+                if(GuiTextBox((Rectangle){ box.x + 288, box.y + 96, 96, 24 }, textBufferZOrientation, 64, isBufferZOrientationEdited)){
+                    isBufferZOrientationEdited = !isBufferZOrientationEdited;
+                }
+
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+
+                GuiLabel((Rectangle){ box.x + 24, box.y + 120, 168, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.masstitle").c_str());
+
+
+                if(GuiTextBox((Rectangle){ box.x + 24, box.y + 144, 168, 24 }, textBufferMass, 64, isBufferMassEdited)){
+                    isBufferMassEdited = !isBufferMassEdited;
+                }
+                
+                GuiLabel((Rectangle){ box.x + 216, box.y + 120, 168, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.lineardampingtitle").c_str());
+
+                if(GuiTextBox((Rectangle){ box.x + 216, box.y + 144, 168, 24 }, textBufferLinearDamping, 64, isBufferLinearDampingEdited)){
+                    isBufferLinearDampingEdited = !isBufferLinearDampingEdited;
+                }
+
+                GuiLabel((Rectangle){ box.x + 24, box.y + 168, 168, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.angulardampingtitle").c_str());
+
+                if(GuiTextBox((Rectangle){ box.x + 24, box.y + 192, 168, 24 }, textBufferAngularDamping, 64, isBufferAngularDampingEdited)){
+                    isBufferAngularDampingEdited = !isBufferAngularDampingEdited;
+                }
+
+                std::string dropDownSelection;
+                std::vector<std::string> meshStrings = IPhysicsEngine::MeshManager::GetMeshStrings();
+                for (size_t i = 0; i < meshStrings.size() - 1; i++)
+                {
+                    dropDownSelection = dropDownSelection + meshStrings[i] + ";";
+                }
+
+                dropDownSelection = dropDownSelection + meshStrings[meshStrings.size() - 1];
+
+                GuiLabel((Rectangle){ box.x + 216, box.y + 168, 168, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.meshtitle").c_str());
+
+                if (GuiDropdownBox({box.x + 216, box.y + 192, 168, 24}, dropDownSelection.c_str(), &dropDownSelectedMesh, isMeshDropDownActive)){
+                    isMeshDropDownActive = !isMeshDropDownActive;
+                }
+
+                GuiLabel((Rectangle){ box.x + 216, box.y + 216, 168, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.angulardampingtitle").c_str());
+
+                if(GuiTextBox((Rectangle){ box.x + 216, box.y + 240, 168, 24 }, textBufferAngularDamping, 64, isBufferAngularDampingEdited)){
+                    isBufferAngularDampingEdited = !isBufferAngularDampingEdited;
+                }
+                
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
+
+                /*
+
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer1InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer2InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer3InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer4InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer5InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer6InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer7InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer8InverseInertiaTensor, 64, isBeingEdited);
+                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer9InverseInertiaTensor, 64, isBeingEdited);
+
+
+                
                 if(GuiTextBox((Rectangle){ box.x + 10, box.y , 90, 30}), "x"){
 
                 }
                 */
-                // Close button
-                if (GuiButton((Rectangle){box.x + box.width - 40, box.y + 10, 30, 30}, "#113#")) {
-                    showAddObjectBox = false;
-                }
+               GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
-                if (GuiButton((Rectangle){box.x + box.width - 40, box.y + 10, 30, 30}, "#113#")) {
+                // Add Button
+                if (GuiButton((Rectangle){box.x + box.width - 72, box.y + box.height - 48, 48, 24}, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.addbutton").c_str())) {
+                    // Assuming data is valid
+                    isValidData = true;
 
+                    // Converting the char arrays to real values.
+                    IPhysicsEngine::CharBufferResultStore* xCoordinate = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+                    IPhysicsEngine::CharBufferResultStore* yCoordinate = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+                    IPhysicsEngine::CharBufferResultStore* zCoordinate = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
 
-                    // Creating the object
-                    IPhysicsEngine::Object* object = new IPhysicsEngine::Object();
-                    IPhysicsEngine::RigidBody* rigidbody = object->AddComponent<IPhysicsEngine::RigidBody>();
-                    IPhysicsEngine::Geometry* geometry = object->AddComponent<IPhysicsEngine::Geometry>();
-                    rigidbody->SetPosition(*position);
-                    rigidbody->SetOrientation(*orientation);
-                    rigidbody->SetMass(mass);
-                    rigidbody->SetLinearDamping(linearDamping);
-                    rigidbody->SetAngularDamping(angularDamping);
-                    rigidbody->SetInverseInertiaTensor(*inverseInertiaTensor);
+                    if(!xCoordinate->isValid){
+                        isValidData = false;
+                    }
 
-                    Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
-                    geometry->SetMesh(&cubeMesh);
-                    geometry->SetScale(1.0f);
-                    geometry->SetColor(RED);
+                    if(!yCoordinate->isValid){
+                        isValidData = false;
+                    }
+
+                    if(!zCoordinate->isValid){
+                        isValidData = false;
+                    }
+
                     
-                    world.AddObject(object);
-                    //world.AddForceRegistry(object, gravity);
+                    position.SetX(xCoordinate->result);
+                    position.SetY(yCoordinate->result);
+                    position.SetZ(zCoordinate->result);
+
+                    IPhysicsEngine::CharBufferResultStore* xOrientation = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+                    IPhysicsEngine::CharBufferResultStore* yOrientation = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+                    IPhysicsEngine::CharBufferResultStore* zOrientation = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+
+                    if(!xOrientation->isValid){
+                        isValidData = false;
+                    }
+
+                    if(!yOrientation->isValid){
+                        isValidData = false;
+                    }
+
+                    if(!zOrientation->isValid){
+                        isValidData = false;
+                    }
+
+                    orientation.SetFromEuler(xOrientation->result, yOrientation->result, zOrientation->result);
+
+                    IPhysicsEngine::CharBufferResultStore* massResult = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+
+                    if(!massResult->isValid){
+                        isValidData = false;
+                    }
+
+                    mass = massResult->result;
+
+                    IPhysicsEngine::CharBufferResultStore* linearDampingResult = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+
+                    if(!linearDampingResult->isValid){
+                        isValidData = false;
+                    }
+
+                    linearDamping = linearDampingResult->result;
+
+                    IPhysicsEngine::CharBufferResultStore* angularDampingResult = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
+
+                    if(!angularDampingResult->isValid){
+                        isValidData = false;
+                    }
+
+                    angularDamping = angularDampingResult->result;
+
+                    if(isValidData){
+                        // Creating the object
+                        IPhysicsEngine::Object* object = new IPhysicsEngine::Object();
+                        IPhysicsEngine::RigidBody* rigidbody = object->AddComponent<IPhysicsEngine::RigidBody>();
+                        IPhysicsEngine::Geometry* geometry = object->AddComponent<IPhysicsEngine::Geometry>();
+                        rigidbody->SetPosition(position);
+                        rigidbody->SetOrientation(orientation);
+                        rigidbody->SetMass(mass);
+                        rigidbody->SetLinearDamping(linearDamping);
+                        rigidbody->SetAngularDamping(angularDamping);
+                        rigidbody->SetInverseInertiaTensor(inverseInertiaTensor);
+
+                        Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
+                        geometry->SetMesh(&cubeMesh);
+                        geometry->SetScale(1.0f);
+                        geometry->SetColor(RED);
+                        
+                        world.AddObject(object);
+                        //world.AddForceRegistry(object, gravity);
+                    }
+                    else{
+
+                    }
+
+                    
 
                 }
             }
             else if (showAddMeshBox){
+                Rectangle box = {24, 72, 408, 408};
+                showAddMeshBox = !GuiWindowBox(box, IPhysicsEngine::LanguageManager::GetText("addmeshmenu.title").c_str());
+
+                GuiLabel((Rectangle){ box.x + 24, box.y + 216, 168, 24 }, IPhysicsEngine::LanguageManager::GetText("addobjectmenu.colortitle").c_str());
+
+                GuiColorPicker({box.x + 24, box.y + 240, 144, 144}, "Pick a color", &color);
+
+
+
+
+
+
 
             }
 

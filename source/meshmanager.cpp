@@ -1,10 +1,14 @@
 #include "meshmanager.hpp"
 
-IPhysicsEngine::MeshManager::MeshManager(){
+IPhysicsEngine::MeshManager::Map IPhysicsEngine::MeshManager::meshes;
+
+void IPhysicsEngine::MeshManager::LoadDefaults(){
     Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
     Mesh sphereMesh = GenMeshSphere(1.0f, 32, 64);
     Mesh cylinderMesh = GenMeshSphere(1.0f, 32, 64);
     meshes.emplace("Cube", &cubeMesh);
+    meshes.emplace("Sphere", &sphereMesh);
+    meshes.emplace("Cylinder", &cylinderMesh);
 }
 
 Mesh* IPhysicsEngine::MeshManager::GetMesh(std::string _meshName){
@@ -22,6 +26,7 @@ std::vector<std::string> IPhysicsEngine::MeshManager::GetMeshStrings(){
     while (mapIterator != meshes.end())
     {
         meshNames.emplace_back(mapIterator->first);
+        ++mapIterator;
     }
     return meshNames;
     
