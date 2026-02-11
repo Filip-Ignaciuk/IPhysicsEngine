@@ -111,23 +111,23 @@ void IPhysicsEngine::Vector3::operator%=(const Vector3& _vector){
     *this = VectorProduct(_vector);
 }
 
-IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator+(const Vector3& _vector){
+IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator+(const Vector3& _vector) const{
     return Vector3(m_x + _vector.m_x, m_y + _vector.m_y, m_z + _vector.m_z);
 }
 
-IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator-(const Vector3& _vector){
+IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator-(const Vector3& _vector) const{
     return Vector3(m_x - _vector.m_x, m_y - _vector.m_y, m_z - _vector.m_z);
 }
 
-IPhysicsEngine::real IPhysicsEngine::Vector3::operator*(const Vector3& _vector){
+IPhysicsEngine::real IPhysicsEngine::Vector3::operator*(const Vector3& _vector) const{
     return m_x * _vector.m_x + m_y * _vector.m_y + m_z * _vector.m_z;
 }
 
-IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator*(const IPhysicsEngine::real& _magnitude){
+IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator*(const IPhysicsEngine::real& _magnitude) const{
     return Vector3(m_x * _magnitude, m_y * _magnitude, m_z * _magnitude);
 }
 
-IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator%(const Vector3& _vector){
+IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator%(const Vector3& _vector) const{
     return Vector3(m_y * _vector.m_z - m_z * _vector.m_y, m_z * _vector.m_x - m_x * _vector.m_z, m_x * _vector.m_y - m_y * _vector.m_x);
 }
 
