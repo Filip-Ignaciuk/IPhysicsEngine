@@ -30,7 +30,7 @@ namespace IPhysicsEngine
         protected:
         Objects m_objects;
         ForceRegistry m_registery;
-        IPhysicsEngine::real m_timestep = 1.0L / 60.0L;
+        IPhysicsEngine::real m_timestep = (real)1.0 / (real)60.0;
         bool m_physicsState = true;
     };
 }
