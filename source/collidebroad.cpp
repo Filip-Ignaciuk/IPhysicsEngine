@@ -1,6 +1,11 @@
 #include "collidebroad.hpp"
 
 template<class BoundingVolumeClass>
+IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::BoundingVolumeHierarchyNode(BoundingVolumeHierarchyNode* _parent, const BoundingVolumeClass& _volume, RigidBody* _body) : parent(_parent), volume(_volume), body(_body){
+    children[0] = children[1] = nullptr;
+}
+
+template<class BoundingVolumeClass>
 bool IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::IsLeaf() const{
     return body != nullptr;
 }
@@ -10,8 +15,35 @@ unsigned IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::GetPo
     if(IsLeaf() || _limit == 0){
         return 0;
     }
-    return children[0]->GetPotentialContactsWith(children[1], contacts, limit);
+    return children[0]->GetPotentialContactsWith(children[1], _contacts, _limit);
 }
+
+template<class BoundingVolumeClass>
+void IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::Insert(RigidBody* _newBody, const BoundingVolumeClass& _newVolume){
+    if(IsLeaf()){
+        children[0] = new BoundingVolumeHierarchyNode<BoundingVolumeClass>(this, volume, body);
+
+        children[1] = new BoundingVolumeHierarchyNode<BoundingVolumeClass>(this, _newVolume, _newBody);
+
+        this->body = nullptr;
+
+        RecalculateBoundingVolume();
+    }
+    else{
+        if(children[0]->volume.GetGrowth(_newVolume) < children[1]->volume.GetGrowth(_newVolume)){
+            children[0]->Insert(_newBody, _newVolume);
+        }
+        else{
+            children[1]->Insert(_newBody, _newVolume);
+        }
+    }
+}
+
+template<class BoundingVolumeClass>
+bool IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::Overlaps(const BoundingVolumeHierarchyNode<BoundingVolumeClass>* _other) const{
+    return volume->overlaps(_other->volume);
+}
+
 
 template<class BoundingVolumeClass>
 unsigned IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::GetPotentialContactsWith(const BoundingVolumeHierarchyNode<BoundingVolumeClass>* _other, PotentialContact* _contacts, unsigned _limit) const{
@@ -45,6 +77,46 @@ unsigned IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::GetPo
 
     }
 }
+
+template<class BoundingVolumeClass>
+IPhysicsEngine::BoundingVolumeHierarchyNode<BoundingVolumeClass>::~BoundingVolumeHierarchyNode(){
+    // If we don't have a parent, then we ignore the sibling.
+    if(parent){
+        BoundingVolumeHierarchyNode<BoundingVolumeClass>* sibling;
+        // Find our sibling
+        if(parent->children[0] == this){
+            sibling = parent->children[1];
+        }
+        else{
+            sibling = parent->children[0];
+        }
+
+        parent->volume = sibling->volume;
+        parent->body = sibling->body;
+        parent->children[0] = sibling->children[0];
+        parent->children[1] = sibling->children[1];
+
+        // Delete the sibling
+        sibling->parent = nullptr;
+        sibling->body = nullptr;
+        sibling->children[0] = nullptr;
+        sibling->children[1] = nullptr;
+        delete sibling;
+
+        // Recalculate the parent's bounding volume.
+        parent->RecalculateBoundingVolume();
+    }
+
+    if(children[0]){
+        children[0]->parent = nullptr;
+        delete children[0];
+    }
+    if(children[1]){
+        children[1]->parent = nullptr;
+        delete children[1];
+    }
+}
+
 
 IPhysicsEngine::BoundingSphere::BoundingSphere(const Vector3& _centre, real _radius) : m_centre(_centre), m_radius(_radius){
 
