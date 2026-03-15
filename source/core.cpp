@@ -497,6 +497,10 @@ IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::TransformInverseDirection(const
     );
 }
 
+IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::GetAxisVector(int _index) const{
+    return Vector3(data[_index], data[_index + 4], data[_index + 8]);
+}
+
 IPhysicsEngine::Vector3 IPhysicsEngine::LocalToWorld(const Vector3& _local, const Matrix4& _transform){
     return _transform.Transform(_local);
 }

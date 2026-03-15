@@ -3,10 +3,13 @@
 
 namespace IPhysicsEngine{
     class Contact{
-        private:
-        Vector3 m_contactPoint;
-        Vector3 m_contactNormal;
-        real m_penetration;
+        public:
+        RigidBody* body[2];
+        real friction;
+        real restitution;
+        Vector3 contactPoint;
+        Vector3 contactNormal;
+        real penetration;
+        void SetBodyData(RigidBody* _one, RigidBody* _two, real _friction, real _restitution);
     };
-    
 }

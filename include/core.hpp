@@ -141,6 +141,8 @@ namespace IPhysicsEngine
         Vector3 TransformDirection(const Vector3& _vector3) const;
 
         Vector3 TransformInverseDirection(const Vector3& _vector3) const;
+
+        Vector3 GetAxisVector(int _index) const;
     };
 
     const inline static Vector3 Origin(0,0,0);
