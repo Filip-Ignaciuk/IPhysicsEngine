@@ -14,6 +14,10 @@ add_executable(IPhysicsEngine
     ../source/meshmanager.cpp
     ../source/languagemanager.cpp
     ../source/collidebroad.cpp
+    ../source/collidenarrow.cpp
+    ../source/primitive.cpp
+    ../source/contacts.cpp
+    ../source/collidenarrow.cpp
     ../source/rigidbody/world.cpp
     ../source/rigidbody/rigidbody.cpp
     ../source/rigidbody/forcegenerator.cpp

@@ -23,9 +23,9 @@ void IPhysicsEngine::Vector3::AddScaledVector(const Vector3& _vector,  real scal
 };
 
 void IPhysicsEngine::Vector3::ComponentProductUpdate(const Vector3& _vector){
-    m_x = _vector.m_x;
-    m_y = _vector.m_y;
-    m_z = _vector.m_z;
+    m_x *= _vector.m_x;
+    m_y *= _vector.m_y;
+    m_z *= _vector.m_z;
 };
 
 IPhysicsEngine::real IPhysicsEngine::Vector3::ScalarProduct(const Vector3& _vector){

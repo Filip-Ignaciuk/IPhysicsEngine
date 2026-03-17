@@ -7,10 +7,8 @@ namespace IPhysicsEngine
         public:
         RigidBody* rigidbody;
         Matrix4 offset;
-
-        Vector3 GetAxis(unsigned _index) const;
-        protected:
         Matrix4 transform;
+        Vector3 GetAxis(unsigned _index) const;
     };
 
     class CollisionSphere : public CollisionPrimitive{
