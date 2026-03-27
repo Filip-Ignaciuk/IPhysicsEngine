@@ -7,14 +7,12 @@
 
 namespace IPhysicsEngine
 {
-    class Vector3
+    struct Vector3
     {
-    private:
-        real m_x;
-        real m_y;
-        real m_z;
-    public:
-
+        real x;
+        real y;
+        real z;
+ 
         void Normalise();
         void AddScaledVector(const Vector3& _vector,  real scale);
         void ComponentProductUpdate(const Vector3& _vector);
@@ -31,28 +29,20 @@ namespace IPhysicsEngine
 
         real Magnitude() const;
         real SquareMagnitude() const;
-        real GetX() const;
-        real GetY() const;
-        real GetZ() const;
-        void SetX(real _x);
-        void SetY(real _y);
-        void SetZ(real _z);
 
         Vector3 ComponentProduct(const Vector3& _vector);
-
 
         void operator*=(const real _value);
         void operator+=(const Vector3& _vector);
         void operator-=(const Vector3& _vector);
-
         void operator%=(const Vector3& _vector);
+        real operator[](unsigned i) const;
+        real& operator[](unsigned i);
 
         Vector3 operator+(const Vector3& _vector) const;
         Vector3 operator-(const Vector3& _vector) const;
-
         real operator*(const Vector3& _vector) const;
         Vector3 operator*(const real& _magnitude) const;
- 
         Vector3 operator%(const Vector3& _vector) const;
 
     };

@@ -3,11 +3,11 @@
 
 namespace IPhysicsEngine
 {
-    typedef float real;
+    typedef double real;
 }
 
 #define RealSin sinf
 #define RealCos cosf
 #define RealExp expf
-#define Real_Max FLT_MAX
+#define REAL_MAX FLT_MAX
 

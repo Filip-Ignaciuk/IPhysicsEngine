@@ -2,11 +2,11 @@
 #include "precision.hpp"
 
 IPhysicsEngine::real IPhysicsEngine::Vector3::Magnitude() const{
-    return IPhysicsEngine::RealSqrt(m_x*m_x+m_y*m_y+m_z*m_z);
+    return IPhysicsEngine::RealSqrt(x * x + y * y + z * z);
 }
 
 IPhysicsEngine::real IPhysicsEngine::Vector3::SquareMagnitude() const{
-    return m_x*m_x + m_y * m_y + m_z * m_z;
+    return x * x + y * y + z * z;
 };
 
 void IPhysicsEngine::Vector3::Normalise(){
@@ -17,66 +17,42 @@ void IPhysicsEngine::Vector3::Normalise(){
 };
 
 void IPhysicsEngine::Vector3::AddScaledVector(const Vector3& _vector,  real scale){
-    m_x += _vector.m_x * scale;
-    m_y += _vector.m_y * scale;
-    m_z += _vector.m_z * scale;
+    x += _vector.x * scale;
+    y += _vector.y * scale;
+    y += _vector.y * scale;
 };
 
 void IPhysicsEngine::Vector3::ComponentProductUpdate(const Vector3& _vector){
-    m_x *= _vector.m_x;
-    m_y *= _vector.m_y;
-    m_z *= _vector.m_z;
+    x *= _vector.x;
+    y *= _vector.y;
+    z *= _vector.z;
 };
 
 IPhysicsEngine::real IPhysicsEngine::Vector3::ScalarProduct(const Vector3& _vector){
-    return m_x * _vector.m_x + m_y * _vector.m_y + m_z * _vector.m_z;
+    return x * _vector.x + y * _vector.y + z * _vector.z;
 }
 
-IPhysicsEngine::Vector3::Vector3() : m_x(0), m_y(0), m_z(0){
+IPhysicsEngine::Vector3::Vector3() : x(0), y(0), z(0){
 };
 
-IPhysicsEngine::Vector3::Vector3(real _x, real _y, real _z) : m_x(_x), m_y(_y), m_z(_z){
+IPhysicsEngine::Vector3::Vector3(real _x, real _y, real _z) : x(_x), y(_y), z(_z){
 
 };
 
 IPhysicsEngine::Vector3::~Vector3() = default;
 
-IPhysicsEngine::real IPhysicsEngine::Vector3::GetX() const{
-    return m_x;
-}
-
-IPhysicsEngine::real IPhysicsEngine::Vector3::GetY() const{
-    return m_y;
-}
-
-IPhysicsEngine::real IPhysicsEngine::Vector3::GetZ() const{
-    return m_z;
-}
-
-void IPhysicsEngine::Vector3::SetX(real _x){
-    m_x = _x;
-}
-
-void IPhysicsEngine::Vector3::SetY(real _y){
-    m_y = _y;
-}
-
-void IPhysicsEngine::Vector3::SetZ(real _z){
-    m_z = _z;
-}
-
 IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::ComponentProduct(const Vector3& _vector){
-    return Vector3(m_x * _vector.m_x, m_y * _vector.m_y, m_z * _vector.m_z);
+    return Vector3(x * _vector.x, y * _vector.y, z * _vector.z);
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::VectorProduct(const Vector3& _vector){
-    return Vector3(m_y * _vector.m_z - m_z * _vector.m_y, m_z * _vector.m_x - m_x * _vector.m_z, m_x * _vector.m_y - m_y * _vector.m_x);
+    return Vector3(y * _vector.z - z * _vector.y, z * _vector.x - x * _vector.z, x * _vector.y - y * _vector.x);
 }
 
 void IPhysicsEngine::Vector3::Clear(){
-    m_x = 0;
-    m_y = 0;
-    m_z = 0;
+    x = 0;
+    y = 0;
+    z = 0;
 }
 
 void IPhysicsEngine::Vector3::MakeOrthonormalBasis(Vector3* _vectorA, Vector3* _vectorB, Vector3* _vectorC){
@@ -90,45 +66,57 @@ void IPhysicsEngine::Vector3::MakeOrthonormalBasis(Vector3* _vectorA, Vector3* _
 }
 
 void IPhysicsEngine::Vector3::operator*=(const real _value){
-    m_x *= _value;
-    m_y *= _value;
-    m_z *= _value;
+    x *= _value;
+    y *= _value;
+    z *= _value;
 }
 
 void IPhysicsEngine::Vector3::operator+=(const Vector3& _vector){
-    m_x += _vector.m_x;
-    m_y += _vector.m_y;
-    m_z += _vector.m_z;
+    x += _vector.x;
+    y += _vector.y;
+    z += _vector.z;
 }
 
 void IPhysicsEngine::Vector3::operator-=(const Vector3& _vector){
-    m_x -= _vector.m_x;
-    m_y -= _vector.m_y;
-    m_z -= _vector.m_z;
+    x -= _vector.x;
+    y -= _vector.y;
+    z -= _vector.z;
 }
 
 void IPhysicsEngine::Vector3::operator%=(const Vector3& _vector){
     *this = VectorProduct(_vector);
 }
 
+IPhysicsEngine::real IPhysicsEngine::Vector3::operator[](unsigned i) const{
+    if (i == 0) return x;
+    if (i == 1) return y;
+    return z;
+}
+
+IPhysicsEngine::real& IPhysicsEngine::Vector3::operator[](unsigned i){
+    if (i == 0) return x;
+    if (i == 1) return y;
+    return z;
+}
+
 IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator+(const Vector3& _vector) const{
-    return Vector3(m_x + _vector.m_x, m_y + _vector.m_y, m_z + _vector.m_z);
+    return Vector3(x + _vector.x, y + _vector.y, z + _vector.z);
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator-(const Vector3& _vector) const{
-    return Vector3(m_x - _vector.m_x, m_y - _vector.m_y, m_z - _vector.m_z);
+    return Vector3(x - _vector.x, y - _vector.y, z - _vector.z);
 }
 
 IPhysicsEngine::real IPhysicsEngine::Vector3::operator*(const Vector3& _vector) const{
-    return m_x * _vector.m_x + m_y * _vector.m_y + m_z * _vector.m_z;
+    return x * _vector.x + y * _vector.y + z * _vector.z;
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator*(const IPhysicsEngine::real& _magnitude) const{
-    return Vector3(m_x * _magnitude, m_y * _magnitude, m_z * _magnitude);
+    return Vector3(x * _magnitude, y * _magnitude, z * _magnitude);
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Vector3::operator%(const Vector3& _vector) const{
-    return Vector3(m_y * _vector.m_z - m_z * _vector.m_y, m_z * _vector.m_x - m_x * _vector.m_z, m_x * _vector.m_y - m_y * _vector.m_x);
+    return Vector3(y * _vector.z - z * _vector.y, z * _vector.x - x * _vector.z, x * _vector.y - y * _vector.x);
 }
 
 IPhysicsEngine::Quaternion::Quaternion() : r(0.0f), i(0.0f), j(0.0f), k(0.0f){
@@ -166,15 +154,15 @@ void IPhysicsEngine::Quaternion::operator*= (const Quaternion& _mulitplier){
 }
 
 void IPhysicsEngine::Quaternion::RotateByVector(const Vector3& _vector3){
-    Quaternion q(0, _vector3.GetX(), _vector3.GetY(), _vector3.GetZ());
+    Quaternion q(0, _vector3.x, _vector3.y, _vector3.z);
     (*this) *= q;
 }
 
 void IPhysicsEngine::Quaternion::AddScaledVector(const Vector3& _vector3, real _scale){
     Quaternion q(0,
-    _vector3.GetX() * _scale,
-    _vector3.GetY() * _scale,
-    _vector3.GetZ() * _scale);
+    _vector3.x * _scale,
+    _vector3.y * _scale,
+    _vector3.z * _scale);
     q *= *this;
     r += q.r * ((real)0.5);
     i += q.i * ((real)0.5);
@@ -330,9 +318,9 @@ void IPhysicsEngine::Matrix3::Invert(){
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Matrix3::operator*(const Vector3& _vector3) const{
     return Vector3(
-        _vector3.GetX() * data[0] + _vector3.GetY() * data[1] + _vector3.GetZ() * data[2], 
-        _vector3.GetX() * data[3] + _vector3.GetY() * data[4] + _vector3.GetZ() * data[5], 
-        _vector3.GetX() * data[6] + _vector3.GetY() * data[7] + _vector3.GetZ() * data[8]
+        _vector3.x * data[0] + _vector3.y * data[1] + _vector3.z * data[2], 
+        _vector3.x * data[3] + _vector3.y * data[4] + _vector3.z * data[5], 
+        _vector3.x * data[6] + _vector3.y * data[7] + _vector3.z * data[8]
     );
 }
 
@@ -371,9 +359,9 @@ IPhysicsEngine::Matrix4 IPhysicsEngine::Matrix4::operator*(const Matrix4& _other
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::operator*(const Vector3& _vector3) const{
     return Vector3(
-        _vector3.GetX() * data[0] + _vector3.GetY() * data[1] + _vector3.GetZ() * data[2] + data[3], 
-        _vector3.GetX() * data[4] + _vector3.GetY() * data[5] + _vector3.GetZ() * data[6] + data[7], 
-        _vector3.GetX() * data[8] + _vector3.GetY() * data[9] + _vector3.GetZ() * data[10] + data[11]
+        _vector3.x * data[0] + _vector3.y * data[1] + _vector3.z * data[2] + data[3], 
+        _vector3.x * data[4] + _vector3.y * data[5] + _vector3.z * data[6] + data[7], 
+        _vector3.x * data[8] + _vector3.y * data[9] + _vector3.z * data[10] + data[11]
     );
 }
 
@@ -414,15 +402,15 @@ void IPhysicsEngine::Matrix4::SetOrientationAndPos(const Quaternion& _quaternion
     data[0] = 1 - (2*_quaternion.j*_quaternion.j + 2*_quaternion.k*_quaternion.k);
     data[1] = 2*_quaternion.i*_quaternion.j + 2*_quaternion.k*_quaternion.r;
     data[2] = 2*_quaternion.i*_quaternion.k - 2*_quaternion.j*_quaternion.r;
-    data[3] = _position.GetX();
+    data[3] = _position.x;
     data[4] = 2*_quaternion.i*_quaternion.j - 2*_quaternion.k*_quaternion.r;
     data[5] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.k*_quaternion.k);
     data[6] = 2*_quaternion.j*_quaternion.k + 2*_quaternion.i*_quaternion.r;
-    data[7] = _position.GetY();
+    data[7] = _position.y;
     data[8] = 2*_quaternion.i*_quaternion.k + 2*_quaternion.j*_quaternion.r;
     data[9] = 2*_quaternion.j*_quaternion.k - 2*_quaternion.i*_quaternion.r;
     data[10] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.j*_quaternion.j);
-    data[11] = _position.GetZ();
+    data[11] = _position.z;
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::Transform(const Vector3& _vector3) const{
@@ -450,50 +438,50 @@ void IPhysicsEngine::Matrix4::Invert(){
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::TransformInverse(const Vector3& _vector3) const{
     Vector3 tmp = _vector3;
-    real x = tmp.GetX();
-    real y = tmp.GetY();
-    real z = tmp.GetZ();
-    tmp.SetX(x -= data[3]);
-    tmp.SetY(y -= data[7]);
-    tmp.SetZ(z -= data[11]);
+    real x = tmp.x;
+    real y = tmp.y;
+    real z = tmp.z;
+    tmp.x = tmp.x - data[3];
+    tmp.y = tmp.y - data[7];
+    tmp.z = tmp.z -= data[11];
     return Vector3(
-        tmp.GetX() * data[0] +
-        tmp.GetY() * data[4] +
-        tmp.GetZ() * data[8],
-        tmp.GetX() * data[1] +
-        tmp.GetY() * data[5] +
-        tmp.GetZ() * data[9],
-        tmp.GetX() * data[2] +
-        tmp.GetY() * data[6] +
-        tmp.GetZ() * data[10]
+        tmp.x * data[0] +
+        tmp.y * data[4] +
+        tmp.z * data[8],
+        tmp.x * data[1] +
+        tmp.y * data[5] +
+        tmp.z * data[9],
+        tmp.x * data[2] +
+        tmp.y * data[6] +
+        tmp.z * data[10]
     );
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::TransformDirection(const Vector3& _vector3) const{
     return Vector3(
-        _vector3.GetX() * data[0] +
-        _vector3.GetY() * data[1] +
-        _vector3.GetZ() * data[2],
-        _vector3.GetX() * data[4] +
-        _vector3.GetY() * data[5] +
-        _vector3.GetZ() * data[6],
-        _vector3.GetX() * data[8] +
-        _vector3.GetY() * data[9] +
-        _vector3.GetZ() * data[10]
+        _vector3.x * data[0] +
+        _vector3.y * data[1] +
+        _vector3.z * data[2],
+        _vector3.x * data[4] +
+        _vector3.y * data[5] +
+        _vector3.z * data[6],
+        _vector3.x * data[8] +
+        _vector3.y * data[9] +
+        _vector3.y * data[10]
     );
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::Matrix4::TransformInverseDirection(const Vector3& _vector3) const{
     return Vector3(
-        _vector3.GetX() * data[0] +
-        _vector3.GetY() * data[4] +
-        _vector3.GetZ() * data[8],
-        _vector3.GetX() * data[1] +
-        _vector3.GetY() * data[5] +
-        _vector3.GetZ() * data[9],
-        _vector3.GetX() * data[2] +
-        _vector3.GetY() * data[6] +
-        _vector3.GetZ() * data[10]
+        _vector3.x * data[0] +
+        _vector3.y * data[4] +
+        _vector3.z * data[8],
+        _vector3.x * data[1] +
+        _vector3.y * data[5] +
+        _vector3.z * data[9],
+        _vector3.x * data[2] +
+        _vector3.y * data[6] +
+        _vector3.z * data[10]
     );
 }
 
@@ -557,7 +545,7 @@ void IPhysicsEngine::RandomStore::Initialise(){
 }
 
 IPhysicsEngine::Vector3 IPhysicsEngine::RandomVector3(Vector3 _lowerBound, Vector3 _upperbound){
-    return Vector3(RandomReal(_lowerBound.GetX(), _upperbound.GetX()), RandomReal(_lowerBound.GetY(), _upperbound.GetY()), RandomReal(_lowerBound.GetZ(), _upperbound.GetZ()));
+    return Vector3(RandomReal(_lowerBound.x, _upperbound.x), RandomReal(_lowerBound.y, _upperbound.y), RandomReal(_lowerBound.z, _upperbound.z));
 }
 
 IPhysicsEngine::real IPhysicsEngine::RandomReal(real _lowerBound, real _upperbound){

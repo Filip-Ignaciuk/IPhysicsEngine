@@ -135,21 +135,21 @@ void IPhysicsEngine::RigidBody::CalculateTransformMatrix(Matrix4& _transformMatr
     2*_orientation.r*_orientation.k;
     _transformMatrix.data[2] = 2*_orientation.i*_orientation.k +
     2*_orientation.r*_orientation.j;
-    _transformMatrix.data[3] = _position.GetX();
+    _transformMatrix.data[3] = _position.x;
     _transformMatrix.data[4] = 2*_orientation.i*_orientation.j +
     2*_orientation.r*_orientation.k;
     _transformMatrix.data[5] = 1-2*_orientation.i*_orientation.i -
     2*_orientation.k*_orientation.k;
     _transformMatrix.data[6] = 2*_orientation.j*_orientation.k -
     2*_orientation.r*_orientation.i;
-    _transformMatrix.data[7] = _position.GetY();
+    _transformMatrix.data[7] = _position.y;
     _transformMatrix.data[8] = 2*_orientation.i*_orientation.k -
     2*_orientation.r*_orientation.j;
     _transformMatrix.data[9] = 2*_orientation.j*_orientation.k +
     2*_orientation.r*_orientation.i;
     _transformMatrix.data[10] = 1-2*_orientation.i*_orientation.i -
     2*_orientation.j*_orientation.j;
-    _transformMatrix.data[11] = _position.GetZ();
+    _transformMatrix.data[11] = _position.z;
 }
 
 void IPhysicsEngine::RigidBody::CalculateTransformInertiaTensor(Matrix3& _iitWorld, const Quaternion& _quaternion, const Matrix3& _iitBody, const Matrix4& _rotmat){
