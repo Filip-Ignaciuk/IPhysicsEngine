@@ -80,6 +80,10 @@ IPhysicsEngine::real IPhysicsEngine::RigidBody::GetMass(){
     return 1 / m_inverseMass;
 }
 
+IPhysicsEngine::real IPhysicsEngine::RigidBody::GetInverseMass(){
+    return m_inverseMass;
+}
+
 IPhysicsEngine::Vector3& IPhysicsEngine::RigidBody::GetPosition(){
     return m_position;
 }

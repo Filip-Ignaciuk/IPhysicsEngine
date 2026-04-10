@@ -51,6 +51,8 @@ namespace IPhysicsEngine
 
         real GetMass();
 
+        real GetInverseMass();
+
         Vector3& GetPosition();
 
         Quaternion GetOrientation();

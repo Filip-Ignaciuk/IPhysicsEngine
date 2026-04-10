@@ -291,6 +291,19 @@ void IPhysicsEngine::Matrix3::SetOrientation(const Quaternion& _quaternion){
     data[8] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.j*_quaternion.j);
 }
 
+void IPhysicsEngine::Matrix3::SetComponents(const Vector3& _componentOne, const Vector3& _componentTwo, const Vector3& _componentThree){
+    data[0] = _componentOne.x;
+    data[1] = _componentTwo.x;
+    data[2] = _componentThree.x;
+    data[3] = _componentOne.y;
+    data[4] = _componentTwo.y;
+    data[5] = _componentThree.y;
+    data[6] = _componentOne.z;
+    data[7] = _componentTwo.z;
+    data[8] = _componentThree.z;
+}
+
+
 IPhysicsEngine::Matrix3 IPhysicsEngine::Matrix3::Inverse() const{
     Matrix3 result;
     result.SetInverse(*this);

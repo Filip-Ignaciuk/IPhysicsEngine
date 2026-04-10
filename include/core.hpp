@@ -91,6 +91,8 @@ namespace IPhysicsEngine
 
         void SetOrientation(const Quaternion& _quaternion);
 
+        void SetComponents(const Vector3& _componentOne, const Vector3& _componentTwo, const Vector3& _componentThree);
+
         Matrix3 Inverse() const;
 
         Matrix3 Transpose() const;
