@@ -67,6 +67,12 @@ int main(void)
     IPhysicsEngine::LanguageManager::LoadLanguage(fileDir);
     IPhysicsEngine::MeshManager::LoadDefaults();
     
+    IPhysicsEngine::Object* object = new IPhysicsEngine::Object();
+    IPhysicsEngine::RigidBody* rigidbody = object->AddComponent<IPhysicsEngine::RigidBody>();
+    IPhysicsEngine::Geometry* geometry = object->AddComponent<IPhysicsEngine::Geometry>();
+    geometry->SetMesh(IPhysicsEngine::MeshManager::GetMesh("Cube"));
+    geometry->SetColor(Color(RED));
+    world.AddObject(object);
 
     
     /*
@@ -210,7 +216,7 @@ int main(void)
                     iQuaternion =  rigidbody->GetOrientation();
                     iMass = rigidbody->GetMass();
                     iVelocity = rigidbody->GetVelocity();
-                    Matrix position = MatrixTranslate(iPosition.GetX(), iPosition.GetY(), iPosition.GetZ());
+                    Matrix position = MatrixTranslate(iPosition.x, iPosition.y, iPosition.z);
                     Vector4 quaternion{iQuaternion.i, iQuaternion.j, iQuaternion.k, iQuaternion.r};
                     Matrix rotation = QuaternionToMatrix(quaternion);
 
@@ -415,9 +421,9 @@ int main(void)
                     }
 
                     
-                    position.SetX(xCoordinate->result);
-                    position.SetY(yCoordinate->result);
-                    position.SetZ(zCoordinate->result);
+                    position.x = (xCoordinate->result);
+                    position.y = (yCoordinate->result);
+                    position.z = (zCoordinate->result);
 
                     IPhysicsEngine::CharBufferResultStore* xOrientation = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);
                     IPhysicsEngine::CharBufferResultStore* yOrientation = IPhysicsEngine::CharBufferToReal(textBufferXCoordinate);

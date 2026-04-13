@@ -3,7 +3,7 @@
 
 namespace IPhysicsEngine
 {
-    typedef double real;
+    typedef float real;
 }
 
 #define RealSin sinf

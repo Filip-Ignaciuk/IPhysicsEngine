@@ -80,8 +80,16 @@ IPhysicsEngine::real IPhysicsEngine::RigidBody::GetMass(){
     return 1 / m_inverseMass;
 }
 
+bool IPhysicsEngine::RigidBody::GetIsAwake(){
+    return m_isAwake;
+}
+
 IPhysicsEngine::real IPhysicsEngine::RigidBody::GetInverseMass(){
     return m_inverseMass;
+}
+
+IPhysicsEngine::Matrix3 IPhysicsEngine::RigidBody::GetInverseInertiaTensorWorld() const{
+    return m_inverseInertiaTensorWorld;
 }
 
 IPhysicsEngine::Vector3& IPhysicsEngine::RigidBody::GetPosition(){
@@ -92,6 +100,10 @@ IPhysicsEngine::Quaternion IPhysicsEngine::RigidBody::GetOrientation(){
     return m_orientation;
 }
 
+IPhysicsEngine::Vector3 IPhysicsEngine::RigidBody::GetRotation(){
+    return m_rotation;
+}
+
 IPhysicsEngine::Vector3 IPhysicsEngine::RigidBody::GetVelocity(){
     return m_velocity;
 }
@@ -99,6 +111,11 @@ IPhysicsEngine::Vector3 IPhysicsEngine::RigidBody::GetVelocity(){
 IPhysicsEngine::Matrix4 IPhysicsEngine::RigidBody::GetTransformMatrix(){
     return m_transformMatrix;
 }
+
+IPhysicsEngine::Vector3 IPhysicsEngine::RigidBody::GetLastFrameAcceleration(){
+    return m_lastFrameAcceleration;
+}
+
 
 bool IPhysicsEngine::RigidBody::HasFiniteMass(){
     return m_inverseMass >= 0.0f;
@@ -116,6 +133,10 @@ void IPhysicsEngine::RigidBody::SetMass(real& _mass){
     m_inverseMass = 1 / _mass;
 }
 
+void IPhysicsEngine::RigidBody::SetIsAwake(bool _isAwake){
+    m_isAwake = _isAwake;
+}
+
 void IPhysicsEngine::RigidBody::SetInverseMass(real& _inverseMass){
     m_inverseMass = _inverseMass;
 }
@@ -130,6 +151,14 @@ void IPhysicsEngine::RigidBody::SetAngularDamping(real& _angularDamping){
 
 void IPhysicsEngine::RigidBody::SetInverseInertiaTensor(const Matrix3& _inertiaTensor){
     m_inverseInertiaTensor.SetInverse(_inertiaTensor);
+}
+
+void IPhysicsEngine::RigidBody::AddVelocity(Vector3& _velocity){
+    m_velocity += _velocity;
+}
+
+void IPhysicsEngine::RigidBody::AddRotation(Vector3& _rotation){
+    m_rotation += _rotation;
 }
 
 void IPhysicsEngine::RigidBody::CalculateTransformMatrix(Matrix4& _transformMatrix, const Vector3& _position, const Quaternion& _orientation){

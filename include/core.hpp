@@ -104,6 +104,8 @@ namespace IPhysicsEngine
         Vector3 operator*(const Vector3& _vector3) const;
 
         Vector3 Transform(const Vector3& _vector3) const;
+
+        Vector3 TransformTranspose(const Vector3& _vector3) const;
     };
 
     class Matrix4{

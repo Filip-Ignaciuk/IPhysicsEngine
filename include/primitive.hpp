@@ -1,5 +1,5 @@
 #pragma once
-#include "rigidbody.hpp"
+#include "rigidbody/rigidbody.hpp"
 
 namespace IPhysicsEngine
 {

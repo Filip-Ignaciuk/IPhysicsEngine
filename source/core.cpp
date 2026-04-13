@@ -341,6 +341,14 @@ IPhysicsEngine::Vector3 IPhysicsEngine::Matrix3::Transform(const Vector3& _vecto
     return (*this) * _vector3;
 }
 
+IPhysicsEngine::Vector3 IPhysicsEngine::Matrix3::TransformTranspose(const Vector3& _vector3) const{
+    return Vector3(
+                _vector3.x * data[0] + _vector3.y * data[3] + _vector3.z * data[6],
+                _vector3.x * data[1] + _vector3.y * data[4] + _vector3.z * data[7],
+                _vector3.x * data[2] + _vector3.y * data[5] + _vector3.z * data[8]
+            );
+}
+
 IPhysicsEngine::Matrix4 IPhysicsEngine::Matrix4::operator*(const Matrix4& _other) const{
     Matrix4 result;
     result.data[0] = _other.data[0]*data[0] + _other.data[4]*data[1] +

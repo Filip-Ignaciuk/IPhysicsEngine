@@ -51,15 +51,23 @@ namespace IPhysicsEngine
 
         real GetMass();
 
+        bool GetIsAwake();
+
         real GetInverseMass();
+
+        Matrix3 GetInverseInertiaTensorWorld() const;
 
         Vector3& GetPosition();
 
         Quaternion GetOrientation();
 
+        Vector3 GetRotation();
+
         Vector3 GetVelocity();
 
         Matrix4 GetTransformMatrix();
+
+        Vector3 GetLastFrameAcceleration();
 
         bool HasFiniteMass();
 
@@ -69,11 +77,19 @@ namespace IPhysicsEngine
 
         void SetMass(real& _mass);
 
+        void SetIsAwake(bool _isAwake);
+
         void SetInverseMass(real& _inverseMass);
+
         void SetLinearDamping(real& _linearDamping);
+
         void SetAngularDamping(real& _angularDamping);
 
         void SetInverseInertiaTensor(const Matrix3& _inertiaTensor);
+
+        void AddVelocity(Vector3& _velocity);
+
+        void AddRotation(Vector3& _rotation);
 
 
     private:
