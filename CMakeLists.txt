@@ -8,22 +8,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(IPhysicsEngine 
     ../source/main.cpp 
     ../source/core.cpp 
-    ../source/component.cpp
+    ../source/components/component.cpp
     ../source/object.cpp
-    ../source/geometry.cpp
+    ../source/components/geometry.cpp
     ../source/meshmanager.cpp
     ../source/languagemanager.cpp
     ../source/collidebroad.cpp
     ../source/collidenarrow.cpp
-    ../source/primitive.cpp
+    ../source/components/primitive.cpp
     ../source/contacts.cpp
     ../source/collidenarrow.cpp
-    ../source/rigidbody/world.cpp
-    ../source/rigidbody/rigidbody.cpp
-    ../source/rigidbody/forcegenerator.cpp
+    ../source/world.cpp
+    ../source/components/rigidbody.cpp
+    ../source/forcegenerator.cpp
     )
 
 include_directories(IPhysicsEngine PRIVATE include)
+include_directories(IPhysicsEngine PRIVATE components)
 
 find_package(raylib REQUIRED)
 

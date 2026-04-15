@@ -1,13 +1,21 @@
 #pragma once
-#include "rigidbody/rigidbody.hpp"
+#include "components/component.hpp"
+#include "components/rigidbody.hpp"
 
 namespace IPhysicsEngine
 {
-    class CollisionPrimitive{
+    enum CollisionPrimitiveType{
+        SPHERE,
+        PLANE,
+        BOX
+    };
+
+    class CollisionPrimitive : public Component{
         public:
         RigidBody* rigidbody;
         Matrix4 offset;
         Matrix4 transform;
+        CollisionPrimitiveType type;
         Vector3 GetAxis(unsigned _index) const;
     };
 

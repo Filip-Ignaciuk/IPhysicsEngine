@@ -1,4 +1,4 @@
-#include "rigidbody/rigidbody.hpp"
+#include "components/rigidbody.hpp"
 
 IPhysicsEngine::RigidBody::RigidBody(){
 
@@ -116,6 +116,9 @@ IPhysicsEngine::Vector3 IPhysicsEngine::RigidBody::GetLastFrameAcceleration(){
     return m_lastFrameAcceleration;
 }
 
+IPhysicsEngine::real IPhysicsEngine::RigidBody::GetMaxDistanceFromCentre(){
+    return m_maxDistanceFromCentre;
+}
 
 bool IPhysicsEngine::RigidBody::HasFiniteMass(){
     return m_inverseMass >= 0.0f;
@@ -151,6 +154,10 @@ void IPhysicsEngine::RigidBody::SetAngularDamping(real& _angularDamping){
 
 void IPhysicsEngine::RigidBody::SetInverseInertiaTensor(const Matrix3& _inertiaTensor){
     m_inverseInertiaTensor.SetInverse(_inertiaTensor);
+}
+
+void IPhysicsEngine::RigidBody::SetMaxDistanceFromCentre(real _distance){
+    m_maxDistanceFromCentre = _distance;
 }
 
 void IPhysicsEngine::RigidBody::AddVelocity(Vector3& _velocity){

@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "component.hpp"
+#include "components/component.hpp"
 #include "core.hpp"
 
 namespace IPhysicsEngine{

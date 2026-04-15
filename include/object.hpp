@@ -5,7 +5,7 @@
 #include <memory>
 #include <iterator>
 
-#include "component.hpp"
+#include "components/component.hpp"
 
 namespace IPhysicsEngine{
     class Object

@@ -1,6 +1,6 @@
 #pragma once
 #include "contacts.hpp"
-#include "primitive.hpp"
+#include "components/primitive.hpp"
 
 namespace IPhysicsEngine{
     struct CollisionData

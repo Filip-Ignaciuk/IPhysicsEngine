@@ -12,7 +12,7 @@ namespace IPhysicsEngine{
         static Map meshes;
     public:
         static void LoadDefaults();
-
+        static void Unload();
         static Mesh* GetMesh(std::string _meshName);
         static std::vector<std::string> GetMeshStrings();
         static void SetMesh(std::string& _meshName, Mesh* _mesh);

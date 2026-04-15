@@ -15,13 +15,15 @@
 
 #include "core.hpp"
 
-#include "rigidbody/rigidbody.hpp"
-#include "rigidbody/forcegenerator.hpp"
-#include "rigidbody/world.hpp"
+#include "components/rigidbody.hpp"
+#include "forcegenerator.hpp"
+#include "world.hpp"
 
+#include "collidebroad.hpp"
+#include "collidenarrow.hpp"
 #include "object.hpp"
-#include "component.hpp"
-#include "geometry.hpp"
+#include "components/component.hpp"
+#include "components/geometry.hpp"
 #include "languagemanager.hpp"
 #include "meshmanager.hpp"
 
@@ -66,7 +68,7 @@ int main(void)
     std::string fileDir = "resources/en-gb.json";
     IPhysicsEngine::LanguageManager::LoadLanguage(fileDir);
     IPhysicsEngine::MeshManager::LoadDefaults();
-    
+
     IPhysicsEngine::Object* object = new IPhysicsEngine::Object();
     IPhysicsEngine::RigidBody* rigidbody = object->AddComponent<IPhysicsEngine::RigidBody>();
     IPhysicsEngine::Geometry* geometry = object->AddComponent<IPhysicsEngine::Geometry>();

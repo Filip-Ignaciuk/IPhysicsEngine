@@ -1,6 +1,6 @@
 #pragma once
 #include "core.hpp"
-#include "rigidbody/rigidbody.hpp"
+#include "components/rigidbody.hpp"
 
 namespace IPhysicsEngine{
     class Contact{
@@ -41,8 +41,8 @@ namespace IPhysicsEngine{
         public:
         unsigned positionIterationsUsed;
         unsigned velocityIterationsUsed;
-        protected:
         void ResolveContacts(Contact* _contactArray, unsigned _numberOfContacts, real _duration);
+        protected:
         void PrepareContacts(Contact* _contactArray, unsigned _numberOfContacts, real _duration);
         void AdjustVelocities(Contact* _contactArray, unsigned _numberOfContacts, real _duration);
         void AdjustPositions(Contact* _contactArray, unsigned _numberOfContacts, real _duration);

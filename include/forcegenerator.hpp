@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "rigidbody.hpp"
+#include "components/rigidbody.hpp"
 
 namespace IPhysicsEngine{
     class ForceGenerator{

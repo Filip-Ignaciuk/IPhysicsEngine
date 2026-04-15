@@ -17,6 +17,7 @@ namespace IPhysicsEngine
         Matrix3 m_inverseInertiaTensorWorld;
         real m_angularDamping;
 
+        real m_maxDistanceFromCentre;
 
         Vector3 m_forceAccumulated;
 
@@ -69,6 +70,8 @@ namespace IPhysicsEngine
 
         Vector3 GetLastFrameAcceleration();
 
+        real GetMaxDistanceFromCentre();
+
         bool HasFiniteMass();
 
         void SetPosition(Vector3& _position);
@@ -86,6 +89,8 @@ namespace IPhysicsEngine
         void SetAngularDamping(real& _angularDamping);
 
         void SetInverseInertiaTensor(const Matrix3& _inertiaTensor);
+
+        void SetMaxDistanceFromCentre(real _distance);
 
         void AddVelocity(Vector3& _velocity);
 

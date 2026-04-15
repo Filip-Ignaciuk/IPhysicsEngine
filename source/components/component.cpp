@@ -1,4 +1,4 @@
-#include "component.hpp"
+#include "components/component.hpp"
 
 IPhysicsEngine::Component::Component(){
     
