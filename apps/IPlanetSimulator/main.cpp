@@ -13,7 +13,7 @@
 
 #include <raylib.h>
 #include <raygui.h>
-
+#include <filesystem>
 #include "core.hpp"
 
 #include "components/rigidbody.hpp"
@@ -61,14 +61,18 @@ int main(void)
 
     IPhysics::World world;
     std::string fileDir = "resources/en-gb.json";
+
+    #ifdef __APPLE__
+    fileDir = "Projects/IPhysicsEngine/build/resources/en-gb.json";
+    #endif
+
+
+    std::cout << "Working dir: " << std::filesystem::current_path() << std::endl;
+
     IApp::LanguageManager::LoadLanguage(fileDir);
     IApp::MeshManager::LoadDefaults();
 
-    const IPhysics::Matrix3 standardTensor(
-    2.5e-13, 0,       0,
-    0,       2.5e-13, 0,
-    0,       0,       2.5e-13
-    );
+    const IPhysics::Matrix3 standardTensor(2.5e-13, 0, 0, 0, 2.5e-13, 0, 0, 0, 2.5e-13);
     IPhysics::Vector3 velocity(0, 0, -5);
     IPhysics::Object* object1 = new IPhysics::Object();
     IPhysics::Geometry* geometry1 = object1->AddComponent<IPhysics::Geometry>();
@@ -278,11 +282,6 @@ int main(void)
 
 
             EndMode3D();
-
-            IPhysics::RigidBody* rigidbody = object2->GetComponent<IPhysics::RigidBody>();
-            iPosition = rigidbody->GetPosition();
-            std::string text = std::to_string(iPosition.x) + " " + std::to_string(iPosition.y) + " " + std::to_string(iPosition.z);
-            GuiLabel((Rectangle){ 256, 256, 256, 256 }, text.c_str());
             
             // List Button
             if (GuiButton((Rectangle){ 24, 24, 24, 24 }, "#214#")) {
@@ -352,6 +351,8 @@ int main(void)
 
                     if(GuiButton(objectDeleteButtonRectangle, "#143#")){
                         world.RemoveObject(object);
+                        world.RemoveForceRegistry(object);
+                        realGravity->RemoveObject(object);
                     }
                     initialObjectPanelPosition.y += 40;
                 }

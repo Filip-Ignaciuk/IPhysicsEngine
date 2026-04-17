@@ -34,6 +34,7 @@ namespace IPhysics
         Objects& GetObjects();
 
         void RemoveObject(Object* _object);
+        void RemoveForceRegistry(Object* _object);
 
         protected:
         Objects m_objects;

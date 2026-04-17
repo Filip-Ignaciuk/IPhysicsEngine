@@ -109,3 +109,7 @@ IPhysics::World::Objects& IPhysics::World::GetObjects(){
 void IPhysics::World::RemoveObject(Object* _object){
     m_objects.erase(remove(m_objects.begin(), m_objects.end(), _object), m_objects.end());
 }
+
+void IPhysics::World::RemoveForceRegistry(Object* _object){
+    m_registery.Remove(_object);
+}

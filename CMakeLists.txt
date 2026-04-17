@@ -53,14 +53,6 @@ endif()
 if(APPLE)
 target_link_libraries(IPlanetSimulator
     PRIVATE
-        "-framework Cocoa"
-        "-framework IOKit"
-        "-framework CoreFoundation"
-        "-framework CoreGraphics"
-        "-framework OpenGL"
-        "-framework Carbon"
-        "-framework Foundation"
-        "-framework AppKit"
         raylib
         IPhysics
         IApp

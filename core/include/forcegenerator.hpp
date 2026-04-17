@@ -23,6 +23,7 @@ namespace IPhysics{
     public:
         RealGravity(const real& _gravityConstant);
         void AddObject(Object* _object);
+        void RemoveObject(Object* _object);
         void UpdateForce(RigidBody* _rigidBody, real _duration) override;
     };
 
@@ -81,6 +82,7 @@ namespace IPhysics{
             ForceRegistry();
             void Add(Object* _object, ForceGenerator* _forceGenerator);
             void Remove(Object* _object, ForceGenerator* _forceGenerator);
+            void Remove(Object* _object);
             void Clear();
             void UpdateForces(real _duration);
 

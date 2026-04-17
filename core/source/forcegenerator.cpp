@@ -21,6 +21,10 @@ void IPhysics::RealGravity::AddObject(Object* _object){
     m_rigidbodies.emplace_back(_object->GetComponent<RigidBody>());
 }
 
+void IPhysics::RealGravity::RemoveObject(Object* _object){
+    m_rigidbodies.erase(remove(m_rigidbodies.begin(), m_rigidbodies.end(), _object->GetComponent<RigidBody>()), m_rigidbodies.end());
+}
+
 void IPhysics::RealGravity::UpdateForce(RigidBody* _rigidBody, real _duration){
     Vector3 totalForce(0, 0, 0);
     for(RigidBody* rigidbody : m_rigidbodies){
@@ -144,9 +148,20 @@ void IPhysics::ForceRegistry::Remove(Object* _object, ForceGenerator* _forceGene
     forceRegistration.forceGenerator = _forceGenerator;
     registrations.erase(std::remove(registrations.begin(), registrations.end(), forceRegistration), registrations.end());
 }
+
+void IPhysics::ForceRegistry::Remove(Object* _object){
+    RigidBody* rigidBody = _object->GetComponent<RigidBody>();
+    for(ForceRegistration forceRegistration : registrations){
+        if(forceRegistration.rigidBody == rigidBody){
+            registrations.erase(remove(registrations.begin(), registrations.end(), forceRegistration), registrations.end());
+        }
+    }
+}
+
 void IPhysics::ForceRegistry::Clear(){
     registrations.clear();
 }
+
 void IPhysics::ForceRegistry::UpdateForces(real _duration){
     std::vector<ForceRegistration>::iterator iterator = registrations.begin();
 
