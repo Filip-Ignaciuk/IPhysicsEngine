@@ -194,6 +194,13 @@ IPhysics::Matrix3::Matrix3(){
     
 }
 
+IPhysics::Matrix3::Matrix3(const Matrix3& _other){
+    for (int i = 0; i < 9; i++)
+    {
+        data[i] = _other.data[i];
+    }
+}
+
 IPhysics::Matrix3::Matrix3(real _a1, real _a2, real _a3, real _b1, real _b2, real _b3, real _c1, real _c2, real _c3){
     data[0] = _a1;
     data[1] = _a2;
@@ -533,19 +540,27 @@ IPhysics::CharBufferResultStore* IPhysics::CharBufferToReal(char _buffer[64]){
     // Check if is digit
     for (size_t i = 0; i < 64; i++)
     {
+        if(_buffer[i] == '\0'){
+            break;
+        }
 
-        if(!(_buffer[i] ==  '.') && !std::isdigit(_buffer[i]) && _buffer[i] != '\0'){
+
+        if(_buffer[i] !=  '.' && _buffer[i] != '\0' && !std::isdigit(_buffer[i])){
             charBufferResultStore->isValid = false;
             return charBufferResultStore;
         }
 
         stringForm = stringForm + _buffer[i];
-    }
 
-    charBufferResultStore->result = std::stod(stringForm);
+    }
+    if(stringForm.size() == 0){
+        charBufferResultStore->result = 0.0;
+        charBufferResultStore->isValid = false;
+    }
+    else{
+        charBufferResultStore->result = std::stod(stringForm);
+    }
     return charBufferResultStore;
-    
-    
 }
 
 IPhysics::real IPhysics::RealSqrt(real _value){
@@ -557,7 +572,7 @@ IPhysics::real IPhysics::RealPow(real _value, real _power){
 }
 
 IPhysics::real IPhysics::RealAbs(real _value){
-    return abs(_value);
+    return std::abs(_value);
 }
 
 void IPhysics::RandomStore::Initialise(){

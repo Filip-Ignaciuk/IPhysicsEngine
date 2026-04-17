@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
 #include <random>
-
+#include <iostream>
 
 #include "precision.hpp"
 
@@ -79,11 +79,13 @@ namespace IPhysics
 
         Matrix3();
 
+        Matrix3(const Matrix3& _other);
+
         Matrix3(real _a1, real _a2, real _a3, real _b1, real _b2, real _b3, real _c1, real _c2, real _c3);
 
         Matrix3 operator*(const Matrix3& _other) const;
 
-        void operator*= (const Matrix3 &_other);
+        void operator*= (const Matrix3& _other);
 
         void SetInverse(const Matrix3& _matrix);
 

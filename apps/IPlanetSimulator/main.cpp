@@ -64,17 +64,17 @@ int main(void)
     IApp::LanguageManager::LoadLanguage(fileDir);
     IApp::MeshManager::LoadDefaults();
 
-    IPhysics::Matrix3 tensor(
+    const IPhysics::Matrix3 standardTensor(
     2.5e-13, 0,       0,
     0,       2.5e-13, 0,
     0,       0,       2.5e-13
     );
-    IPhysics::Vector3 velocity(0, 3.2, 0);
+    IPhysics::Vector3 velocity(0, 0, -5);
     IPhysics::Object* object1 = new IPhysics::Object();
     IPhysics::Geometry* geometry1 = object1->AddComponent<IPhysics::Geometry>();
     IPhysics::RigidBody* rigidbody1 = object1->AddComponent<IPhysics::RigidBody>();
     IPhysics::Information* information1 = object1->AddComponent<IPhysics::Information>();
-    IPhysics::Vector3 position1(10.0, 10.0, 10.0);
+    IPhysics::Vector3 position1(10.0, 0.0, 0.0);
     IPhysics::real mass1 = 7.5 * pow(10, 12);
     IPhysics::Quaternion quaternion1(0, 0, 0, 1);
     IPhysics::real damping = 1;
@@ -83,7 +83,7 @@ int main(void)
     rigidbody1->SetOrientation(quaternion1);
     rigidbody1->SetLinearDamping(damping);
     rigidbody1->SetAngularDamping(damping);
-    rigidbody1->SetInverseInertiaTensor(tensor);
+    rigidbody1->SetInverseInertiaTensor(standardTensor);
     rigidbody1->AddVelocity(velocity);
     geometry1->SetMesh(IApp::MeshManager::GetMesh("Box"));
     geometry1->SetColor(Color(RED));
@@ -97,7 +97,7 @@ int main(void)
     IPhysics::Geometry* geometry2 = object2->AddComponent<IPhysics::Geometry>();
     IPhysics::RigidBody* rigidbody2 = object2->AddComponent<IPhysics::RigidBody>();
     IPhysics::Information* information2 = object2->AddComponent<IPhysics::Information>();
-    IPhysics::Vector3 position2(0.0, 0.0, 0.0);
+    IPhysics::Vector3 position2(-10.0, 0.0, 0.0);
     IPhysics::real mass2 = 7.5 * pow(10, 12);
     IPhysics::Quaternion quaternion2(0, 0, 0, 1);
     rigidbody2->SetPosition(position2);
@@ -105,7 +105,7 @@ int main(void)
     rigidbody2->SetOrientation(quaternion2);
     rigidbody2->SetLinearDamping(damping);
     rigidbody2->SetAngularDamping(damping);
-    rigidbody2->SetInverseInertiaTensor(tensor);
+    rigidbody2->SetInverseInertiaTensor(standardTensor);
     //rigidbody2->AddVelocity(velocity);
     geometry2->SetMesh(IApp::MeshManager::GetMesh("Box"));
     geometry2->SetColor(Color(BLUE));
@@ -154,6 +154,17 @@ int main(void)
 
     static bool isMeshDropDownActive = false;
 
+    static bool isBuffer1InverseInertiaTensorEdited = false;
+    static bool isBuffer2InverseInertiaTensorEdited = false;
+    static bool isBuffer3InverseInertiaTensorEdited = false;
+    static bool isBuffer4InverseInertiaTensorEdited = false;
+    static bool isBuffer5InverseInertiaTensorEdited = false;
+    static bool isBuffer6InverseInertiaTensorEdited = false;
+    static bool isBuffer7InverseInertiaTensorEdited = false;
+    static bool isBuffer8InverseInertiaTensorEdited = false;
+    static bool isBuffer9InverseInertiaTensorEdited = false;
+
+    static bool wantsStandardInverseInertiaValue = false;
 
     static char textBufferXCoordinate[64] = "";
     static char textBufferYCoordinate[64] = "";
@@ -179,15 +190,15 @@ int main(void)
 
     // Information associated with add object window
 
-    IPhysics::Vector3 position;
-    IPhysics::Quaternion orientation;
-    IPhysics::real mass;
-    IPhysics::real linearDamping;
-    IPhysics::real angularDamping;
-    IPhysics::Matrix3 inverseInertiaTensor;
-    Mesh mesh;
-    Color color;
-    IPhysics::real scale;
+    IPhysics::Vector3* position = new IPhysics::Vector3();
+    IPhysics::Quaternion* orientation = new IPhysics::Quaternion();
+    IPhysics::real* mass = new IPhysics::real();
+    IPhysics::real* linearDamping = new IPhysics::real();
+    IPhysics::real* angularDamping = new IPhysics::real();
+    IPhysics::Matrix3* inverseInertiaTensor = new IPhysics::Matrix3();
+    Mesh* mesh;
+    Color* color;
+    IPhysics::real* scale;
 
     // Information associated with error handling
     std::vector<IApp::Error> errors;
@@ -199,55 +210,6 @@ int main(void)
         if(IApp::ErrorManager::IsQueueNotEmpty() && errors.size() != 5){
             errors.emplace_back(IApp::ErrorManager::GetNextError());
         }
-        Vector2 startingPosition = { 960, 648 };
-        for (auto iterator = errors.begin(); iterator != errors.end();){
-            IApp::Error error = *iterator;
-            if(error.GetErrorSeverity() == IApp::ErrorSeverity::FatalError){
-                break;
-            }
-            if(error.GetErrorSeverity() == IApp::ErrorSeverity::NormalError){
-                DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, RED);
-                DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, MAROON);
-
-                DrawText(error.GetErrorTitle().c_str(), startingPosition.x, startingPosition.y + 8, 10, WHITE);
-                DrawText(error.GetErrorMessage().c_str(), startingPosition.x, startingPosition.y + 24, 10, LIGHTGRAY);
-                if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
-                    iterator = errors.erase(iterator);
-                    break;
-                }
-            }
-            if(error.GetErrorSeverity() == IApp::ErrorSeverity::Warning){
-                DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, YELLOW);
-                DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, BROWN);
-
-                DrawText(error.GetErrorTitle().c_str(), startingPosition.x, startingPosition.y + 8, 10, WHITE);
-                DrawText(error.GetErrorMessage().c_str(), startingPosition.x, startingPosition.y + 24, 10, LIGHTGRAY);
-                if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
-                    iterator = errors.erase(iterator);
-                    break;
-                }
-                
-            }
-            if(error.GetErrorSeverity() == IApp::ErrorSeverity::Information){
-                DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, LIGHTGRAY);
-                DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, DARKGRAY);
-
-                DrawText(error.GetErrorTitle().c_str(), startingPosition.x, startingPosition.y + 8, 10, WHITE);
-                DrawText(error.GetErrorMessage().c_str(), startingPosition.x, startingPosition.y + 24, 10, LIGHTGRAY);
-                if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
-                    iterator = errors.erase(iterator);
-                    break;
-                }
-                
-            }
-
-            ++iterator;
-            startingPosition.y -= 72;
-
-        }
-
-
-
 
         world.StartFrame();
 
@@ -308,7 +270,7 @@ int main(void)
                     Model* model = Map[object];
                     model->transform = MatrixMultiply(rotation, position);
                     DrawModel(*model, (Vector3){0,0,0}, geometry->GetScale(), geometry->GetColor());
-
+                    
                     ++iterator;
                 }
                
@@ -489,26 +451,26 @@ int main(void)
                     isMeshDropDownActive = !isMeshDropDownActive;
                 }
                 
-                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-
-                /*
-
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer1InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer2InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer3InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer4InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer5InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer6InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer7InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer8InverseInertiaTensor, 64, isBeingEdited);
-                GuiTextBox((Rectangle){ 100, 100, 48, 24 }, textBuffer9InverseInertiaTensor, 64, isBeingEdited);
-
-
-                
-                if(GuiTextBox((Rectangle){ box.x + 10, box.y , 90, 30}), "x"){
-
+                GuiLabel((Rectangle){ box.x + 24, box.y + 216, 168, 24 }, "Inverse Inertia Tensor");
+                if(wantsStandardInverseInertiaValue){
+                    GuiSetState(STATE_DISABLED);
                 }
-                */
+                GuiTextBox((Rectangle){ box.x + 24,  box.y + 240, 24, 24 }, textBuffer1InverseInertiaTensor, 64, isBuffer1InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 72,  box.y + 240, 24, 24 }, textBuffer2InverseInertiaTensor, 64, isBuffer2InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 120, box.y + 240, 24, 24 }, textBuffer3InverseInertiaTensor, 64, isBuffer3InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 24,  box.y + 288, 24, 24 }, textBuffer4InverseInertiaTensor, 64, isBuffer4InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 72,  box.y + 288, 24, 24 }, textBuffer5InverseInertiaTensor, 64, isBuffer5InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 120, box.y + 288, 24, 24 }, textBuffer6InverseInertiaTensor, 64, isBuffer6InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 24,  box.y + 336, 24, 24 }, textBuffer7InverseInertiaTensor, 64, isBuffer7InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 72,  box.y + 336, 24, 24 }, textBuffer8InverseInertiaTensor, 64, isBuffer8InverseInertiaTensorEdited);
+                GuiTextBox((Rectangle){ box.x + 120, box.y + 336, 24, 24 }, textBuffer9InverseInertiaTensor, 64, isBuffer9InverseInertiaTensorEdited);
+                if(wantsStandardInverseInertiaValue){
+                    GuiSetState(STATE_NORMAL);
+                }
+
+                GuiLabel((Rectangle){ box.x + 216, box.y + 216, 168, 24 }, "Use Standard Tensor");
+                GuiCheckBox((Rectangle){ box.x + 364, box.y + 220, 16, 16 }, "", &wantsStandardInverseInertiaValue);
+
                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
                 // Add Button
@@ -518,8 +480,8 @@ int main(void)
 
                     // Converting the char arrays to real values.
                     IPhysics::CharBufferResultStore* xCoordinate = IPhysics::CharBufferToReal(textBufferXCoordinate);
-                    IPhysics::CharBufferResultStore* yCoordinate = IPhysics::CharBufferToReal(textBufferXCoordinate);
-                    IPhysics::CharBufferResultStore* zCoordinate = IPhysics::CharBufferToReal(textBufferXCoordinate);
+                    IPhysics::CharBufferResultStore* yCoordinate = IPhysics::CharBufferToReal(textBufferYCoordinate);
+                    IPhysics::CharBufferResultStore* zCoordinate = IPhysics::CharBufferToReal(textBufferZCoordinate);
 
                     if(!xCoordinate->isValid){
                         isValidData = false;
@@ -545,14 +507,9 @@ int main(void)
                         IApp::ErrorManager::AddError(error);
                     }
 
-                    
-                    position.x = (xCoordinate->result);
-                    position.y = (yCoordinate->result);
-                    position.z = (zCoordinate->result);
-
-                    IPhysics::CharBufferResultStore* xOrientation = IPhysics::CharBufferToReal(textBufferXCoordinate);
-                    IPhysics::CharBufferResultStore* yOrientation = IPhysics::CharBufferToReal(textBufferXCoordinate);
-                    IPhysics::CharBufferResultStore* zOrientation = IPhysics::CharBufferToReal(textBufferXCoordinate);
+                    IPhysics::CharBufferResultStore* xOrientation = IPhysics::CharBufferToReal(textBufferXOrientation);
+                    IPhysics::CharBufferResultStore* yOrientation = IPhysics::CharBufferToReal(textBufferYOrientation);
+                    IPhysics::CharBufferResultStore* zOrientation = IPhysics::CharBufferToReal(textBufferZOrientation);
 
                     if(!xOrientation->isValid){
                         isValidData = false;
@@ -578,9 +535,7 @@ int main(void)
                         IApp::ErrorManager::AddError(error);
                     }
 
-                    orientation.SetFromEuler(xOrientation->result, yOrientation->result, zOrientation->result);
-
-                    IPhysics::CharBufferResultStore* massResult = IPhysics::CharBufferToReal(textBufferXCoordinate);
+                    IPhysics::CharBufferResultStore* massResult = IPhysics::CharBufferToReal(textBufferMass);
 
                     if(!massResult->isValid){
                         isValidData = false;
@@ -590,9 +545,7 @@ int main(void)
                         IApp::ErrorManager::AddError(error);
                     }
 
-                    mass = massResult->result;
-
-                    IPhysics::CharBufferResultStore* linearDampingResult = IPhysics::CharBufferToReal(textBufferXCoordinate);
+                    IPhysics::CharBufferResultStore* linearDampingResult = IPhysics::CharBufferToReal(textBufferLinearDamping);
 
                     if(!linearDampingResult->isValid){
                         isValidData = false;
@@ -602,9 +555,7 @@ int main(void)
                         IApp::ErrorManager::AddError(error);
                     }
 
-                    linearDamping = linearDampingResult->result;
-
-                    IPhysics::CharBufferResultStore* angularDampingResult = IPhysics::CharBufferToReal(textBufferXCoordinate);
+                    IPhysics::CharBufferResultStore* angularDampingResult = IPhysics::CharBufferToReal(textBufferAngularDamping);
 
                     if(!angularDampingResult->isValid){
                         isValidData = false;
@@ -614,25 +565,118 @@ int main(void)
                         IApp::ErrorManager::AddError(error);
                     }
 
-                    angularDamping = angularDampingResult->result;
+                    IPhysics::CharBufferResultStore* inverseInertiaResult1 = IPhysics::CharBufferToReal(textBuffer1InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult2 = IPhysics::CharBufferToReal(textBuffer2InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult3 = IPhysics::CharBufferToReal(textBuffer3InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult4 = IPhysics::CharBufferToReal(textBuffer4InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult5 = IPhysics::CharBufferToReal(textBuffer5InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult6 = IPhysics::CharBufferToReal(textBuffer6InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult7 = IPhysics::CharBufferToReal(textBuffer7InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult8 = IPhysics::CharBufferToReal(textBuffer8InverseInertiaTensor);
+                    IPhysics::CharBufferResultStore* inverseInertiaResult9 = IPhysics::CharBufferToReal(textBuffer9InverseInertiaTensor);
+                    if(!wantsStandardInverseInertiaValue){
+                        if(!inverseInertiaResult1->isValid){
+                            isValidData = false;
+                            std::string title = "Top left Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult2->isValid){
+                            isValidData = false;
+                            std::string title = "Top middle Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult3->isValid){
+                            isValidData = false;
+                            std::string title = "Top right Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult4->isValid){
+                            isValidData = false;
+                            std::string title = "Centre left Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult5->isValid){
+                            isValidData = false;
+                            std::string title = "Centre middle Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult6->isValid){
+                            isValidData = false;
+                            std::string title = "Centre right Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult7->isValid){
+                            isValidData = false;
+                            std::string title = "Bottom left Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult8->isValid){
+                            isValidData = false;
+                            std::string title = "Bottom middle Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                        if(!inverseInertiaResult9->isValid){
+                            isValidData = false;
+                            std::string title = "Bottom right Inverse Inertia result invalid";
+                            std::string message = "The value you have provided is invalid.";
+                            IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                            IApp::ErrorManager::AddError(error);
+                        }
+                    }
+                    
 
                     if(isValidData){
+                        position->x = xCoordinate->result;
+                        position->y = yCoordinate->result;
+                        position->z = zCoordinate->result;
+                        orientation->SetFromEuler(xOrientation->result, yOrientation->result, zOrientation->result);
+                        (*mass) = massResult->result;
+                        (*linearDamping) = linearDampingResult->result;
+                        (*angularDamping) = angularDampingResult->result;
+                        if(wantsStandardInverseInertiaValue){
+                            std::cout << "Hello" << std::endl;
+                            inverseInertiaTensor = new IPhysics::Matrix3(standardTensor);
+                        }
+                        else{
+                                                        std::cout << "2" << std::endl;
+
+                            inverseInertiaTensor = new IPhysics::Matrix3(
+                                inverseInertiaResult1->result, inverseInertiaResult2->result, inverseInertiaResult3->result,
+                                inverseInertiaResult4->result, inverseInertiaResult5->result, inverseInertiaResult6->result,
+                                inverseInertiaResult7->result, inverseInertiaResult8->result, inverseInertiaResult9->result
+                            );
+                        }
+                        
+
                         // Creating the object
                         IPhysics::Object* object = new IPhysics::Object();
                         IPhysics::RigidBody* rigidbody = object->AddComponent<IPhysics::RigidBody>();
                         IPhysics::Geometry* geometry = object->AddComponent<IPhysics::Geometry>();
                         IPhysics::Information* information = object->AddComponent<IPhysics::Information>();
-                        rigidbody->SetPosition(position);
-                        rigidbody->SetOrientation(orientation);
-                        rigidbody->SetMass(mass);
-                        rigidbody->SetLinearDamping(linearDamping);
-                        rigidbody->SetAngularDamping(angularDamping);
-                        IPhysics::Matrix3 tensor(
-                            2.5e-13, 0,       0,
-                            0,       2.5e-13, 0,
-                            0,       0,       2.5e-13
-                            );
-                        rigidbody->SetInverseInertiaTensor(tensor);
+                        rigidbody->SetPosition(*position);
+                        rigidbody->SetOrientation(*orientation);
+                        rigidbody->SetMass(*mass);
+                        rigidbody->SetLinearDamping(*linearDamping);
+                        rigidbody->SetAngularDamping(*angularDamping);
+
+                        
+                        rigidbody->SetInverseInertiaTensor(*inverseInertiaTensor);
 
                         geometry->SetMesh(IApp::MeshManager::GetMesh("Box"));
                         geometry->SetScale(1.0f);
@@ -640,7 +684,20 @@ int main(void)
                         std::string name = "Name";
                         information->SetName(name);
                         
+                        Model model = LoadModelFromMesh(*geometry->GetMesh());
+
+                        Map.emplace(object, &model);
+
+                        realGravity->AddObject(object);
+                        world.AddForceRegistry(object, realGravity);
                         world.AddObject(object);
+
+                        position = new IPhysics::Vector3();
+                        orientation = new IPhysics::Quaternion();
+                        mass = new IPhysics::real();
+                        linearDamping = new IPhysics::real();
+                        angularDamping = new IPhysics::real();
+
                     }
                     else{
 
@@ -656,7 +713,7 @@ int main(void)
 
                 GuiLabel((Rectangle){ box.x + 24, box.y + 216, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.colortitle").c_str());
 
-                GuiColorPicker({box.x + 24, box.y + 240, 144, 144}, "Pick a color", &color);
+                GuiColorPicker({box.x + 24, box.y + 240, 144, 144}, "Pick a color", color);
 
 
 
@@ -678,6 +735,54 @@ int main(void)
                 DrawText("Press Spacebar to toggle physics simulation on and off", 946, 630, 10, DARKGRAY);
                 DrawText("Add objects using the Add button", 946, 650, 10, DARKGRAY);
                 DrawText("- Z to zoom to (0, 0, 0)", 946, 670, 10, DARKGRAY);
+            }
+
+            // Displaying Errors
+            Vector2 startingPosition = { 960, 648 };
+            for (auto iterator = errors.begin(); iterator != errors.end();){
+                IApp::Error error = *iterator;
+                if(error.GetErrorSeverity() == IApp::ErrorSeverity::FatalError){
+                    break;
+                }
+                if(error.GetErrorSeverity() == IApp::ErrorSeverity::NormalError){
+                    DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, RED);
+                    DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, MAROON);
+
+                    DrawText(error.GetErrorTitle().c_str(), startingPosition.x + 8, startingPosition.y + 8, 10, WHITE);
+                    DrawText(error.GetErrorMessage().c_str(), startingPosition.x + 8, startingPosition.y + 24, 10, LIGHTGRAY);
+                    if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
+                        iterator = errors.erase(iterator);
+                        break;
+                    }
+                }
+                if(error.GetErrorSeverity() == IApp::ErrorSeverity::Warning){
+                    DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, YELLOW);
+                    DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, BROWN);
+
+                    DrawText(error.GetErrorTitle().c_str(), startingPosition.x + 8, startingPosition.y + 8, 10, WHITE);
+                    DrawText(error.GetErrorMessage().c_str(), startingPosition.x + 8, startingPosition.y + 24, 10, LIGHTGRAY);
+                    if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
+                        iterator = errors.erase(iterator);
+                        break;
+                    }
+                    
+                }
+                if(error.GetErrorSeverity() == IApp::ErrorSeverity::Information){
+                    DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, LIGHTGRAY);
+                    DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, DARKGRAY);
+
+                    DrawText(error.GetErrorTitle().c_str(), startingPosition.x + 8, startingPosition.y + 8, 10, WHITE);
+                    DrawText(error.GetErrorMessage().c_str(), startingPosition.x + 8, startingPosition.y + 24, 10, LIGHTGRAY);
+                    if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
+                        iterator = errors.erase(iterator);
+                        break;
+                    }
+                    
+                }
+
+                ++iterator;
+                startingPosition.y -= 72;
+
             }
 
             

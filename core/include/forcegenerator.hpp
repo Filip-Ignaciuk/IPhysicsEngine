@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include <algorithm>
-
 #include "components/rigidbody.hpp"
 #include "object.hpp"
 

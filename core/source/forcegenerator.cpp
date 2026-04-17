@@ -149,11 +149,11 @@ void IPhysics::ForceRegistry::Clear(){
 }
 void IPhysics::ForceRegistry::UpdateForces(real _duration){
     std::vector<ForceRegistration>::iterator iterator = registrations.begin();
+
     while (iterator != registrations.end())
     {
         ForceRegistration forceRegisteration = *iterator;
         forceRegisteration.forceGenerator->UpdateForce(forceRegisteration.rigidBody, _duration);
         ++iterator;
     }
-    
 }
