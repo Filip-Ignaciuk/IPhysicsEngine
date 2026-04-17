@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <algorithm>
 
 #include "object.hpp"
 #include "collidebroad.hpp"
@@ -31,6 +32,8 @@ namespace IPhysics
         ForceRegistry& GetParticleForceRegistry();
 
         Objects& GetObjects();
+
+        void RemoveObject(Object* _object);
 
         protected:
         Objects m_objects;

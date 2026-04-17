@@ -22,7 +22,7 @@ void IPhysics::RealGravity::AddObject(Object* _object){
 }
 
 void IPhysics::RealGravity::UpdateForce(RigidBody* _rigidBody, real _duration){
-    Vector3 totalForce;
+    Vector3 totalForce(0, 0, 0);
     for(RigidBody* rigidbody : m_rigidbodies){
         if(_rigidBody == rigidbody){
             continue;
@@ -32,7 +32,7 @@ void IPhysics::RealGravity::UpdateForce(RigidBody* _rigidBody, real _duration){
         real distanceMagnitude = distance.Magnitude();
 
         real forceMagnitude = -1 * m_gravityConstant * totalMass / (distanceMagnitude * distanceMagnitude * distanceMagnitude);
-        totalForce += distance * distanceMagnitude;
+        totalForce += distance * forceMagnitude;
     }
     _rigidBody->AddForce(totalForce);
 }

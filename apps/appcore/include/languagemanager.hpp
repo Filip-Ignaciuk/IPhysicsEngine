@@ -4,7 +4,7 @@
 
 #include "json.hpp"
 
-namespace IPhysics{
+namespace IApp{
     class LanguageManager{
         private:
         static nlohmann::json language;

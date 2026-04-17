@@ -4,7 +4,8 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/core/include/**",
-                "${workspaceFolder}/core/include/components/**"
+                "${workspaceFolder}/core/include/components/**",
+                "${workspaceFolder}/apps/appcore/include/**"
             ],
             "defines": [],
             "macFrameworkPath": [],
@@ -18,7 +19,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/core/include/**",
-                "${workspaceFolder}/core/include/components/**"
+                "${workspaceFolder}/core/include/components/**",
+                "${workspaceFolder}/apps/appcore/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang++",

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(IPhysicsEngineCore)
+project(IApp)
 project(IPlanetSimulator)
 
 set(CMAKE_BUILD_TYPE Debug)
@@ -20,17 +21,23 @@ add_library(IPhysics STATIC
     core/source/components/geometry.cpp
     core/source/components/primitive.cpp
     core/source/components/rigidbody.cpp
+    core/source/components/information.cpp
+)
+
+add_library(IApp STATIC
+    apps/appcore/source/meshmanager.cpp
+    apps/appcore/source/languagemanager.cpp
+    apps/appcore/source/errormanager.cpp
 )
 
 add_executable(IPlanetSimulator 
     apps/IPlanetSimulator/main.cpp
-    apps/IPlanetSimulator/meshmanager.cpp
-    apps/IPlanetSimulator/languagemanager.cpp
-    
 )
 
 include_directories(IPhysics PRIVATE core/include)
 include_directories(IPhysics PRIVATE core/include/components)
+include_directories(IApp PRIVATE apps/appcore/include)
+
 
 find_package(raylib REQUIRED)
 
@@ -39,6 +46,7 @@ target_link_libraries(IPlanetSimulator
     PRIVATE
         raylib
         IPhysics
+        IApp
 )
 endif()
 
@@ -55,6 +63,7 @@ target_link_libraries(IPlanetSimulator
         "-framework AppKit"
         raylib
         IPhysics
+        IApp
 )
 endif()
 

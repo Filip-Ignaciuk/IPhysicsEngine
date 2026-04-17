@@ -19,7 +19,7 @@ void IPhysics::Vector3::Normalise(){
 void IPhysics::Vector3::AddScaledVector(const Vector3& _vector,  real scale){
     x += _vector.x * scale;
     y += _vector.y * scale;
-    y += _vector.y * scale;
+    z += _vector.z * scale;
 };
 
 void IPhysics::Vector3::ComponentProductUpdate(const Vector3& _vector){
@@ -488,7 +488,7 @@ IPhysics::Vector3 IPhysics::Matrix4::TransformDirection(const Vector3& _vector3)
         _vector3.z * data[6],
         _vector3.x * data[8] +
         _vector3.y * data[9] +
-        _vector3.y * data[10]
+        _vector3.z * data[10]
     );
 }
 
@@ -534,7 +534,7 @@ IPhysics::CharBufferResultStore* IPhysics::CharBufferToReal(char _buffer[64]){
     for (size_t i = 0; i < 64; i++)
     {
 
-        if(!(_buffer[i] ==  '.') && !std::isdigit(_buffer[i])){
+        if(!(_buffer[i] ==  '.') && !std::isdigit(_buffer[i]) && _buffer[i] != '\0'){
             charBufferResultStore->isValid = false;
             return charBufferResultStore;
         }

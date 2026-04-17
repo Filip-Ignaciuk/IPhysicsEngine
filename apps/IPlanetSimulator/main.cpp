@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <unordered_map>
 #include "raylib.h"
 #include "raymath.h"
 
@@ -21,8 +22,10 @@
 #include "object.hpp"
 #include "components/component.hpp"
 #include "components/geometry.hpp"
+#include "components/information.hpp"
 #include "languagemanager.hpp"
 #include "meshmanager.hpp"
+#include "errormanager.hpp"
 
 
 int main(void)
@@ -53,38 +56,64 @@ int main(void)
 
     SetTargetFPS(60);
 
+    
+    std::unordered_map<IPhysics::Object*, Model*> Map; 
 
     IPhysics::World world;
     std::string fileDir = "resources/en-gb.json";
-    IPhysics::LanguageManager::LoadLanguage(fileDir);
-    IPhysics::MeshManager::LoadDefaults();
+    IApp::LanguageManager::LoadLanguage(fileDir);
+    IApp::MeshManager::LoadDefaults();
 
-
+    IPhysics::Matrix3 tensor(
+    2.5e-13, 0,       0,
+    0,       2.5e-13, 0,
+    0,       0,       2.5e-13
+    );
+    IPhysics::Vector3 velocity(0, 3.2, 0);
     IPhysics::Object* object1 = new IPhysics::Object();
     IPhysics::Geometry* geometry1 = object1->AddComponent<IPhysics::Geometry>();
     IPhysics::RigidBody* rigidbody1 = object1->AddComponent<IPhysics::RigidBody>();
+    IPhysics::Information* information1 = object1->AddComponent<IPhysics::Information>();
     IPhysics::Vector3 position1(10.0, 10.0, 10.0);
     IPhysics::real mass1 = 7.5 * pow(10, 12);
     IPhysics::Quaternion quaternion1(0, 0, 0, 1);
+    IPhysics::real damping = 1;
     rigidbody1->SetPosition(position1);
     rigidbody1->SetMass(mass1);
     rigidbody1->SetOrientation(quaternion1);
-    geometry1->SetMesh(IPhysics::MeshManager::GetMesh("Sphere"));
+    rigidbody1->SetLinearDamping(damping);
+    rigidbody1->SetAngularDamping(damping);
+    rigidbody1->SetInverseInertiaTensor(tensor);
+    rigidbody1->AddVelocity(velocity);
+    geometry1->SetMesh(IApp::MeshManager::GetMesh("Box"));
     geometry1->SetColor(Color(RED));
     geometry1->SetScale(1.0);
+    std::string name1 = "One";
+    information1->SetName(name1);
+    Model model1 = LoadModelFromMesh(*geometry1->GetMesh());
+    Map.emplace(object1, &model1);
 
     IPhysics::Object* object2 = new IPhysics::Object();
     IPhysics::Geometry* geometry2 = object2->AddComponent<IPhysics::Geometry>();
     IPhysics::RigidBody* rigidbody2 = object2->AddComponent<IPhysics::RigidBody>();
-    IPhysics::Vector3 position2(-10.0, -10.0, -10.0);
+    IPhysics::Information* information2 = object2->AddComponent<IPhysics::Information>();
+    IPhysics::Vector3 position2(0.0, 0.0, 0.0);
     IPhysics::real mass2 = 7.5 * pow(10, 12);
     IPhysics::Quaternion quaternion2(0, 0, 0, 1);
     rigidbody2->SetPosition(position2);
     rigidbody2->SetMass(mass2);
     rigidbody2->SetOrientation(quaternion2);
-    geometry2->SetMesh(IPhysics::MeshManager::GetMesh("Sphere"));
+    rigidbody2->SetLinearDamping(damping);
+    rigidbody2->SetAngularDamping(damping);
+    rigidbody2->SetInverseInertiaTensor(tensor);
+    //rigidbody2->AddVelocity(velocity);
+    geometry2->SetMesh(IApp::MeshManager::GetMesh("Box"));
     geometry2->SetColor(Color(BLUE));
     geometry2->SetScale(1.0);
+    std::string name2 = "Two";
+    information2->SetName(name1);
+    Model model2 = LoadModelFromMesh(*geometry2->GetMesh());
+    Map.emplace(object2, &model2);
 
     IPhysics::RealGravity* realGravity = new IPhysics::RealGravity(6.674 * pow(10, -11));
     realGravity->AddObject(object1);
@@ -96,10 +125,16 @@ int main(void)
 
 
     // GUI state
+    bool showListObjectBox = false;
     bool showAddObjectBox = false;
     bool showAddMeshBox = false;
     bool showPreviewBox = false;
     bool showHelpBox = false;
+    bool showSettingsBox = false;
+
+    // List Objects Window State
+    static Vector2 scroll = { 0, 0 };
+    Rectangle view = { 0 };
 
     // Adding Objects Window State
     static bool isValidData = false;
@@ -120,25 +155,25 @@ int main(void)
     static bool isMeshDropDownActive = false;
 
 
-    char textBufferXCoordinate[64] = "";
-    char textBufferYCoordinate[64] = "";
-    char textBufferZCoordinate[64] = "";
-    char textBufferXOrientation[64] = "";
-    char textBufferYOrientation[64] = "";
-    char textBufferZOrientation[64] = "";
-    char textBufferMass[64] = "";
-    char textBufferLinearDamping[64] = "";
-    char textBufferAngularDamping[64] = "";
+    static char textBufferXCoordinate[64] = "";
+    static char textBufferYCoordinate[64] = "";
+    static char textBufferZCoordinate[64] = "";
+    static char textBufferXOrientation[64] = "";
+    static char textBufferYOrientation[64] = "";
+    static char textBufferZOrientation[64] = "";
+    static char textBufferMass[64] = "";
+    static char textBufferLinearDamping[64] = "";
+    static char textBufferAngularDamping[64] = "";
 
-    char textBuffer1InverseInertiaTensor[64] = "";
-    char textBuffer2InverseInertiaTensor[64] = "";
-    char textBuffer3InverseInertiaTensor[64] = "";
-    char textBuffer4InverseInertiaTensor[64] = "";
-    char textBuffer5InverseInertiaTensor[64] = "";
-    char textBuffer6InverseInertiaTensor[64] = "";
-    char textBuffer7InverseInertiaTensor[64] = "";
-    char textBuffer8InverseInertiaTensor[64] = "";
-    char textBuffer9InverseInertiaTensor[64] = "";
+    static char textBuffer1InverseInertiaTensor[64] = "";
+    static char textBuffer2InverseInertiaTensor[64] = "";
+    static char textBuffer3InverseInertiaTensor[64] = "";
+    static char textBuffer4InverseInertiaTensor[64] = "";
+    static char textBuffer5InverseInertiaTensor[64] = "";
+    static char textBuffer6InverseInertiaTensor[64] = "";
+    static char textBuffer7InverseInertiaTensor[64] = "";
+    static char textBuffer8InverseInertiaTensor[64] = "";
+    static char textBuffer9InverseInertiaTensor[64] = "";
 
     int dropDownSelectedMesh = 0;
 
@@ -154,18 +189,75 @@ int main(void)
     Color color;
     IPhysics::real scale;
 
+    // Information associated with error handling
+    std::vector<IApp::Error> errors;
+
     // Main loop
     while (!WindowShouldClose())
     {
+        // Handling Errors
+        if(IApp::ErrorManager::IsQueueNotEmpty() && errors.size() != 5){
+            errors.emplace_back(IApp::ErrorManager::GetNextError());
+        }
+        Vector2 startingPosition = { 960, 648 };
+        for (auto iterator = errors.begin(); iterator != errors.end();){
+            IApp::Error error = *iterator;
+            if(error.GetErrorSeverity() == IApp::ErrorSeverity::FatalError){
+                break;
+            }
+            if(error.GetErrorSeverity() == IApp::ErrorSeverity::NormalError){
+                DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, RED);
+                DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, MAROON);
+
+                DrawText(error.GetErrorTitle().c_str(), startingPosition.x, startingPosition.y + 8, 10, WHITE);
+                DrawText(error.GetErrorMessage().c_str(), startingPosition.x, startingPosition.y + 24, 10, LIGHTGRAY);
+                if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
+                    iterator = errors.erase(iterator);
+                    break;
+                }
+            }
+            if(error.GetErrorSeverity() == IApp::ErrorSeverity::Warning){
+                DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, YELLOW);
+                DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, BROWN);
+
+                DrawText(error.GetErrorTitle().c_str(), startingPosition.x, startingPosition.y + 8, 10, WHITE);
+                DrawText(error.GetErrorMessage().c_str(), startingPosition.x, startingPosition.y + 24, 10, LIGHTGRAY);
+                if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
+                    iterator = errors.erase(iterator);
+                    break;
+                }
+                
+            }
+            if(error.GetErrorSeverity() == IApp::ErrorSeverity::Information){
+                DrawRectangle( startingPosition.x, startingPosition.y, 288, 48, LIGHTGRAY);
+                DrawRectangleLines( startingPosition.x, startingPosition.y, 288, 48, DARKGRAY);
+
+                DrawText(error.GetErrorTitle().c_str(), startingPosition.x, startingPosition.y + 8, 10, WHITE);
+                DrawText(error.GetErrorMessage().c_str(), startingPosition.x, startingPosition.y + 24, 10, LIGHTGRAY);
+                if(GuiButton({startingPosition.x + 256, startingPosition.y + 8, 24, 24}, "#113#")){
+                    iterator = errors.erase(iterator);
+                    break;
+                }
+                
+            }
+
+            ++iterator;
+            startingPosition.y -= 72;
+
+        }
+
+
+
+
         world.StartFrame();
 
         if (IsKeyPressed(KEY_SPACE)) {
             world.SetPhysicsState(!world.GetPhysicsState());
             if(world.GetPhysicsState()){
-                pauseButtonText = "#131#";
+                pauseButtonText = "#132#";
             }
             else{
-                pauseButtonText = "#132#";
+                pauseButtonText = "#131#";
             }
         }
 
@@ -190,6 +282,7 @@ int main(void)
             world.RunPhysics();
         }
 
+
         BeginDrawing();
             ClearBackground(CLITERAL(Color){39, 38, 40});
             IPhysics::Vector3 iPosition;
@@ -212,13 +305,9 @@ int main(void)
 
 
 
-                    
-                    //Model model = LoadModelFromMesh(*geometry->GetMesh());
-                    Mesh* mesh = new Mesh(GenMeshSphere(1.0f, 32, 64));
-
-                    Model model = LoadModelFromMesh(*mesh);
-                    model.transform = MatrixMultiply(rotation, position);
-                    DrawModel(model, (Vector3){0,0,0}, geometry->GetScale(), geometry->GetColor());
+                    Model* model = Map[object];
+                    model->transform = MatrixMultiply(rotation, position);
+                    DrawModel(*model, (Vector3){0,0,0}, geometry->GetScale(), geometry->GetColor());
 
                     ++iterator;
                 }
@@ -228,22 +317,28 @@ int main(void)
 
             EndMode3D();
 
-
-
+            IPhysics::RigidBody* rigidbody = object2->GetComponent<IPhysics::RigidBody>();
+            iPosition = rigidbody->GetPosition();
+            std::string text = std::to_string(iPosition.x) + " " + std::to_string(iPosition.y) + " " + std::to_string(iPosition.z);
+            GuiLabel((Rectangle){ 256, 256, 256, 256 }, text.c_str());
             
-            
+            // List Button
+            if (GuiButton((Rectangle){ 24, 24, 24, 24 }, "#214#")) {
+                showListObjectBox = !showListObjectBox;
+            }
+
             // Add Button
-            if (GuiButton((Rectangle){ 24, 24, 24, 24 }, "#80#")) {
-                showAddObjectBox = true;
+            if (GuiButton((Rectangle){ 72, 24, 24, 24 }, "#80#")) {
+                showAddObjectBox = !showAddObjectBox;
             }
 
             // Add Mesh Button
-            if (GuiButton((Rectangle){ 72, 24, 24, 24 }, "#162#")) {
-                showAddMeshBox = true;
+            if (GuiButton((Rectangle){ 120, 24, 24, 24 }, "#162#")) {
+                showAddMeshBox = !showAddMeshBox;
             }
 
             // Pause Button
-            if (GuiButton((Rectangle){ 120, 24, 24, 24 }, pauseButtonText.c_str())){
+            if (GuiButton((Rectangle){ 216, 24, 24, 24 }, pauseButtonText.c_str())){
                 if (world.GetPhysicsState()){
                     pauseButtonText = "#131#";
                     world.SetPhysicsState(false);
@@ -254,21 +349,70 @@ int main(void)
                 }
             }
 
-            // Help Button 193
+            // Help Button
             if (GuiButton((Rectangle){ 168, 24, 24, 24 },"#193#")){
                 showHelpBox = !showHelpBox;
             }
 
+            // Settings Button
+            if (GuiButton((Rectangle){ 1224, 24, 24, 24 },"#142#")){
+                showSettingsBox = !showSettingsBox;
+            }
+
+            if(showListObjectBox){
+                Rectangle box = {24, 72, 408, 408};
+                Rectangle scrollPanel = { 24, 96, 408, 408 };
+                Rectangle content = { 0, 0, 290, 290 };
+                Rectangle view;
+                
+
+
+
+                showListObjectBox = !GuiWindowBox(box, "List");
+
+                GuiScrollPanel(scrollPanel, NULL, content, &scroll, &view);
+                Vector2 initialObjectPanelPosition = {scrollPanel.x, scrollPanel.y};
+
+                for(IPhysics::Object* object : world.GetObjects()){
+                    IPhysics::Information* information = object->GetComponent<IPhysics::Information>();
+                    Rectangle objectPanel {initialObjectPanelPosition.x, initialObjectPanelPosition.y, 408, 40};
+                    Rectangle objectNameRectangle {objectPanel.x + 8, objectPanel.y + 8, 232, 24};
+                    Rectangle objectViewButtonRectangle {objectPanel.x + 296, objectPanel.y + 8, 24, 24};
+                    Rectangle objectDeleteButtonRectangle {objectPanel.x + 344, objectPanel.y + 8, 24, 24};
+
+                    DrawRectangle(objectPanel.x, objectPanel.y, objectPanel.width, objectPanel.height, LIGHTGRAY);
+                    DrawRectangleLines(objectPanel.x, objectPanel.y, objectPanel.width, objectPanel.height, DARKGRAY);
+                    GuiLabel(objectNameRectangle, information->GetName().c_str());
+
+                    if(GuiButton(objectViewButtonRectangle, "#42#")){
+
+                    }
+
+                    if(GuiButton(objectDeleteButtonRectangle, "#143#")){
+                        world.RemoveObject(object);
+                    }
+                    initialObjectPanelPosition.y += 40;
+                }
+
+
+                BeginScissorMode(view.x, view.y, view.width, view.height);
+
+                
+
+                EndScissorMode();
+            }
+
+
             if (showAddObjectBox)
             {
-                Rectangle box = {24, 72, 408, 408}; // Position and size of the popup
-                showAddObjectBox = !GuiWindowBox(box, IPhysics::LanguageManager::GetText("addobjectmenu.title").c_str());
+                Rectangle box = {24, 72, 408, 408};
+                showAddObjectBox = !GuiWindowBox(box, IApp::LanguageManager::GetText("addobjectmenu.title").c_str());
 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT_VERTICAL, TEXT_ALIGN_MIDDLE);
 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
-                GuiLabel((Rectangle){ box.x + 24, box.y + 24, 96, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.positiontitle").c_str());
+                GuiLabel((Rectangle){ box.x + 24, box.y + 24, 96, 24 }, IApp::LanguageManager::GetText("addobjectmenu.positiontitle").c_str());
 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
@@ -290,7 +434,7 @@ int main(void)
                 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
-                GuiLabel((Rectangle){ box.x + 24, box.y + 72, 96, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.orientationtitle").c_str());
+                GuiLabel((Rectangle){ box.x + 24, box.y + 72, 96, 24 }, IApp::LanguageManager::GetText("addobjectmenu.orientationtitle").c_str());
 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
@@ -311,27 +455,27 @@ int main(void)
 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
-                GuiLabel((Rectangle){ box.x + 24, box.y + 120, 168, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.masstitle").c_str());
+                GuiLabel((Rectangle){ box.x + 24, box.y + 120, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.masstitle").c_str());
 
 
                 if(GuiTextBox((Rectangle){ box.x + 24, box.y + 144, 168, 24 }, textBufferMass, 64, isBufferMassEdited)){
                     isBufferMassEdited = !isBufferMassEdited;
                 }
                 
-                GuiLabel((Rectangle){ box.x + 216, box.y + 120, 168, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.lineardampingtitle").c_str());
+                GuiLabel((Rectangle){ box.x + 216, box.y + 120, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.lineardampingtitle").c_str());
 
                 if(GuiTextBox((Rectangle){ box.x + 216, box.y + 144, 168, 24 }, textBufferLinearDamping, 64, isBufferLinearDampingEdited)){
                     isBufferLinearDampingEdited = !isBufferLinearDampingEdited;
                 }
 
-                GuiLabel((Rectangle){ box.x + 24, box.y + 168, 168, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.angulardampingtitle").c_str());
+                GuiLabel((Rectangle){ box.x + 24, box.y + 168, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.angulardampingtitle").c_str());
 
                 if(GuiTextBox((Rectangle){ box.x + 24, box.y + 192, 168, 24 }, textBufferAngularDamping, 64, isBufferAngularDampingEdited)){
                     isBufferAngularDampingEdited = !isBufferAngularDampingEdited;
                 }
 
                 std::string dropDownSelection;
-                std::vector<std::string> meshStrings = IPhysics::MeshManager::GetMeshStrings();
+                std::vector<std::string> meshStrings = IApp::MeshManager::GetMeshStrings();
                 for (size_t i = 0; i < meshStrings.size() - 1; i++)
                 {
                     dropDownSelection = dropDownSelection + meshStrings[i] + ";";
@@ -339,16 +483,10 @@ int main(void)
 
                 dropDownSelection = dropDownSelection + meshStrings[meshStrings.size() - 1];
 
-                GuiLabel((Rectangle){ box.x + 216, box.y + 168, 168, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.meshtitle").c_str());
+                GuiLabel((Rectangle){ box.x + 216, box.y + 168, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.meshtitle").c_str());
 
                 if (GuiDropdownBox({box.x + 216, box.y + 192, 168, 24}, dropDownSelection.c_str(), &dropDownSelectedMesh, isMeshDropDownActive)){
                     isMeshDropDownActive = !isMeshDropDownActive;
-                }
-
-                GuiLabel((Rectangle){ box.x + 216, box.y + 216, 168, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.angulardampingtitle").c_str());
-
-                if(GuiTextBox((Rectangle){ box.x + 216, box.y + 240, 168, 24 }, textBufferAngularDamping, 64, isBufferAngularDampingEdited)){
-                    isBufferAngularDampingEdited = !isBufferAngularDampingEdited;
                 }
                 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
@@ -374,7 +512,7 @@ int main(void)
                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
                 // Add Button
-                if (GuiButton((Rectangle){box.x + box.width - 72, box.y + box.height - 48, 48, 24}, IPhysics::LanguageManager::GetText("addobjectmenu.addbutton").c_str())) {
+                if (GuiButton((Rectangle){box.x + box.width - 72, box.y + box.height - 48, 48, 24}, IApp::LanguageManager::GetText("addobjectmenu.addbutton").c_str())) {
                     // Assuming data is valid
                     isValidData = true;
 
@@ -385,14 +523,26 @@ int main(void)
 
                     if(!xCoordinate->isValid){
                         isValidData = false;
+                        std::string title = "X coordinate invalid";
+                        std::string message = "The X coordinate you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     if(!yCoordinate->isValid){
                         isValidData = false;
+                        std::string title = "Y coordinate invalid";
+                        std::string message = "The Y coordinate you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     if(!zCoordinate->isValid){
                         isValidData = false;
+                        std::string title = "Z coordinate invalid";
+                        std::string message = "The Z coordinate you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     
@@ -406,14 +556,26 @@ int main(void)
 
                     if(!xOrientation->isValid){
                         isValidData = false;
+                        std::string title = "X orientation invalid";
+                        std::string message = "The X orientation you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     if(!yOrientation->isValid){
                         isValidData = false;
+                        std::string title = "Y orientation invalid";
+                        std::string message = "The Y orientation you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     if(!zOrientation->isValid){
                         isValidData = false;
+                        std::string title = "Z orientation invalid";
+                        std::string message = "The Z orientation you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     orientation.SetFromEuler(xOrientation->result, yOrientation->result, zOrientation->result);
@@ -422,6 +584,10 @@ int main(void)
 
                     if(!massResult->isValid){
                         isValidData = false;
+                        std::string title = "Mass invalid";
+                        std::string message = "The mass you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     mass = massResult->result;
@@ -430,6 +596,10 @@ int main(void)
 
                     if(!linearDampingResult->isValid){
                         isValidData = false;
+                        std::string title = "Linear Damping invalid";
+                        std::string message = "The linear damping you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     linearDamping = linearDampingResult->result;
@@ -438,6 +608,10 @@ int main(void)
 
                     if(!angularDampingResult->isValid){
                         isValidData = false;
+                        std::string title = "Angular Damping invalid";
+                        std::string message = "The angular damping you have provided is invalid.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
                     }
 
                     angularDamping = angularDampingResult->result;
@@ -447,17 +621,24 @@ int main(void)
                         IPhysics::Object* object = new IPhysics::Object();
                         IPhysics::RigidBody* rigidbody = object->AddComponent<IPhysics::RigidBody>();
                         IPhysics::Geometry* geometry = object->AddComponent<IPhysics::Geometry>();
+                        IPhysics::Information* information = object->AddComponent<IPhysics::Information>();
                         rigidbody->SetPosition(position);
                         rigidbody->SetOrientation(orientation);
                         rigidbody->SetMass(mass);
                         rigidbody->SetLinearDamping(linearDamping);
                         rigidbody->SetAngularDamping(angularDamping);
-                        rigidbody->SetInverseInertiaTensor(inverseInertiaTensor);
+                        IPhysics::Matrix3 tensor(
+                            2.5e-13, 0,       0,
+                            0,       2.5e-13, 0,
+                            0,       0,       2.5e-13
+                            );
+                        rigidbody->SetInverseInertiaTensor(tensor);
 
-                        Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
-                        geometry->SetMesh(&cubeMesh);
+                        geometry->SetMesh(IApp::MeshManager::GetMesh("Box"));
                         geometry->SetScale(1.0f);
                         geometry->SetColor(RED);
+                        std::string name = "Name";
+                        information->SetName(name);
                         
                         world.AddObject(object);
                     }
@@ -471,9 +652,9 @@ int main(void)
             }
             else if (showAddMeshBox){
                 Rectangle box = {24, 72, 408, 408};
-                showAddMeshBox = !GuiWindowBox(box, IPhysics::LanguageManager::GetText("addmeshmenu.title").c_str());
+                showAddMeshBox = !GuiWindowBox(box, IApp::LanguageManager::GetText("addmeshmenu.title").c_str());
 
-                GuiLabel((Rectangle){ box.x + 24, box.y + 216, 168, 24 }, IPhysics::LanguageManager::GetText("addobjectmenu.colortitle").c_str());
+                GuiLabel((Rectangle){ box.x + 24, box.y + 216, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.colortitle").c_str());
 
                 GuiColorPicker({box.x + 24, box.y + 240, 144, 144}, "Pick a color", &color);
 
@@ -490,7 +671,7 @@ int main(void)
             }
 
             if(showHelpBox){
-                DrawRectangle( 936, 600, 312, 96, Fade(GRAY, 0.5f));
+                DrawRectangle( 936, 600, 312, 96, GRAY);
                 DrawRectangleLines( 936, 600, 312, 96, DARKGRAY);
 
                 DrawText("Press Z to toggle camera control on and off", 946, 610, 10, BLACK);

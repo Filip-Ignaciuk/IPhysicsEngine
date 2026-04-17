@@ -4,7 +4,7 @@
 #include "raylib.h"
 #include "core.hpp"
 
-namespace IPhysics{
+namespace IApp{
     class MeshManager
     {
     private:
