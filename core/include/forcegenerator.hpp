@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <algorithm>
-#include "components/rigidbody.hpp"
+#include "rigidbody.hpp"
 #include "object.hpp"
 
 namespace IPhysics{

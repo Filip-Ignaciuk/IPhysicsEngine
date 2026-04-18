@@ -27,7 +27,7 @@
             "cStandard": "c17",
             "cppStandard": "c++23",
             "intelliSenseMode": "linux-clang-x64",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/build-web/compile_commands.json"
         },
         {
             "name": "Windows",
@@ -44,6 +44,36 @@
             "cppStandard": "c++23",
             "intelliSenseMode": "windows-clang-x64",
             "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+        },
+        {
+            "name": "Emscripten",
+            "compilerPath": "/Users/cold/Libraries/emsdk/upstream/bin/clang++",
+            "compilerArgs": [
+                "-target",
+                "wasm32-unknown-emscripten",
+                "-fignore-exceptions",
+                "-mllvm",
+                "-combiner-global-alias-analysis=false",
+                "-mllvm",
+                "-enable-emscripten-sjlj",
+                "-mllvm",
+                "-disable-lsr",
+                "--sysroot=/Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot",
+                "-DEMSCRIPTEN",
+                "-Xclang",
+                "-iwithsysroot/include/fakesdl",
+                "-Xclang",
+                "-iwithsysroot/include/compat"
+            ],
+            "includePath": [
+                "${workspaceFolder}/core/include/**",
+                "${workspaceFolder}/core/include/components/**",
+                "${workspaceFolder}/apps/appcore/include/**"
+            ],
+            "defines": [
+                "__EMSCRIPTEN__"
+            ],
+            "intelliSenseMode": "linux-clang-x64"
         }
     ],
     "version": 4

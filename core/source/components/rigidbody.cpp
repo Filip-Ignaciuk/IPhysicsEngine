@@ -1,4 +1,4 @@
-#include "components/rigidbody.hpp"
+#include "rigidbody.hpp"
 
 IPhysics::RigidBody::RigidBody(){
 

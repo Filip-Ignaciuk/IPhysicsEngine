@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="../Main.css">
+    <title>Filip Ignaciuk - IPlanetSimulator</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 20px auto;
+        }
+        #status {
+            text-align: center;
+            color: #888;
+            font-family: monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body style="background-color:#181a1b">
+    <div style="background-color: #202324;">
+        <h1><a href="../index.html">Filip Ignaciuk</a></h1>
+        <h2><a href="../Projects.html">Projects</a> >> <a href="Physics.html">IPhysicsEngine</a> >> IPlanetSimulator</h2>
+        <hr>
+    </div>
+    <div id="status">Loading...</div>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <script>
+        var Module = {
+            canvas: document.getElementById('canvas'),
+            setStatus: function(text) {
+                document.getElementById('status').textContent = text;
+            },
+            onRuntimeInitialized: function() {
+                document.getElementById('status').textContent = '';
+            }
+        };
+    </script>
+    {{{ SCRIPT }}}
+</body>
+</html>
