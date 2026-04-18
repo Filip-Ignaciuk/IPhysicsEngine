@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 
 project(IPhysicsEngineCore)
-project(IApp)
-project(IPlanetSimulator)
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -59,3 +57,22 @@ target_link_libraries(IPlanetSimulator
 )
 endif()
 
+if(EMSCRIPTEN)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
+        -s USE_GLFW=3 \
+        -s ASYNCIFY \
+        -s ALLOW_MEMORY_GROWTH=1 \
+        --preload-file resources \
+        --shell-file shell.html")
+    
+    set_target_properties(IPlanetSimulator PROPERTIES 
+        SUFFIX ".html"
+    )
+    
+    target_link_libraries(IPlanetSimulator
+        PRIVATE
+            IPhysics
+            IApp
+            raylib
+    )
+endif()

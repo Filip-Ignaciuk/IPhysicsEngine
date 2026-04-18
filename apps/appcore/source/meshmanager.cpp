@@ -6,10 +6,8 @@ IApp::MeshManager::MeshColours IApp::MeshManager::meshColours;
 void IApp::MeshManager::LoadDefaults(){
     Mesh* cubeMesh = new Mesh(GenMeshCube(1.0f, 1.0f, 1.0f));
     Mesh* sphereMesh = new Mesh(GenMeshSphere(1.0f, 32, 64));
-    Mesh* cylinderMesh = new Mesh(GenMeshCylinder(1.0f, 32, 64));
     meshes.emplace("Box", cubeMesh);
     meshes.emplace("Sphere", sphereMesh);
-    meshes.emplace("Cylinder", cylinderMesh);
     meshColours.emplace("Red", RED);
     meshColours.emplace("Green", GREEN);
     meshColours.emplace("Blue", BLUE);

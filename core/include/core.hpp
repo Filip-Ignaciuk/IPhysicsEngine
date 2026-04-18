@@ -160,8 +160,8 @@ namespace IPhysics
     Vector3 WorldToLocalDirection(const Vector3& _world, const Matrix4& _transform);
 
     struct CharBufferResultStore{
-        static inline bool isValid;
-        static inline real result;
+        bool isValid;
+        real result;
     };
 
     CharBufferResultStore* CharBufferToReal(char _buffer[64]);

@@ -89,7 +89,7 @@ int main(void)
     rigidbody1->SetAngularDamping(damping);
     rigidbody1->SetInverseInertiaTensor(standardTensor);
     rigidbody1->AddVelocity(velocity);
-    geometry1->SetMesh(IApp::MeshManager::GetMesh("Box"));
+    geometry1->SetMesh(IApp::MeshManager::GetMesh("Sphere"));
     geometry1->SetColor(Color(RED));
     geometry1->SetScale(1.0);
     std::string name1 = "One";
@@ -111,11 +111,11 @@ int main(void)
     rigidbody2->SetAngularDamping(damping);
     rigidbody2->SetInverseInertiaTensor(standardTensor);
     //rigidbody2->AddVelocity(velocity);
-    geometry2->SetMesh(IApp::MeshManager::GetMesh("Box"));
+    geometry2->SetMesh(IApp::MeshManager::GetMesh("Sphere"));
     geometry2->SetColor(Color(BLUE));
     geometry2->SetScale(1.0);
     std::string name2 = "Two";
-    information2->SetName(name1);
+    information2->SetName(name2);
     Model model2 = LoadModelFromMesh(*geometry2->GetMesh());
     Map.emplace(object2, &model2);
 
@@ -239,7 +239,7 @@ int main(void)
 
         world.StartFrame();
 
-        if (IsKeyPressed(KEY_SPACE)) {
+        if (IsKeyPressed('P')) {
             world.SetPhysicsState(!world.GetPhysicsState());
             if(world.GetPhysicsState()){
                 pauseButtonText = "#132#";
@@ -277,12 +277,15 @@ int main(void)
             IPhysics::Quaternion iQuaternion;
             IPhysics::real iMass;
             IPhysics::Vector3 iVelocity;
-            BeginMode3D(camera);              
+            BeginMode3D(camera);         
+                DrawGrid(100, 1.0f);
+     
                 IPhysics::World::Objects::iterator iterator = world.GetObjects().begin();
                 while (iterator != world.GetObjects().end()){
                     IPhysics::Object* object = *iterator;
                     IPhysics::RigidBody* rigidbody = object->GetComponent<IPhysics::RigidBody>();
                     IPhysics::Geometry* geometry = object->GetComponent<IPhysics::Geometry>();
+                    IPhysics::Information* information = object->GetComponent<IPhysics::Information>();
                     iPosition =  rigidbody->GetPosition();
                     iQuaternion =  rigidbody->GetOrientation();
                     iMass = rigidbody->GetMass();
@@ -291,16 +294,13 @@ int main(void)
                     Vector4 quaternion{(float)iQuaternion.i, (float)iQuaternion.j, (float)iQuaternion.k, (float)iQuaternion.r};
                     Matrix rotation = QuaternionToMatrix(quaternion);
 
-
-
                     Model* model = Map[object];
                     model->transform = MatrixMultiply(rotation, position);
                     DrawModel(*model, (Vector3){0,0,0}, geometry->GetScale(), geometry->GetColor());
                     
                     ++iterator;
                 }
-               
-                DrawGrid(100, 1.0f);
+
 
 
             EndMode3D();
@@ -333,9 +333,9 @@ int main(void)
             }
 
             // Settings Button
-            if (GuiButton((Rectangle){ 1224, 24, 24, 24 },"#142#")){
-                showSettingsBox = !showSettingsBox;
-            }
+            //if (GuiButton((Rectangle){ 1224, 24, 24, 24 },"#142#")){
+            //    showSettingsBox = !showSettingsBox;
+            //}
 
             if(showListObjectBox){
                 Rectangle box = {24, 72, 408, 408};
@@ -362,9 +362,9 @@ int main(void)
                     DrawRectangleLines(objectPanel.x, objectPanel.y, objectPanel.width, objectPanel.height, DARKGRAY);
                     GuiLabel(objectNameRectangle, information->GetName().c_str());
 
-                    if(GuiButton(objectViewButtonRectangle, "#42#")){
-
-                    }
+                    //if(GuiButton(objectViewButtonRectangle, "#42#")){
+                    //
+                    //}
 
                     if(GuiButton(objectDeleteButtonRectangle, "#143#")){
                         world.RemoveObject(object);
@@ -674,29 +674,26 @@ int main(void)
                         }
                     }
                     
+                    
 
                     if(isValidData){
-                        position->x = xCoordinate->result;
-                        position->y = yCoordinate->result;
-                        position->z = zCoordinate->result;
+                        position = new IPhysics::Vector3(xCoordinate->result, yCoordinate->result, zCoordinate->result);
                         orientation->SetFromEuler(xOrientation->result, yOrientation->result, zOrientation->result);
-                        (*mass) = massResult->result;
-                        (*linearDamping) = linearDampingResult->result;
-                        (*angularDamping) = angularDampingResult->result;
+                        mass = new IPhysics::real(massResult->result);
+                        linearDamping = new IPhysics::real(linearDampingResult->result);
+                        angularDamping = new IPhysics::real(angularDampingResult->result);
                         if(wantsStandardInverseInertiaValue){
-                            std::cout << "Hello" << std::endl;
                             inverseInertiaTensor = new IPhysics::Matrix3(standardTensor);
+                            std::cout << "Using Standard" << std::endl;
                         }
                         else{
-                                                        std::cout << "2" << std::endl;
-
                             inverseInertiaTensor = new IPhysics::Matrix3(
                                 inverseInertiaResult1->result, inverseInertiaResult2->result, inverseInertiaResult3->result,
                                 inverseInertiaResult4->result, inverseInertiaResult5->result, inverseInertiaResult6->result,
                                 inverseInertiaResult7->result, inverseInertiaResult8->result, inverseInertiaResult9->result
                             );
                         }
-                        
+                        IPhysics::CharBufferResultStore* xCoordinate = IPhysics::CharBufferToReal(textBufferXCoordinate);
 
                         // Creating the object
                         IPhysics::Object* object = new IPhysics::Object();
@@ -708,19 +705,15 @@ int main(void)
                         rigidbody->SetMass(*mass);
                         rigidbody->SetLinearDamping(*linearDamping);
                         rigidbody->SetAngularDamping(*angularDamping);
-
-                        
                         rigidbody->SetInverseInertiaTensor(*inverseInertiaTensor);
 
                         geometry->SetMesh(IApp::MeshManager::GetMesh(meshStrings[dropDownSelectedMesh]));
                         geometry->SetScale(1.0f);
                         geometry->SetColor(IApp::MeshManager::GetColor(colourStrings[dropDownSelectedColour]));
-                        std::string name = std::string(textBufferName);
-                        information->SetName(name);
+                        information->SetName((*name));
                         
-                        Model model = LoadModelFromMesh(*geometry->GetMesh());
-
-                        Map.emplace(object, &model);
+                        Model* model = new Model(LoadModelFromMesh(*geometry->GetMesh()));
+                        Map.emplace(object, model);
 
                         realGravity->AddObject(object);
                         world.AddForceRegistry(object, realGravity);
@@ -752,13 +745,15 @@ int main(void)
             }
 
             if(showHelpBox){
-                DrawRectangle( 936, 600, 312, 96, GRAY);
-                DrawRectangleLines( 936, 600, 312, 96, DARKGRAY);
-
-                DrawText("Press Z to toggle camera control on and off", 946, 610, 10, BLACK);
-                DrawText("Press Spacebar to toggle physics simulation on and off", 946, 630, 10, DARKGRAY);
-                DrawText("Add objects using the Add button", 946, 650, 10, DARKGRAY);
-                DrawText("- Z to zoom to (0, 0, 0)", 946, 670, 10, DARKGRAY);
+                Rectangle box = {24, 72, 408, 408};
+                showHelpBox = !GuiWindowBox(box, "Help");
+                DrawText("Press Z to toggle camera control on and off", box.x + 8, box.y + 32, 10, BLACK);
+                DrawText("Whilst camera is toggled use wasd to move around", box.x + 8, box.y + 52, 10, BLACK);
+                DrawText("Press P to toggle physics simulation on and off", box.x + 8, box.y + 72, 10, BLACK);
+                DrawText("Add objects using the Add button", box.x + 8, box.y + 92, 10, BLACK);
+                DrawText("Remove objects in the list menu", box.x + 8, box.y + 112, 10, BLACK);
+                DrawText("To see obvious change, we suggest a mass of:", box.x + 8, box.y + 132, 10, BLACK);
+                DrawText("100 trillion", box.x + 8, box.y + 152, 10, BLACK);
             }
 
             // Displaying Errors

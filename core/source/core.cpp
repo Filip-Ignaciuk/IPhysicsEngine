@@ -187,7 +187,7 @@ void IPhysics::Quaternion::SetFromEuler(real _x, real _y, real _z){
 }
 
 IPhysics::Matrix3::Matrix3(){
-    for (size_t i = 0; i < 9; i++)
+    for (int i = 0; i < 9; i++)
     {
         data[i] = 0.0f;
     }
