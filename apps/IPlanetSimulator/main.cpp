@@ -152,11 +152,13 @@ int main(void)
     static bool isBufferZOrientationEdited = false;
 
     static bool isBufferMassEdited = false;
+    static bool isBufferNameEdited = false;
 
     static bool isBufferLinearDampingEdited = false;
     static bool isBufferAngularDampingEdited = false;
 
     static bool isMeshDropDownActive = false;
+    static bool isColourDropDownActive = false;
 
     static bool isBuffer1InverseInertiaTensorEdited = false;
     static bool isBuffer2InverseInertiaTensorEdited = false;
@@ -177,6 +179,7 @@ int main(void)
     static char textBufferYOrientation[64] = "";
     static char textBufferZOrientation[64] = "";
     static char textBufferMass[64] = "";
+    static char textBufferName[64] = "";
     static char textBufferLinearDamping[64] = "";
     static char textBufferAngularDamping[64] = "";
 
@@ -191,11 +194,30 @@ int main(void)
     static char textBuffer9InverseInertiaTensor[64] = "";
 
     int dropDownSelectedMesh = 0;
+    int dropDownSelectedColour = 0;
+
+    std::string meshDropDownSelection;
+    std::vector<std::string> meshStrings = IApp::MeshManager::GetMeshStrings();
+    for (size_t i = 0; i < meshStrings.size() - 1; i++)
+    {
+        meshDropDownSelection = meshDropDownSelection + meshStrings[i] + ";";
+    }
+    meshDropDownSelection = meshDropDownSelection + meshStrings[meshStrings.size() - 1];
+
+    std::string colourDropDownSelection;
+    std::vector<std::string> colourStrings = IApp::MeshManager::GetColourStrings();
+    for (size_t i = 0; i < colourStrings.size() - 1; i++)
+    {
+        colourDropDownSelection = colourDropDownSelection + colourStrings[i] + ";";
+    }
+    colourDropDownSelection = colourDropDownSelection + colourStrings[colourStrings.size() - 1];
+
 
     // Information associated with add object window
 
     IPhysics::Vector3* position = new IPhysics::Vector3();
     IPhysics::Quaternion* orientation = new IPhysics::Quaternion();
+    std::string* name = new std::string();
     IPhysics::real* mass = new IPhysics::real();
     IPhysics::real* linearDamping = new IPhysics::real();
     IPhysics::real* angularDamping = new IPhysics::real();
@@ -293,13 +315,13 @@ int main(void)
                 showAddObjectBox = !showAddObjectBox;
             }
 
-            // Add Mesh Button
-            if (GuiButton((Rectangle){ 120, 24, 24, 24 }, "#162#")) {
-                showAddMeshBox = !showAddMeshBox;
+            // Help Button
+            if (GuiButton((Rectangle){ 120, 24, 24, 24 },"#193#")){
+                showHelpBox = !showHelpBox;
             }
 
             // Pause Button
-            if (GuiButton((Rectangle){ 216, 24, 24, 24 }, pauseButtonText.c_str())){
+            if (GuiButton((Rectangle){ 168, 24, 24, 24 }, pauseButtonText.c_str())){
                 if (world.GetPhysicsState()){
                     pauseButtonText = "#131#";
                     world.SetPhysicsState(false);
@@ -308,11 +330,6 @@ int main(void)
                     pauseButtonText = "#132#";
                     world.SetPhysicsState(true);
                 }
-            }
-
-            // Help Button
-            if (GuiButton((Rectangle){ 168, 24, 24, 24 },"#193#")){
-                showHelpBox = !showHelpBox;
             }
 
             // Settings Button
@@ -418,44 +435,37 @@ int main(void)
 
                 GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
-                GuiLabel((Rectangle){ box.x + 24, box.y + 120, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.masstitle").c_str());
+                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
+                GuiLabel((Rectangle){ box.x + 24, box.y + 120, 168, 24 }, "Name");
+                if(GuiTextBox((Rectangle){ box.x + 24, box.y + 144, 168, 24 }, textBufferName, 64, isBufferNameEdited)){
+                    isBufferNameEdited = !isBufferNameEdited;
+                }
 
-
-                if(GuiTextBox((Rectangle){ box.x + 24, box.y + 144, 168, 24 }, textBufferMass, 64, isBufferMassEdited)){
+                GuiLabel((Rectangle){ box.x + 216, box.y + 120, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.masstitle").c_str());
+                if(GuiTextBox((Rectangle){ box.x + 216, box.y + 144, 168, 24 }, textBufferMass, 64, isBufferMassEdited)){
                     isBufferMassEdited = !isBufferMassEdited;
                 }
-                
-                GuiLabel((Rectangle){ box.x + 216, box.y + 120, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.lineardampingtitle").c_str());
 
-                if(GuiTextBox((Rectangle){ box.x + 216, box.y + 144, 168, 24 }, textBufferLinearDamping, 64, isBufferLinearDampingEdited)){
+                GuiLabel((Rectangle){ box.x + 24, box.y + 168, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.lineardampingtitle").c_str());
+                GuiLabel((Rectangle){ box.x + 216, box.y + 168, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.angulardampingtitle").c_str());
+
+                if(GuiTextBox((Rectangle){ box.x + 24, box.y + 192, 168, 24 }, textBufferLinearDamping, 64, isBufferLinearDampingEdited)){
                     isBufferLinearDampingEdited = !isBufferLinearDampingEdited;
                 }
-
-                GuiLabel((Rectangle){ box.x + 24, box.y + 168, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.angulardampingtitle").c_str());
-
-                if(GuiTextBox((Rectangle){ box.x + 24, box.y + 192, 168, 24 }, textBufferAngularDamping, 64, isBufferAngularDampingEdited)){
+                if(GuiTextBox((Rectangle){ box.x + 216, box.y + 192, 168, 24 }, textBufferAngularDamping, 64, isBufferAngularDampingEdited)){
                     isBufferAngularDampingEdited = !isBufferAngularDampingEdited;
                 }
 
-                std::string dropDownSelection;
-                std::vector<std::string> meshStrings = IApp::MeshManager::GetMeshStrings();
-                for (size_t i = 0; i < meshStrings.size() - 1; i++)
-                {
-                    dropDownSelection = dropDownSelection + meshStrings[i] + ";";
-                }
-
-                dropDownSelection = dropDownSelection + meshStrings[meshStrings.size() - 1];
-
-                GuiLabel((Rectangle){ box.x + 216, box.y + 168, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.meshtitle").c_str());
-
-                if (GuiDropdownBox({box.x + 216, box.y + 192, 168, 24}, dropDownSelection.c_str(), &dropDownSelectedMesh, isMeshDropDownActive)){
-                    isMeshDropDownActive = !isMeshDropDownActive;
-                }
                 
+
+                GuiLabel((Rectangle){ box.x + 216, box.y + 312, 148, 24 }, "Use Standard Tensor");
+                GuiCheckBox((Rectangle){ box.x + 364, box.y + 316, 16, 16 }, "", &wantsStandardInverseInertiaValue);
+
                 GuiLabel((Rectangle){ box.x + 24, box.y + 216, 168, 24 }, "Inverse Inertia Tensor");
                 if(wantsStandardInverseInertiaValue){
                     GuiSetState(STATE_DISABLED);
                 }
+
                 GuiTextBox((Rectangle){ box.x + 24,  box.y + 240, 24, 24 }, textBuffer1InverseInertiaTensor, 64, isBuffer1InverseInertiaTensorEdited);
                 GuiTextBox((Rectangle){ box.x + 72,  box.y + 240, 24, 24 }, textBuffer2InverseInertiaTensor, 64, isBuffer2InverseInertiaTensorEdited);
                 GuiTextBox((Rectangle){ box.x + 120, box.y + 240, 24, 24 }, textBuffer3InverseInertiaTensor, 64, isBuffer3InverseInertiaTensorEdited);
@@ -469,8 +479,10 @@ int main(void)
                     GuiSetState(STATE_NORMAL);
                 }
 
-                GuiLabel((Rectangle){ box.x + 216, box.y + 216, 168, 24 }, "Use Standard Tensor");
-                GuiCheckBox((Rectangle){ box.x + 364, box.y + 220, 16, 16 }, "", &wantsStandardInverseInertiaValue);
+                
+
+                
+
 
                GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
@@ -534,6 +546,27 @@ int main(void)
                         std::string message = "The Z orientation you have provided is invalid.";
                         IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
                         IApp::ErrorManager::AddError(error);
+                    }
+
+                    name = new std::string(textBufferName);
+                    if(name->empty()){
+                        isValidData = false;
+                        std::string title = "Name invalid";
+                        std::string message = "Please provide a name.";
+                        IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                        IApp::ErrorManager::AddError(error);
+                    }
+                    else{
+                        for(IPhysics::Object* object : world.GetObjects()){
+                            IPhysics::Information* information = object->GetComponent<IPhysics::Information>();
+                            if(information->GetName() == *name){
+                                isValidData = false;
+                                std::string title = "Name invalid";
+                                std::string message = "Name already exists in world, please provide an alternative name.";
+                                IApp::Error error(IApp::ErrorSeverity::NormalError, title, message);
+                                IApp::ErrorManager::AddError(error);
+                            }
+                        }
                     }
 
                     IPhysics::CharBufferResultStore* massResult = IPhysics::CharBufferToReal(textBufferMass);
@@ -679,10 +712,10 @@ int main(void)
                         
                         rigidbody->SetInverseInertiaTensor(*inverseInertiaTensor);
 
-                        geometry->SetMesh(IApp::MeshManager::GetMesh("Box"));
+                        geometry->SetMesh(IApp::MeshManager::GetMesh(meshStrings[dropDownSelectedMesh]));
                         geometry->SetScale(1.0f);
-                        geometry->SetColor(RED);
-                        std::string name = "Name";
+                        geometry->SetColor(IApp::MeshManager::GetColor(colourStrings[dropDownSelectedColour]));
+                        std::string name = std::string(textBufferName);
                         information->SetName(name);
                         
                         Model model = LoadModelFromMesh(*geometry->GetMesh());
@@ -700,29 +733,19 @@ int main(void)
                         angularDamping = new IPhysics::real();
 
                     }
-                    else{
-
-                    }
-
-                    
 
                 }
+                GuiLabel((Rectangle){ box.x + 216, box.y + 264, 168, 24 }, "Colour");
+                if(GuiDropdownBox({box.x + 216, box.y + 288, 168, 24}, colourDropDownSelection.c_str(), &dropDownSelectedColour, isColourDropDownActive)){
+                    isColourDropDownActive = !isColourDropDownActive;
+                }
+
+                GuiLabel((Rectangle){ box.x + 216, box.y + 216, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.meshtitle").c_str());
+                if(GuiDropdownBox({box.x + 216, box.y + 240, 168, 24}, meshDropDownSelection.c_str(), &dropDownSelectedMesh, isMeshDropDownActive)){
+                    isMeshDropDownActive = !isMeshDropDownActive;
+                }
             }
-            else if (showAddMeshBox){
-                Rectangle box = {24, 72, 408, 408};
-                showAddMeshBox = !GuiWindowBox(box, IApp::LanguageManager::GetText("addmeshmenu.title").c_str());
-
-                GuiLabel((Rectangle){ box.x + 24, box.y + 216, 168, 24 }, IApp::LanguageManager::GetText("addobjectmenu.colortitle").c_str());
-
-                GuiColorPicker({box.x + 24, box.y + 240, 144, 144}, "Pick a color", color);
-
-
-
-
-
-
-
-            }
+           
 
             if(showPreviewBox){
 
