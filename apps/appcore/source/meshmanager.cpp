@@ -1,29 +1,40 @@
 #include "meshmanager.hpp"
 
 IApp::MeshManager::MeshMap IApp::MeshManager::meshes;
+IApp::MeshManager::ModelMap IApp::MeshManager::models;
 IApp::MeshManager::MeshColours IApp::MeshManager::meshColours;
 
 void IApp::MeshManager::LoadDefaults(){
-    Mesh* cubeMesh = new Mesh(GenMeshCube(1.0f, 1.0f, 1.0f));
-    Mesh* sphereMesh = new Mesh(GenMeshSphere(1.0f, 32, 64));
+    Mesh cubeMesh = GenMeshCube(1.0f, 1.0f, 1.0f);
+    Mesh sphereMesh = GenMeshSphere(1.0f, 32, 64);
     meshes.emplace("Box", cubeMesh);
     meshes.emplace("Sphere", sphereMesh);
+    Model boxModel = LoadModelFromMesh(cubeMesh);
+    Model sphereModel = LoadModelFromMesh(sphereMesh);
+    models.emplace("Box", boxModel);
+    models.emplace("Sphere", sphereModel);
     meshColours.emplace("Red", RED);
     meshColours.emplace("Green", GREEN);
     meshColours.emplace("Blue", BLUE);
 }
 
 void IApp::MeshManager::Unload(){
-    for(auto& pair : meshes){
-        delete pair.second;
-    }
     meshes.clear();
+    models.clear();
 }
 
 Mesh* IApp::MeshManager::GetMesh(std::string _meshName){
     MeshMap::iterator mapIterator = meshes.find(_meshName);
     if(mapIterator != meshes.end()){
-        return mapIterator->second;
+        return &mapIterator->second;
+    }
+    return nullptr;
+}
+
+Model* IApp::MeshManager::GetModel(std::string _modelName){
+    ModelMap::iterator mapIterator = models.find(_modelName);
+    if(mapIterator != models.end()){
+        return &mapIterator->second;
     }
     return nullptr;
 }

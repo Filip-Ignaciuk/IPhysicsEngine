@@ -66,6 +66,10 @@ namespace IPhysics
 
         Vector3 GetVelocity();
 
+        Vector3 GetAcceleration();
+
+        Vector3 GetForce();
+
         Matrix4 GetTransformMatrix();
 
         Vector3 GetLastFrameAcceleration();

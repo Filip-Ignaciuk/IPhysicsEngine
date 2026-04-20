@@ -17,7 +17,7 @@ namespace IApp{
         std::string m_errorTitle;
         std::string m_errorMessage;
         public:
-        Error(ErrorSeverity _errorSeverity, std::string& _errorTitle, std::string& _errorMessage);
+        Error(ErrorSeverity _errorSeverity, const std::string& _errorTitle, const std::string& _errorMessage);
 
         ErrorSeverity GetErrorSeverity() const;
         std::string GetErrorTitle() const;
@@ -33,6 +33,7 @@ namespace IApp{
         
         public:
         static void AddError(Error& _error);
+        static void AddError(const std::string& _title, const std::string& _message, ErrorSeverity _errorSeverity);
         static bool IsQueueNotEmpty();
         static Error GetNextError();
 

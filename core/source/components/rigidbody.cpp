@@ -108,6 +108,15 @@ IPhysics::Vector3 IPhysics::RigidBody::GetVelocity(){
     return m_velocity;
 }
 
+IPhysics::Vector3 IPhysics::RigidBody::GetAcceleration(){
+    return m_lastFrameAcceleration;
+}
+
+IPhysics::Vector3 IPhysics::RigidBody::GetForce(){
+    return  m_lastFrameAcceleration * (1 / m_inverseMass);
+}
+
+
 IPhysics::Matrix4 IPhysics::RigidBody::GetTransformMatrix(){
     return m_transformMatrix;
 }

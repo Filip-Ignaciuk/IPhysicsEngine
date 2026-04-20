@@ -14,16 +14,16 @@ void IPhysics::World::StartFrame(){
     
 }
 
-void IPhysics::World::RunPhysics(){
+void IPhysics::World::RunPhysics(real _timestep){
     // Update the forces
-    m_registery.UpdateForces(m_timestep);
+    m_registery.UpdateForces(_timestep);
 
     // Move the objects
     Objects::iterator iterator = m_objects.begin();
     while(iterator != m_objects.end()){
         Object* object = *iterator;
         RigidBody* rigidbody = object->GetComponent<RigidBody>();
-        rigidbody->Integrate(m_timestep);
+        rigidbody->Integrate(_timestep);
         ++iterator;
     }
 
@@ -82,20 +82,12 @@ void IPhysics::World::AddForceRegistry(Object* _object, ForceGenerator* _forceGe
     m_registery.Add(_object, _forceGenerator);
 }
 
-void IPhysics::World::SetTimeStep(real _timestep){
-    m_timestep = _timestep;
-}
-
 void IPhysics::World::SetPhysicsState(bool _state){
     m_physicsState = _state;
 }
 
 bool IPhysics::World::GetPhysicsState(){
     return m_physicsState;
-}
-        
-IPhysics::real IPhysics::World::GetTimeStep(){
-    return m_timestep;
 }
 
 IPhysics::ForceRegistry& IPhysics::World::GetParticleForceRegistry(){

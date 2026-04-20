@@ -18,16 +18,14 @@ namespace IPhysics
         static const unsigned MAX_CONTACTS = 256;
 
         void StartFrame();
-        void RunPhysics();
+        void RunPhysics(real _timestep);
 
         void AddObject(Object* _object);
         void AddForceRegistry(Object* _object, ForceGenerator* _forceGenerator);
 
-        void SetTimeStep(real _timestep);
         void SetPhysicsState(bool _state);
 
         bool GetPhysicsState();
-        real GetTimeStep();
 
         ForceRegistry& GetParticleForceRegistry();
 
@@ -41,7 +39,6 @@ namespace IPhysics
         BoundingVolumeHierarchyNode<BoundingSphere>* m_root = nullptr;
         ContactResolver m_contactResolver;
         ForceRegistry m_registery;
-        real m_timestep = (real)1.0 / (real)60.0;
         bool m_physicsState = true;
     };
 }

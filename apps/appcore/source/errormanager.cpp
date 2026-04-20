@@ -1,6 +1,6 @@
 #include "errormanager.hpp"
 
-IApp::Error::Error(ErrorSeverity _errorSeverity, std::string& _errorTitle, std::string& _errorMessage) : m_errorSeverity(_errorSeverity), m_errorTitle(_errorTitle), m_errorMessage(_errorMessage) {}
+IApp::Error::Error(ErrorSeverity _errorSeverity, const std::string& _errorTitle, const std::string& _errorMessage) : m_errorSeverity(_errorSeverity), m_errorTitle(_errorTitle), m_errorMessage(_errorMessage) {}
 
 IApp::ErrorSeverity IApp::Error::GetErrorSeverity() const{
     return m_errorSeverity;
@@ -26,6 +26,11 @@ std::priority_queue<IApp::Error> IApp::ErrorManager::m_errors;
 
 void IApp::ErrorManager::AddError(Error& _error){
     m_errors.emplace(_error);
+}
+
+void IApp::ErrorManager::AddError(const std::string& _title, const std::string& _message, ErrorSeverity _errorSeverity){
+    Error error(_errorSeverity, _title, _message);
+    m_errors.emplace(error);
 }
 
 bool IApp::ErrorManager::IsQueueNotEmpty(){
