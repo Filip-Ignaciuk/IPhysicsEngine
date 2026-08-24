@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <memory>
 #include <unordered_map>
+
+#include "rayguihelper.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
@@ -359,9 +361,9 @@ static inline void AddObjectMenu(){
         isValidData = true;
 
         // Converting the char arrays to real values.
-        IPhysics::CharBufferResultStore* xCoordinate = IPhysics::CharBufferToReal(textBufferXCoordinate);
-        IPhysics::CharBufferResultStore* yCoordinate = IPhysics::CharBufferToReal(textBufferYCoordinate);
-        IPhysics::CharBufferResultStore* zCoordinate = IPhysics::CharBufferToReal(textBufferZCoordinate);
+        IApp::CharBufferResultStore::CharBufferResultStore* xCoordinate = IApp::CharBufferResultStore::CharBufferToReal(textBufferXCoordinate);
+        IApp::CharBufferResultStore::CharBufferResultStore* yCoordinate = IApp::CharBufferResultStore::CharBufferToReal(textBufferYCoordinate);
+        IApp::CharBufferResultStore::CharBufferResultStore* zCoordinate = IApp::CharBufferResultStore::CharBufferToReal(textBufferZCoordinate);
 
         if(!xCoordinate->isValid){
             isValidData = false;
@@ -661,7 +663,7 @@ static inline void ShowListMenu(){
 
         if(GuiButton(objectDeleteButtonRectangle, "#143#")){
             world.RemoveObject(object);
-            world.RemoveForceRegistry(object);
+            world.RemoveForceRegistration(object);
             realGravity->RemoveObject(object);
         }
         initialObjectPanelPosition.y += 40;

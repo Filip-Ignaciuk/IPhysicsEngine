@@ -35,7 +35,7 @@
 #include "particleworld.hpp"
 */
 
-int main(void)
+int main()
 {
     const Vector3 origin = {0,0,0};
     const int screenWidth = 1272;

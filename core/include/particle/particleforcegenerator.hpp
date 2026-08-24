@@ -6,7 +6,10 @@
 namespace IPhysics{
     class ParticleForceGenerator{
         public:
-            virtual void UpdateForce(Particle* _particle, real _duration) = 0;
+        // Deconstructors
+        virtual ~ParticleForceGenerator() = default;
+
+        virtual void UpdateForce(Particle* _particle, real _duration) = 0;
     };
 
     struct ParticleForceRegistration
@@ -18,20 +21,19 @@ namespace IPhysics{
             return particle == _other.particle && particleForceGenerator == _other.particleForceGenerator;
         }
     };
+
     class ParticleForceRegistry{
-        protected:
-        
-
+        private:
         std::vector<ParticleForceRegistration> registrations;
-        public:
 
+        public:
         ParticleForceRegistry();
         void Add(Particle* _particle, ParticleForceGenerator* _particleForceGenerator);
         void Remove(Particle* _particle, ParticleForceGenerator* _particleForceGenerator);
         void Clear();
         void UpdateForces(real _duration);
     
-        std::vector<ParticleForceRegistration>* GetRegistrations();
+        std::vector<ParticleForceRegistration> GetRegistrations();
     };
 
     class ParticleGravity : public ParticleForceGenerator{

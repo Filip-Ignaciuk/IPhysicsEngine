@@ -21,7 +21,7 @@ void IPhysics::ParticleForceRegistry::Remove(Particle* _particle, ParticleForceG
     registrations.erase(std::remove(registrations.begin(), registrations.end(), particleForceRegistration), registrations.end());
 }
 
-std::vector<IPhysics::ParticleForceRegistration>* IPhysics::ParticleForceRegistry::GetRegistrations(){    
+std::vector<IPhysics::ParticleForceRegistration> IPhysics::ParticleForceRegistry::GetRegistrations(){
     return &registrations;
 }
 

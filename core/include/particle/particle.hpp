@@ -8,6 +8,7 @@ namespace IPhysics{
             Vector3 m_velocity;
             Vector3 m_acceleration;
             Vector3 m_forceAccumulated;
+            // Simple and inaccurate form of drag.
             real m_damping;
             real m_inverseMass;
 

@@ -3,10 +3,8 @@
 namespace IPhysics{
     class Component
     {
-    private:
-        
     public:
-        Component();
+        Component() = default;
         virtual ~Component() = default;
     };
 }

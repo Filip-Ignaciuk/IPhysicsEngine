@@ -1,28 +1,31 @@
 #include "world.hpp"
 
+/*
+ * World
+ */
 
+// Mutators
 void IPhysics::World::StartFrame(){
-    Objects::iterator iterator = m_objects.begin();
+    auto iterator = m_objects.begin();
     while (iterator != m_objects.end())
     {
         Object* object = *iterator;
-        RigidBody* rigidbody = object->GetComponent<RigidBody>();
+        auto* rigidbody = object->GetComponent<RigidBody>();
         rigidbody->ClearAccumulators();
         rigidbody->CalculateDerivedData();
         ++iterator;
     }
-    
 }
 
 void IPhysics::World::RunPhysics(real _timestep){
     // Update the forces
-    m_registery.UpdateForces(_timestep);
+    m_registry.UpdateForces(_timestep);
 
     // Move the objects
-    Objects::iterator iterator = m_objects.begin();
+    auto iterator = m_objects.begin();
     while(iterator != m_objects.end()){
         Object* object = *iterator;
-        RigidBody* rigidbody = object->GetComponent<RigidBody>();
+        auto* rigidbody = object->GetComponent<RigidBody>();
         rigidbody->Integrate(_timestep);
         ++iterator;
     }
@@ -76,32 +79,47 @@ void IPhysics::World::AddObject(Object* _object){
     }
     */
 }
-        
 
-void IPhysics::World::AddForceRegistry(Object* _object, ForceGenerator* _forceGenerator){
-    m_registery.Add(_object, _forceGenerator);
+void IPhysics::World::RemoveObject(Object* _object){
+    RemoveForceRegistration(_object);
+    m_objects.erase(
+        std::ranges::remove(
+            m_objects,
+            _object).begin(),
+            m_objects.end());
+}
+
+void IPhysics::World::RemoveLastObject() {
+    m_objects.pop_back();
+}
+
+void IPhysics::World::AddForceRegistration(Object* _object,
+                                           const std::shared_ptr<ForceGenerator>& _forceGenerator){
+    m_registry.Add(_object, _forceGenerator);
+}
+
+void IPhysics::World::RemoveForceRegistration(Object* _object){
+    m_registry.Remove(_object);
 }
 
 void IPhysics::World::SetPhysicsState(bool _state){
     m_physicsState = _state;
 }
 
-bool IPhysics::World::GetPhysicsState(){
-    return m_physicsState;
-}
-
-IPhysics::ForceRegistry& IPhysics::World::GetParticleForceRegistry(){
-    return m_registery;
-}
-
-IPhysics::World::Objects& IPhysics::World::GetObjects(){
+// Queries
+const std::vector<IPhysics::Object*>& IPhysics::World::GetObjects()  {
     return m_objects;
 }
 
-void IPhysics::World::RemoveObject(Object* _object){
-    m_objects.erase(remove(m_objects.begin(), m_objects.end(), _object), m_objects.end());
+const IPhysics::ForceRegistration& IPhysics::World::GetForceRegistration(
+    Object* _object) const{
+    return *m_registry.Get(_object);
 }
 
-void IPhysics::World::RemoveForceRegistry(Object* _object){
-    m_registery.Remove(_object);
+const IPhysics::ForceRegistry& IPhysics::World::GetForceRegistry() const{
+    return m_registry;
+}
+
+bool IPhysics::World::GetPhysicsState() const{
+    return m_physicsState;
 }

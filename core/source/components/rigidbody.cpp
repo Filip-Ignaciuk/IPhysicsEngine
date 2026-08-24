@@ -1,13 +1,17 @@
 #include "rigidbody.hpp"
 
-IPhysics::RigidBody::RigidBody(){
+/*
+ * RigidBody
+ */
 
-}
+// Constructors
+IPhysics::RigidBody::RigidBody() = default;
 
 IPhysics::RigidBody::RigidBody(const Vector3& _originalPosition, const Quaternion& _originalOrientation, const real& _inverseMass, const real& _linearDamping, const real& _angularDamping, const Matrix3& _inverseInertiaTensor) : m_position(_originalPosition), m_orientation(_originalOrientation), m_inverseMass(_inverseMass), m_linearDamping(_linearDamping), m_inverseInertiaTensor(_inverseInertiaTensor){
 
 }
 
+// Mutators
 void IPhysics::RigidBody::Integrate(real _duration){
 
     // Linear Acceleration
@@ -15,7 +19,7 @@ void IPhysics::RigidBody::Integrate(real _duration){
     m_lastFrameAcceleration.AddScaledVector(m_forceAccumulated, m_inverseMass);
 
     // Angular Acceleration
-    Vector3 AngularAcceleration = m_inverseInertiaTensorWorld.Transform(m_torqueAccumulated);
+    const Vector3 AngularAcceleration = m_inverseInertiaTensorWorld.Transform(m_torqueAccumulated);
 
     m_velocity.AddScaledVector(m_lastFrameAcceleration, _duration);
 
@@ -38,7 +42,6 @@ void IPhysics::RigidBody::AddForce(const Vector3& _vector){
     m_isAwake = true;
 }
 
-
 void IPhysics::RigidBody::AddForceAtPoint(const Vector3& _vector, const Vector3& _point){
     // This converts to coordinates relative to the centre of mass.
     Vector3 pt = _point;
@@ -50,7 +53,7 @@ void IPhysics::RigidBody::AddForceAtPoint(const Vector3& _vector, const Vector3&
 }
 
 void IPhysics::RigidBody::AddForceAtBodyPoint(const Vector3& _vector, const Vector3& _point){
-    Vector3 pt = GetPointInWorldSpace(_point);
+    const Vector3 pt = GetPointInWorldSpace(_point);
     AddForceAtPoint(_vector, pt);
 
     m_isAwake = true;
@@ -68,80 +71,15 @@ void IPhysics::RigidBody::CalculateDerivedData(){
     CalculateTransformInertiaTensor(m_inverseInertiaTensorWorld, m_orientation, m_inverseInertiaTensor, m_transformMatrix);
 }
 
-IPhysics::Vector3 IPhysics::RigidBody::GetPointInLocalSpace(const Vector3& _point){
-    return m_transformMatrix.TransformInverse(_point);
-}
-
-IPhysics::Vector3 IPhysics::RigidBody::GetPointInWorldSpace(const Vector3& _point){
-    return m_transformMatrix.Transform(_point);
-}
-
-IPhysics::real IPhysics::RigidBody::GetMass(){
-    return 1 / m_inverseMass;
-}
-
-bool IPhysics::RigidBody::GetIsAwake(){
-    return m_isAwake;
-}
-
-IPhysics::real IPhysics::RigidBody::GetInverseMass(){
-    return m_inverseMass;
-}
-
-IPhysics::Matrix3 IPhysics::RigidBody::GetInverseInertiaTensorWorld() const{
-    return m_inverseInertiaTensorWorld;
-}
-
-IPhysics::Vector3& IPhysics::RigidBody::GetPosition(){
-    return m_position;
-}
-
-IPhysics::Quaternion IPhysics::RigidBody::GetOrientation(){
-    return m_orientation;
-}
-
-IPhysics::Vector3 IPhysics::RigidBody::GetRotation(){
-    return m_rotation;
-}
-
-IPhysics::Vector3 IPhysics::RigidBody::GetVelocity(){
-    return m_velocity;
-}
-
-IPhysics::Vector3 IPhysics::RigidBody::GetAcceleration(){
-    return m_lastFrameAcceleration;
-}
-
-IPhysics::Vector3 IPhysics::RigidBody::GetForce(){
-    return  m_lastFrameAcceleration * (1 / m_inverseMass);
-}
-
-
-IPhysics::Matrix4 IPhysics::RigidBody::GetTransformMatrix(){
-    return m_transformMatrix;
-}
-
-IPhysics::Vector3 IPhysics::RigidBody::GetLastFrameAcceleration(){
-    return m_lastFrameAcceleration;
-}
-
-IPhysics::real IPhysics::RigidBody::GetMaxDistanceFromCentre(){
-    return m_maxDistanceFromCentre;
-}
-
-bool IPhysics::RigidBody::HasFiniteMass(){
-    return m_inverseMass >= 0.0f;
-}
-
-void IPhysics::RigidBody::SetPosition(Vector3& _position){
+void IPhysics::RigidBody::SetPosition(const Vector3& _position){
     m_position = _position;
 }
 
-void IPhysics::RigidBody::SetOrientation(Quaternion& _quaternion){
+void IPhysics::RigidBody::SetOrientation(const Quaternion& _quaternion){
     m_orientation = _quaternion;
 }
 
-void IPhysics::RigidBody::SetMass(real& _mass){
+void IPhysics::RigidBody::SetMass(real _mass){
     m_inverseMass = 1 / _mass;
 }
 
@@ -149,15 +87,15 @@ void IPhysics::RigidBody::SetIsAwake(bool _isAwake){
     m_isAwake = _isAwake;
 }
 
-void IPhysics::RigidBody::SetInverseMass(real& _inverseMass){
+void IPhysics::RigidBody::SetInverseMass(real _inverseMass){
     m_inverseMass = _inverseMass;
 }
 
-void IPhysics::RigidBody::SetLinearDamping(real& _linearDamping){
+void IPhysics::RigidBody::SetLinearDamping(real _linearDamping){
     m_linearDamping = _linearDamping;
 }
 
-void IPhysics::RigidBody::SetAngularDamping(real& _angularDamping){
+void IPhysics::RigidBody::SetAngularDamping(real _angularDamping){
     m_angularDamping = _angularDamping;
 }
 
@@ -169,12 +107,78 @@ void IPhysics::RigidBody::SetMaxDistanceFromCentre(real _distance){
     m_maxDistanceFromCentre = _distance;
 }
 
-void IPhysics::RigidBody::AddVelocity(Vector3& _velocity){
+void IPhysics::RigidBody::AddVelocity(const Vector3& _velocity){
     m_velocity += _velocity;
 }
 
-void IPhysics::RigidBody::AddRotation(Vector3& _rotation){
+void IPhysics::RigidBody::AddRotation(const Vector3& _rotation){
     m_rotation += _rotation;
+}
+
+// Queries
+IPhysics::Vector3 IPhysics::RigidBody::GetPointInLocalSpace(const Vector3& _point) const {
+    return m_transformMatrix.TransformInverse(_point);
+}
+
+IPhysics::Vector3 IPhysics::RigidBody::GetPointInWorldSpace(const Vector3& _point) const {
+    return m_transformMatrix.Transform(_point);
+}
+
+IPhysics::real IPhysics::RigidBody::GetMass() const{
+    return 1 / m_inverseMass;
+}
+
+bool IPhysics::RigidBody::GetIsAwake() const{
+    return m_isAwake;
+}
+
+IPhysics::real IPhysics::RigidBody::GetInverseMass() const{
+    return m_inverseMass;
+}
+
+const IPhysics::Matrix3& IPhysics::RigidBody::GetInverseInertiaTensorWorld() const{
+    return m_inverseInertiaTensorWorld;
+}
+
+const IPhysics::Vector3& IPhysics::RigidBody::GetPosition() const{
+    return m_position;
+}
+
+const IPhysics::Quaternion& IPhysics::RigidBody::GetOrientation() const {
+    return m_orientation;
+}
+
+const IPhysics::Vector3& IPhysics::RigidBody::GetRotation() const{
+    return m_rotation;
+}
+
+const IPhysics::Vector3& IPhysics::RigidBody::GetVelocity() const{
+    return m_velocity;
+}
+
+const IPhysics::Vector3& IPhysics::RigidBody::GetAcceleration() const{
+    return m_lastFrameAcceleration;
+}
+
+const IPhysics::Vector3& IPhysics::RigidBody::GetForce() const{
+    return  m_lastFrameAcceleration * (1 / m_inverseMass);
+}
+
+
+const IPhysics::Matrix4& IPhysics::RigidBody::GetTransformMatrix() const{
+    return m_transformMatrix;
+}
+
+const IPhysics::Vector3& IPhysics::RigidBody::GetLastFrameAcceleration() const{
+    return m_lastFrameAcceleration;
+}
+
+IPhysics::real IPhysics::RigidBody::GetMaxDistanceFromCentre()const{
+    return m_maxDistanceFromCentre;
+}
+
+bool IPhysics::RigidBody::HasFiniteMass() const{
+    return m_inverseMass >= 0.0f;
 }
 
 void IPhysics::RigidBody::CalculateTransformMatrix(Matrix4& _transformMatrix, const Vector3& _position, const Quaternion& _orientation){

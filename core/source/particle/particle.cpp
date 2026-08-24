@@ -41,20 +41,24 @@ namespace IPhysics
     }
 
     bool IPhysics::Particle::Integrate(real _duration){
+        // Reject infinite masses.
         if (m_inverseMass <= 0.0f){
             return false;
         }
 
+        // Update linear position.
         m_position.AddScaledVector(m_velocity, _duration);
 
+        // Work out acceleration from force.
         Vector3 resultingAcceleration = m_acceleration;
         resultingAcceleration.AddScaledVector(m_forceAccumulated, m_inverseMass);
 
-
+        // Update linear velocity.
+        m_velocity.AddScaledVector(resultingAcceleration, _duration);
+        // Add drag.
         m_velocity *= RealPow(m_damping, _duration);
 
-        m_velocity.AddScaledVector(resultingAcceleration, _duration);
-
+        // Clear forces.
         ClearAccumulator();
         
         return true;

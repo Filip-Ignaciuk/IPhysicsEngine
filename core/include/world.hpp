@@ -1,4 +1,6 @@
-#pragma once
+#ifndef IPHYSICS_WORLD_HPP
+#define IPHYSICS_WORLD_HPP
+
 #include <vector>
 #include <algorithm>
 
@@ -7,38 +9,44 @@
 #include "collidenarrow.hpp"
 #include "forcegenerator.hpp"
 #include "contacts.hpp"
-#include "components/primitive.hpp"
 
 namespace IPhysics
 {
     class World{
         public:
-        typedef std::vector<Object*> Objects;
-
-        static const unsigned MAX_CONTACTS = 256;
-
+        // Mutators
         void StartFrame();
         void RunPhysics(real _timestep);
 
         void AddObject(Object* _object);
-        void AddForceRegistry(Object* _object, ForceGenerator* _forceGenerator);
+        void RemoveObject(Object* _object);
+        void RemoveLastObject();
+
+        void AddForceRegistration(Object* _object,
+            const std::shared_ptr<ForceGenerator>& _forceGenerator);
+        void RemoveForceRegistration(Object* _object);
 
         void SetPhysicsState(bool _state);
 
-        bool GetPhysicsState();
+        // Queries
+        [[nodiscard]] const std::vector<Object*>& GetObjects();
 
-        ForceRegistry& GetParticleForceRegistry();
+        [[nodiscard]] const ForceRegistration& GetForceRegistration(Object* _object) const;
 
-        Objects& GetObjects();
+        [[nodiscard]] const ForceRegistry& GetForceRegistry() const;
 
-        void RemoveObject(Object* _object);
-        void RemoveForceRegistry(Object* _object);
+        [[nodiscard]] bool GetPhysicsState() const;
 
         protected:
-        Objects m_objects;
-        BoundingVolumeHierarchyNode<BoundingSphere>* m_root = nullptr;
-        ContactResolver m_contactResolver;
-        ForceRegistry m_registery;
+        static constexpr unsigned MAX_CONTACTS = 256;
+
+        std::vector<Object*> m_objects;
         bool m_physicsState = true;
+
+        BoundingVolumeHierarchyNode<BoundingSphere>* m_root = nullptr;
+        ContactResolver m_contactResolver{};
+        ForceRegistry m_registry;
     };
 }
+
+#endif
