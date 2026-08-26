@@ -24,13 +24,13 @@ public:
     [[nodiscard]] const std::vector<IPhysics::Object*>& GetParticles() ;
 
 private:
-    const int MAXIMUM_PARTICLE_COUNT = 1000;
+    const int MAXIMUM_PARTICLE_COUNT = 100000;
 
     const IPhysics::real m_timeStep;
 
     IPhysics::World m_world{};
     int m_numberOfParticles = 0;
-    GravityAlgorithm m_gravityAlgorithm = GravityAlgorithm::Naive;
+    GravityAlgorithm m_gravityAlgorithm = GravityAlgorithm::BarnesHut;
     std::shared_ptr<IPhysics::ForceGenerator> m_gravityForceGenerator;
 
     static IPhysics::Vector3 RandomGalaxyPosition();

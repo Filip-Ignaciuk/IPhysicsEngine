@@ -1,6 +1,8 @@
 #include "igravitymodel.hpp"
 #include <numbers>
 
+#include "gravityalgorithms.hpp"
+
 /*
  * IGravityModel
  */
@@ -12,7 +14,7 @@ IGravityModel::IGravityModel(IPhysics::real _timeStep)
 
 // Mutators
 void IGravityModel::SetupSimulation() {
-    UpdateNumberOfParticles(1000);
+    UpdateNumberOfParticles(100000);
 }
 
 void IGravityModel::UpdateSimulation() {
@@ -45,8 +47,11 @@ void IGravityModel::UpdateNumberOfParticles(int _count) {
         }
     }
     else {
+
         const auto force_generator
-            = std::make_shared<IPhysics::RealGravity>(6.674 * pow(10, -11));
+            = std::make_shared<RealGravityBarnesHut>(
+                6.674 * pow(10, -11),
+                0.5);
         for (int i = 0; i < boundedCount; ++i) {
             // Creating object
             auto* object = new IPhysics::Object();
