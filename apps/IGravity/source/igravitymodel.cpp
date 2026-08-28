@@ -1,7 +1,11 @@
 #include "igravitymodel.hpp"
-#include <numbers>
 
-#include "gravityalgorithms.hpp"
+#include <numbers>
+#include <chrono>
+#include <iostream>
+
+#include "gravity.hpp"
+#include "barneshutgravity.hpp"
 
 /*
  * IGravityModel
@@ -20,7 +24,11 @@ void IGravityModel::SetupSimulation() {
 void IGravityModel::UpdateSimulation() {
     m_world.StartFrame();
     if(m_world.GetPhysicsState()){
+        auto start = std::chrono::high_resolution_clock::now();
         m_world.RunPhysics(m_timeStep);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << duration.count() << std::endl;
     }
 }
 
@@ -48,8 +56,8 @@ void IGravityModel::UpdateNumberOfParticles(int _count) {
     }
     else {
 
-        const auto force_generator
-            = std::make_shared<RealGravityBarnesHut>(
+        std::shared_ptr<IPhysics::Gravity> force_generator
+            = std::make_shared<IPhysics::BarnesHutGravity>(
                 6.674 * pow(10, -11),
                 0.5);
         for (int i = 0; i < boundedCount; ++i) {

@@ -5,9 +5,6 @@
 #include "igravitymodel.hpp"
 #include "igravityview.hpp"
 
-
-
-
 class IGravity {
 public:
     // Constructors

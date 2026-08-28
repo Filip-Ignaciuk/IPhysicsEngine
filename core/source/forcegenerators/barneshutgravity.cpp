@@ -1,54 +1,18 @@
-#include "gravityalgorithms.hpp"
+#include "barneshutgravity.hpp"
 
-RealGravityCuda::RealGravityCuda(IPhysics::real _gravityConstant) {
-    this->m_gravityConstant = _gravityConstant;
-}
-
-void RealGravityCuda::AddObject(IPhysics::Object *_object) {
-    m_rigidBodies.emplace_back(_object->GetComponent<IPhysics::RigidBody>());
-}
-
-void RealGravityCuda::RemoveObject(IPhysics::Object *_object) {
-    m_rigidBodies.erase(
-        remove(
-            m_rigidBodies.begin(),
-            m_rigidBodies.end(),
-            _object->GetComponent<IPhysics::RigidBody>()),
-            m_rigidBodies.end());
-}
-
-void RealGravityCuda::UpdateForce(
-    IPhysics::RigidBody *_rigidBody, IPhysics::real _duration) {
-    IPhysics::Vector3 totalForce(0, 0, 0);
-    for(IPhysics::RigidBody* rigidbody : m_rigidBodies){
-        if(_rigidBody == rigidbody){
-            continue;
-        }
-        IPhysics::real totalMass = rigidbody->GetMass() * _rigidBody->GetMass();
-        IPhysics::Vector3 distance = _rigidBody->GetPosition()
-        - rigidbody->GetPosition();
-        IPhysics::real distanceMagnitude = distance.Magnitude();
-
-        IPhysics::real forceMagnitude = -1 * m_gravityConstant
-        * totalMass / (distanceMagnitude * distanceMagnitude * distanceMagnitude);
-        totalForce += distance * forceMagnitude;
-    }
-    _rigidBody->AddForce(totalForce);
-}
-
-RealGravityBarnesHut::RealGravityBarnesHut(
+IPhysics::BarnesHutGravity::BarnesHutGravity(
     IPhysics::real _gravityConstant,
     IPhysics::real thresholdValue) :
-m_gravityConstant(_gravityConstant),
-thresholdValue(thresholdValue) {
+    Gravity(_gravityConstant),
+    thresholdValue(thresholdValue) {
     CreateTreeRoot();
 }
 
-void RealGravityBarnesHut::AddObject(IPhysics::Object* _object) {
+void IPhysics::BarnesHutGravity::AddObject(IPhysics::Object* _object) {
     m_rigidBodies.emplace_back(_object->GetComponent<IPhysics::RigidBody>());
 }
 
-void RealGravityBarnesHut::RemoveObject(IPhysics::Object* _object) {
+void IPhysics::BarnesHutGravity::RemoveObject(IPhysics::Object* _object) {
     m_rigidBodies.erase(
     remove(
         m_rigidBodies.begin(),
@@ -57,26 +21,29 @@ void RealGravityBarnesHut::RemoveObject(IPhysics::Object* _object) {
         m_rigidBodies.end());
 }
 
-void RealGravityBarnesHut::UpdateForce(
+void IPhysics::BarnesHutGravity::UpdateForce(
     IPhysics::RigidBody* _rigidBody, IPhysics::real _duration) {
     if (totalProcessedParticles == m_rigidBodies.size()) {
-        CreateTree();
         totalProcessedParticles = 0;
     }
+    if (totalProcessedParticles == 0) {
+        CreateTree();
+    }
+
     _rigidBody->AddForce(TraverseNode(root, _rigidBody));
     ++totalProcessedParticles;
 }
 
-void RealGravityBarnesHut::CreateTree() {
+void IPhysics::BarnesHutGravity::CreateTree() {
     CreateTreeRoot();
     for (IPhysics::RigidBody* rigidbody : m_rigidBodies) {
         AddObjectToNode(root, rigidbody);
     }
 }
 
-void RealGravityBarnesHut::CreateTreeRoot() {
+void IPhysics::BarnesHutGravity::CreateTreeRoot() {
     delete root;
-    root = new BHTN();
+    root = new bhtn();
     root->midPoint = {0, 0, 0};
 
     IPhysics::real largestDistance = 0;
@@ -96,7 +63,7 @@ void RealGravityBarnesHut::CreateTreeRoot() {
    }
 }
 
-void RealGravityBarnesHut::AddObjectToNode(BHTN* _node, IPhysics::RigidBody* _rigidBody) {
+void IPhysics::BarnesHutGravity::AddObjectToNode(bhtn* _node, IPhysics::RigidBody* _rigidBody) {
     // Empty Leaf
     if (_node->IsExternalNode() && _node->rigidBody == nullptr) {
         _node->rigidBody = _rigidBody;
@@ -137,7 +104,7 @@ void RealGravityBarnesHut::AddObjectToNode(BHTN* _node, IPhysics::RigidBody* _ri
     // Create children nodes and disperse rigid bodies accordingly.
 
     // Creating children nodes.
-    auto* nw = new BHTN();
+    auto* nw = new bhtn();
     nw->width = _node->width / 2;
     nw->midPoint = IPhysics::Vector3{
         _node->midPoint.x - (_node->width / 2),
@@ -146,7 +113,7 @@ void RealGravityBarnesHut::AddObjectToNode(BHTN* _node, IPhysics::RigidBody* _ri
     };
     _node->nw = nw;
 
-    auto* ne = new BHTN();
+    auto* ne = new bhtn();
     ne->width = _node->width / 2;
     ne->midPoint = IPhysics::Vector3{
         _node->midPoint.x + (_node->width / 2),
@@ -155,7 +122,7 @@ void RealGravityBarnesHut::AddObjectToNode(BHTN* _node, IPhysics::RigidBody* _ri
     };
     _node->ne = ne;
 
-    auto* sw = new BHTN();
+    auto* sw = new bhtn();
     sw->width = _node->width / 2;
     sw->midPoint = IPhysics::Vector3{
         _node->midPoint.x - (_node->width / 2),
@@ -164,7 +131,7 @@ void RealGravityBarnesHut::AddObjectToNode(BHTN* _node, IPhysics::RigidBody* _ri
     };
     _node->sw = sw;
 
-    auto* se = new BHTN();
+    auto* se = new bhtn();
     se->width = _node->width / 2;
     se->midPoint = IPhysics::Vector3{
         _node->midPoint.x + (_node->width / 2),
@@ -208,13 +175,13 @@ void RealGravityBarnesHut::AddObjectToNode(BHTN* _node, IPhysics::RigidBody* _ri
     _node->rigidBody = nullptr;
 }
 
-IPhysics::Vector3 RealGravityBarnesHut::CalculateGravityForce(
+IPhysics::Vector3 IPhysics::BarnesHutGravity::CalculateGravityForce(
     IPhysics::real _mass1,
     const IPhysics::Vector3& _centreOfMass1,
     IPhysics::real _mass2,
     const IPhysics::Vector3& _centreOfMass2) const {
 
-    IPhysics::real totalMass = _mass1 * _mass2;
+    const IPhysics::real totalMass = _mass1 * _mass2;
     const IPhysics::Vector3 distance = _centreOfMass1 - _centreOfMass2;
     const IPhysics::real distanceMagnitude = distance.Magnitude();
 
@@ -223,8 +190,8 @@ IPhysics::Vector3 RealGravityBarnesHut::CalculateGravityForce(
     return distance * forceMagnitude;
 }
 
-IPhysics::Vector3 RealGravityBarnesHut::TraverseNode(
-    const BHTN *_node,
+IPhysics::Vector3 IPhysics::BarnesHutGravity::TraverseNode(
+    const bhtn *_node,
     const IPhysics::RigidBody* _rigidBody) {
     IPhysics::Vector3 totalForce{0, 0, 0};
 
@@ -235,19 +202,19 @@ IPhysics::Vector3 RealGravityBarnesHut::TraverseNode(
         if (_node->rigidBody == _rigidBody) {
             return totalForce;
         }
-        totalForce +=CalculateGravityForce(
+        totalForce += CalculateGravityForce(
             _rigidBody->GetMass(),
             _rigidBody->GetPosition(),
             _node->rigidBody->GetMass(),
             _node->rigidBody->GetPosition());
         }
     else {
-        IPhysics::Vector3 displacementBetweenMasses = _rigidBody->GetPosition()
+        const IPhysics::Vector3 displacementBetweenMasses = _rigidBody->GetPosition()
         - _node->centreOfMass;
         IPhysics::real distanceBetweenMasses = displacementBetweenMasses.Magnitude();
 
         if ((_node->width / distanceBetweenMasses) < thresholdValue) {
-            totalForce +=CalculateGravityForce(
+            totalForce += CalculateGravityForce(
         _rigidBody->GetMass(),
         _rigidBody->GetPosition(),
         _node->mass,

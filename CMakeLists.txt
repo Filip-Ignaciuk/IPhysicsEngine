@@ -8,29 +8,39 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(IPhysics STATIC
-    core/source/core.cpp
-    core/source/object.cpp  
-    core/source/world.cpp
-    core/source/forcegenerator.cpp
-    core/source/contacts.cpp
-    core/source/collidebroad.cpp
-    core/source/collidenarrow.cpp
-    core/source/components/geometry.cpp
-    core/source/components/primitive.cpp
-    core/source/components/rigidbody.cpp
-    core/source/components/information.cpp
+        core/source/core.cpp
+        core/source/object.cpp
+        core/source/world.cpp
+        core/source/forcegenerator.cpp
+        core/source/contacts.cpp
+        core/source/collidebroad.cpp
+        core/source/collidenarrow.cpp
+
+        core/source/components/geometry.cpp
+        core/source/components/primitive.cpp
+        core/source/components/rigidbody.cpp
+        core/source/components/information.cpp
+
+        core/source/forcegenerators/spring.cpp
+        core/source/forcegenerators/downwardgravity.cpp
+        core/source/forcegenerators/gravity.cpp
+        core/source/forcegenerators/barneshutgravity.cpp
+        core/source/forcegenerators/cudabarneshutgravity.cpp
+        core/source/forcegenerators/cudagravity.cpp
+
 )
 
 target_include_directories(IPhysics PUBLIC
         core/include
         core/include/components
+        core/include/forcegenerators
 )
 
 add_library(IApp STATIC
-    apps/appcore/source/meshmanager.cpp
-    apps/appcore/source/languagemanager.cpp
-    apps/appcore/source/errormanager.cpp
-    apps/appcore/source/rayguihelper.cpp
+        apps/appcore/source/meshmanager.cpp
+        apps/appcore/source/languagemanager.cpp
+        apps/appcore/source/errormanager.cpp
+        apps/appcore/source/rayguihelper.cpp
 )
 
 target_link_libraries(IApp PUBLIC IPhysics)
@@ -40,7 +50,7 @@ target_include_directories(IApp PUBLIC
 )
 
 #add_executable(IPlanetSimulator
-#    apps/IPlanetSimulator/main.cpp
+#       apps/IPlanetSimulator/main.cpp
 #)
 
 #target_link_libraries(IPlanetSimulator
@@ -52,7 +62,6 @@ target_include_directories(IApp PUBLIC
 add_executable(IGravity
         apps/IGravity/source/main.cpp
         apps/IGravity/source/igravity.cpp
-        apps/IGravity/source/gravityalgorithms.cpp
         apps/IGravity/source/igravitymodel.cpp
         apps/IGravity/source/igravityview.cpp
         apps/IGravity/source/igravitycontroller.cpp
@@ -69,10 +78,10 @@ target_include_directories(IGravity PUBLIC
 )
 
 if(NOT EMSCRIPTEN)
-    find_package(raylib REQUIRED)
+        find_package(raylib REQUIRED)
 
-    #target_link_libraries(IPlanetSimulator PRIVATE raylib)
-    target_link_libraries(IGravity PRIVATE raylib)
+        #target_link_libraries(IPlanetSimulator PRIVATE raylib)
+        target_link_libraries(IGravity PRIVATE raylib)
 endif()
 
 #if(EMSCRIPTEN)
