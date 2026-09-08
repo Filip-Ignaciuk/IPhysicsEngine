@@ -23,7 +23,7 @@ CompileFlags:
 
     # Match the user's project target where possible. clangd expects sm_XX[a];
     # Nsight normalizes accepted compute_XX[a] aliases before writing this.
-    - --cuda-gpu-arch=sm_75
+    - --cuda-gpu-arch=sm_86
 
     # CUDA 13.x is newer than clangd 22's reported CUDA support window. These
     # keep that version skew from becoming a top-level diagnostic.

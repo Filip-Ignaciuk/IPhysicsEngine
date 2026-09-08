@@ -46,7 +46,7 @@ class RigidBody : public Component {
   [[nodiscard]] const Vector3& GetRotation() const;
   [[nodiscard]] const Vector3& GetVelocity() const;
   [[nodiscard]] const Vector3& GetAcceleration() const;
-  [[nodiscard]] const Vector3& GetForce() const;
+  [[nodiscard]] const Vector3& GetForceAccumulated() const;
   [[nodiscard]] const Matrix4& GetTransformMatrix() const;
   [[nodiscard]] const Vector3& GetLastFrameAcceleration() const;
   [[nodiscard]] real GetMaxDistanceFromCentre() const;
@@ -80,10 +80,11 @@ class RigidBody : public Component {
   static void CalculateTransformMatrix(Matrix4& transformMatrix,
                                        const Vector3& position,
                                        const Quaternion& orientation);
+                                       
   static void CalculateTransformInertiaTensor(Matrix3& iitWorld,
                                               const Quaternion& quaternion,
                                               const Matrix3& iitBody,
-                                              const Matrix4& rotmat);
+                                              const Matrix4& rotationMatrix);
 };
 }  // namespace IPhysics
 

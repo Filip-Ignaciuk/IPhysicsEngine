@@ -1,5 +1,5 @@
-#ifndef IPHYSICS_CUDAGRAVITY_HPP
-#define IPHYSICS_CUDAGRAVITY_HPP
+#ifndef IPHYSICS_CUDAGRAVITY_CUH
+#define IPHYSICS_CUDAGRAVITY_CUH
 
 #include "gravity.hpp"
 
@@ -18,6 +18,8 @@ namespace IPhysics {
         long long m_rigidBodiesSize = 0;
         long long m_totalThreads = 0;
         long long m_blocks = 0;
+
+        bool m_isCalculated = false;
 
         real* m_positionsX = nullptr;
         real* m_positionsY = nullptr;

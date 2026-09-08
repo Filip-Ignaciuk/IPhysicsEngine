@@ -1,10 +1,11 @@
 {
-  "C_Cpp.default.compileCommands": "${workspaceFolder}/build-web/compile_commands.json",
-  "C_Cpp.default.compilerPath": "/Users/cold/Libraries/emsdk/upstream/emscripten/em++",
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++",
   "C_Cpp.default.includePath": [
-    "/Users/cold/Libraries/emsdk/upstream/emscripten/system/include",
-    "/Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot/include",
-    "/Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1"
+    "${workspaceFolder}/core/include/**",
+    "${workspaceFolder}/apps/appcore/include/**",
+    "/usr/local/cuda/targets/x86_64-linux/include",
+    "/usr/local/cuda/targets/x86_64-linux/include/cccl"
   ],
-  "nsight.cuda.languageSupport.provider": "cpptools"
+  "nsight.cuda.languageSupport.provider": "clangd"
 }

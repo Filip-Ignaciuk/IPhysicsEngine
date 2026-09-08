@@ -61,9 +61,9 @@ void IGravityView::UpdateCamera() {
 void IGravityView::UpdateParticles() const {
   for (int i = 0; i < m_iGravityModel->GetParticles().size(); ++i) {
     IPhysics::Object* obj = m_iGravityModel->GetParticles()[i];
-    const auto* rigidbody = obj->GetComponent<IPhysics::RigidBody>();
-    const Vector2 position{.x = static_cast<float>(rigidbody->GetPosition().x),
-                           .y = static_cast<float>(rigidbody->GetPosition().y)};
+    const auto* rigidBody = obj->GetComponent<IPhysics::RigidBody>();
+    const Vector2 position{.x = static_cast<float>(rigidBody->GetPosition().x),
+                           .y = static_cast<float>(rigidBody->GetPosition().y)};
     DrawCircleV(position, 1.0f, RED);
   }
 }

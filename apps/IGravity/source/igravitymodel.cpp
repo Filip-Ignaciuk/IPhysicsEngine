@@ -1,7 +1,6 @@
 #include "igravitymodel.hpp"
 
 #include <chrono>
-#include <iostream>
 #include <numbers>
 
 #include "barneshutgravity.hpp"

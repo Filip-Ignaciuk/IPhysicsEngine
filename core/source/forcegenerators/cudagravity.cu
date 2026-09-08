@@ -1,9 +1,7 @@
-#include <cuda_runtime.h>
-
-#include <cuda/cmath>
-#include <iostream>
-
 #include "cudagravity.cuh"
+
+#include <cuda_runtime.h>
+#include <cuda/cmath>
 #include "precision.hpp"
 
 __global__ void GravityCalculator2D(IPhysics::real* _positionsX,
@@ -63,6 +61,7 @@ void IPhysics::CudaGravity::RemoveObject(Object* _object) {
 }
 
 void IPhysics::CudaGravity::UpdateForce(RigidBody* _rigidBody, real _duration) {
+  // Check if rigidBody is the first object in the list.
   EnsureCapacity(m_rigidBodiesSize);
   // Ensure there is more than one body.
   if (2 > m_rigidBodiesSize) {

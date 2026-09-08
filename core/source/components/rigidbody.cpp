@@ -169,8 +169,8 @@ const IPhysics::Vector3& IPhysics::RigidBody::GetAcceleration() const {
   return m_lastFrameAcceleration;
 }
 
-const IPhysics::Vector3& IPhysics::RigidBody::GetForce() const {
-  return {m_lastFrameAcceleration * (1 / m_inverseMass)};
+const IPhysics::Vector3& IPhysics::RigidBody::GetForceAccumulated() const {
+  return m_forceAccumulated;
 }
 
 const IPhysics::Matrix4& IPhysics::RigidBody::GetTransformMatrix() const {
@@ -217,48 +217,48 @@ void IPhysics::RigidBody::CalculateTransformMatrix(
 
 void IPhysics::RigidBody::CalculateTransformInertiaTensor(
     Matrix3& iitWorld, const Quaternion& quaternion, const Matrix3& iitBody,
-    const Matrix4& rotmat) {
-  real t4 = rotmat.data[0] * iitBody.data[0] +
-            rotmat.data[1] * iitBody.data[3] + rotmat.data[2] * iitBody.data[6];
-  real t9 = rotmat.data[0] * iitBody.data[1] +
-            rotmat.data[1] * iitBody.data[4] + rotmat.data[2] * iitBody.data[7];
-  real t14 = rotmat.data[0] * iitBody.data[2] +
-             rotmat.data[1] * iitBody.data[5] +
-             rotmat.data[2] * iitBody.data[8];
-  real t28 = rotmat.data[4] * iitBody.data[0] +
-             rotmat.data[5] * iitBody.data[3] +
-             rotmat.data[6] * iitBody.data[6];
-  real t33 = rotmat.data[4] * iitBody.data[1] +
-             rotmat.data[5] * iitBody.data[4] +
-             rotmat.data[6] * iitBody.data[7];
-  real t38 = rotmat.data[4] * iitBody.data[2] +
-             rotmat.data[5] * iitBody.data[5] +
-             rotmat.data[6] * iitBody.data[8];
-  real t52 = rotmat.data[8] * iitBody.data[0] +
-             rotmat.data[9] * iitBody.data[3] +
-             rotmat.data[10] * iitBody.data[6];
-  real t57 = rotmat.data[8] * iitBody.data[1] +
-             rotmat.data[9] * iitBody.data[4] +
-             rotmat.data[10] * iitBody.data[7];
-  real t62 = rotmat.data[8] * iitBody.data[2] +
-             rotmat.data[9] * iitBody.data[5] +
-             rotmat.data[10] * iitBody.data[8];
+    const Matrix4& rotationMatrix) {
+  real t4 = rotationMatrix.data[0] * iitBody.data[0] +
+            rotationMatrix.data[1] * iitBody.data[3] + rotationMatrix.data[2] * iitBody.data[6];
+  real t9 = rotationMatrix.data[0] * iitBody.data[1] +
+            rotationMatrix.data[1] * iitBody.data[4] + rotationMatrix.data[2] * iitBody.data[7];
+  real t14 = rotationMatrix.data[0] * iitBody.data[2] +
+             rotationMatrix.data[1] * iitBody.data[5] +
+             rotationMatrix.data[2] * iitBody.data[8];
+  real t28 = rotationMatrix.data[4] * iitBody.data[0] +
+             rotationMatrix.data[5] * iitBody.data[3] +
+             rotationMatrix.data[6] * iitBody.data[6];
+  real t33 = rotationMatrix.data[4] * iitBody.data[1] +
+             rotationMatrix.data[5] * iitBody.data[4] +
+             rotationMatrix.data[6] * iitBody.data[7];
+  real t38 = rotationMatrix.data[4] * iitBody.data[2] +
+             rotationMatrix.data[5] * iitBody.data[5] +
+             rotationMatrix.data[6] * iitBody.data[8];
+  real t52 = rotationMatrix.data[8] * iitBody.data[0] +
+             rotationMatrix.data[9] * iitBody.data[3] +
+             rotationMatrix.data[10] * iitBody.data[6];
+  real t57 = rotationMatrix.data[8] * iitBody.data[1] +
+             rotationMatrix.data[9] * iitBody.data[4] +
+             rotationMatrix.data[10] * iitBody.data[7];
+  real t62 = rotationMatrix.data[8] * iitBody.data[2] +
+             rotationMatrix.data[9] * iitBody.data[5] +
+             rotationMatrix.data[10] * iitBody.data[8];
   iitWorld.data[0] =
-      t4 * rotmat.data[0] + t9 * rotmat.data[1] + t14 * rotmat.data[2];
+      t4 * rotationMatrix.data[0] + t9 * rotationMatrix.data[1] + t14 * rotationMatrix.data[2];
   iitWorld.data[1] =
-      t4 * rotmat.data[4] + t9 * rotmat.data[5] + t14 * rotmat.data[6];
+      t4 * rotationMatrix.data[4] + t9 * rotationMatrix.data[5] + t14 * rotationMatrix.data[6];
   iitWorld.data[2] =
-      t4 * rotmat.data[8] + t9 * rotmat.data[9] + t14 * rotmat.data[10];
+      t4 * rotationMatrix.data[8] + t9 * rotationMatrix.data[9] + t14 * rotationMatrix.data[10];
   iitWorld.data[3] =
-      t28 * rotmat.data[0] + t33 * rotmat.data[1] + t38 * rotmat.data[2];
+      t28 * rotationMatrix.data[0] + t33 * rotationMatrix.data[1] + t38 * rotationMatrix.data[2];
   iitWorld.data[4] =
-      t28 * rotmat.data[4] + t33 * rotmat.data[5] + t38 * rotmat.data[6];
+      t28 * rotationMatrix.data[4] + t33 * rotationMatrix.data[5] + t38 * rotationMatrix.data[6];
   iitWorld.data[5] =
-      t28 * rotmat.data[8] + t33 * rotmat.data[9] + t38 * rotmat.data[10];
+      t28 * rotationMatrix.data[8] + t33 * rotationMatrix.data[9] + t38 * rotationMatrix.data[10];
   iitWorld.data[6] =
-      t52 * rotmat.data[0] + t57 * rotmat.data[1] + t62 * rotmat.data[2];
+      t52 * rotationMatrix.data[0] + t57 * rotationMatrix.data[1] + t62 * rotationMatrix.data[2];
   iitWorld.data[7] =
-      t52 * rotmat.data[4] + t57 * rotmat.data[5] + t62 * rotmat.data[6];
+      t52 * rotationMatrix.data[4] + t57 * rotationMatrix.data[5] + t62 * rotationMatrix.data[6];
   iitWorld.data[8] =
-      t52 * rotmat.data[8] + t57 * rotmat.data[9] + t62 * rotmat.data[10];
+      t52 * rotationMatrix.data[8] + t57 * rotationMatrix.data[9] + t62 * rotationMatrix.data[10];
 }
