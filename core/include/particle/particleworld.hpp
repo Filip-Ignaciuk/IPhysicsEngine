@@ -12,15 +12,15 @@ namespace IPhysics
         typedef std::vector<Particle*> Particles;
         typedef std::vector<ParticleContactGenerator*> ContactGenerators;
 
-        ParticleWorld(unsigned _maxContacts, unsigned _iterations = 0);
+        ParticleWorld(unsigned maxContacts, unsigned iterations = 0);
 
         void StartFrame();
 
         unsigned GenerateContacts();
         
-        void Integrate(real _duration);
+        void Integrate(real duration);
 
-        void RunPhysics(real _duration);
+        void RunPhysics(real duration);
 
         Particles& GetParticles();
 
@@ -50,7 +50,7 @@ namespace IPhysics
         std::vector<IPhysics::Particle *>* particles;
         real restitution;
         public:
-        void Init(std::vector<IPhysics::Particle *>* _particles, real _restitution);
-        virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) const;
+        void Init(std::vector<IPhysics::Particle *>* particles, real restitution);
+        virtual unsigned AddContact(ParticleContact* contact, unsigned limit) const;
     };
 }

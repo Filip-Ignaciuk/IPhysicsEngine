@@ -9,10 +9,10 @@ namespace IPhysics{
             real m_age;
         public:
         Firework();
-        bool Integrate(real _duration) override;
+        bool Integrate(real duration) override;
         
-        void SetType(unsigned _type);
-        void SetAge(unsigned _age);
+        void SetType(unsigned type);
+        void SetAge(unsigned age);
 
         unsigned GetType();
         real GetAge();
@@ -22,9 +22,9 @@ namespace IPhysics{
             unsigned type;
             unsigned count;
             Payload() : type(0), count(0) {}
-            void Set(unsigned _type, unsigned _count){
-                Payload::type = _type;
-                Payload::count = _count;
+            void Set(unsigned type, unsigned count){
+                Payload::type = type;
+                Payload::count = count;
             }
     };
     struct FireworkRule
@@ -45,9 +45,9 @@ namespace IPhysics{
     
         FireworkRule();
 
-        void Initialise(unsigned _payloadCount);
-        void SetParameters(unsigned _type, real _minAge, real _maxAge, const Vector3& _minVelocity, const Vector3& _maxVelocity, real _damping);
-        void Create(Firework* _firework, const Firework* _parent = NULL) const;
+        void Initialise(unsigned payloadCount);
+        void SetParameters(unsigned type, real minAge, real maxAge, const Vector3& minVelocity, const Vector3& maxVelocity, real damping);
+        void Create(Firework* firework, const Firework* parent = NULL) const;
     };
     
 
@@ -65,13 +65,13 @@ namespace IPhysics{
 
         public:
             static void Initialise();
-            static int Update(real _duration);
+            static int Update(real duration);
 
             static unsigned GetMaxFireworks();
             static Firework* GetFireworks();
             static FireworkRule* GetFireworkRules();
 
-            static void Create(unsigned _type, const Firework* _parent);
-            static void Create(unsigned _type, unsigned _number, const Firework* _parent);
+            static void Create(unsigned type, const Firework* parent);
+            static void Create(unsigned type, unsigned number, const Firework* parent);
     };
 }

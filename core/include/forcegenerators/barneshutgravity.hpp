@@ -8,14 +8,14 @@ namespace IPhysics {
     class BarnesHutGravity : public Gravity {
     public:
         // Constructors
-        BarnesHutGravity(IPhysics::real _gravityConstant,
+        BarnesHutGravity(IPhysics::real gravityConstant,
             IPhysics::real thresholdValue);
 
         // Mutators
-        void AddObject(IPhysics::Object* _object) override;
-        void RemoveObject(IPhysics::Object* _object) override;
+        void AddObject(IPhysics::Object* object) override;
+        void RemoveObject(IPhysics::Object* object) override;
 
-        void UpdateForce(IPhysics::RigidBody* _rigidBody, IPhysics::real _duration) override;
+        void UpdateForce(IPhysics::RigidBody* rigidBody, IPhysics::real duration) override;
 
     private:
         int totalProcessedParticles = 0;
@@ -28,17 +28,17 @@ namespace IPhysics {
         void CreateTree();
         void CreateTreeRoot();
 
-        static void AddObjectToNode(bhtn* _node, IPhysics::RigidBody* _rigidBody);
+        static void AddObjectToNode(bhtn* node, IPhysics::RigidBody* rigidBody);
 
         [[nodiscard]] IPhysics::Vector3 CalculateGravityForce(
-            IPhysics::real _mass1,
-            const IPhysics::Vector3& _centreOfMass1,
-            IPhysics::real _mass2,
-            const IPhysics::Vector3& _centreOfMass2) const;
+            IPhysics::real mass1,
+            const IPhysics::Vector3& centreOfMass1,
+            IPhysics::real mass2,
+            const IPhysics::Vector3& centreOfMass2) const;
 
         IPhysics::Vector3 TraverseNode(
-            const bhtn* _node,
-            const IPhysics::RigidBody* _rigidBody);
+            const bhtn* node,
+            const IPhysics::RigidBody* rigidBody);
     };
 }
 

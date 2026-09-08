@@ -1,23 +1,23 @@
 #include "forcegenerators/spring.hpp"
 
 // Constructors
-IPhysics::Spring::Spring(const Vector3& _localConnectionPoint,
-    RigidBody* _other,
-    const Vector3& _otherLocalConnectionPoint,
-    real _springConstant,
-    real _restLength) :
-    m_localConnectionPoint(_localConnectionPoint),
-    m_localOtherConnectionPoint(_otherLocalConnectionPoint),
-    m_other(_other),
-    m_springConstant(_springConstant),
-    m_restLength(_restLength)
+IPhysics::Spring::Spring(const Vector3& localConnectionPoint,
+    RigidBody* other,
+    const Vector3& otherLocalConnectionPoint,
+    real springConstant,
+    real restLength) :
+    m_localConnectionPoint(localConnectionPoint),
+    m_localOtherConnectionPoint(otherLocalConnectionPoint),
+    m_other(other),
+    m_springConstant(springConstant),
+    m_restLength(restLength)
 {
 }
 
 // Mutators
-void IPhysics::Spring::UpdateForce(RigidBody* _rigidBody, real _duration){
-    const Vector3 lws = _rigidBody->GetPointInWorldSpace(m_localConnectionPoint);
-    const Vector3 ows = _rigidBody->GetPointInWorldSpace(m_localOtherConnectionPoint);
+void IPhysics::Spring::UpdateForce(RigidBody* rigidBody, real duration){
+    const Vector3 lws = rigidBody->GetPointInWorldSpace(m_localConnectionPoint);
+    const Vector3 ows = rigidBody->GetPointInWorldSpace(m_localOtherConnectionPoint);
 
     Vector3 force = lws - ows;
 
@@ -28,6 +28,6 @@ void IPhysics::Spring::UpdateForce(RigidBody* _rigidBody, real _duration){
 
     force.Normalise();
     force *= -magnitude;
-    _rigidBody->AddForceAtPoint(force, lws);
+    rigidBody->AddForceAtPoint(force, lws);
 
 }

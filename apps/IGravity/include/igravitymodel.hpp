@@ -12,15 +12,15 @@ enum class GravityAlgorithm {
 class IGravityModel {
 public:
     // Constructors
-    explicit IGravityModel(IPhysics::real _timeStep);
+    explicit IGravityModel(IPhysics::real timeStep);
 
     // Mutators
     void SetupSimulation();
     void UpdateSimulation();
 
-    void UpdateNumberOfParticles(int _count);
+    void UpdateNumberOfParticles(int count);
 
-    void SetSimulationPause(bool _wantsPaused);
+    void SetSimulationPause(bool wantsPaused);
 
     // Queries
     [[nodiscard]] const std::vector<IPhysics::Object*>& GetParticles();

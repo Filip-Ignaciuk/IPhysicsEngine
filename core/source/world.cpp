@@ -17,16 +17,16 @@ void IPhysics::World::StartFrame(){
     }
 }
 
-void IPhysics::World::RunPhysics(real _timestep){
+void IPhysics::World::RunPhysics(real timestep){
     // Update the forces
-    m_registry.UpdateForces(_timestep);
+    m_registry.UpdateForces(timestep);
 
     // Move the objects
     auto iterator = m_objects.begin();
     while(iterator != m_objects.end()){
         Object* object = *iterator;
         auto* rigidbody = object->GetComponent<RigidBody>();
-        rigidbody->Integrate(_timestep);
+        rigidbody->Integrate(timestep);
         ++iterator;
     }
 
@@ -66,26 +66,26 @@ void IPhysics::World::RunPhysics(real _timestep){
     */
 }
 
-void IPhysics::World::AddObject(Object* _object){
-    m_objects.emplace_back(_object);
+void IPhysics::World::AddObject(Object* object){
+    m_objects.emplace_back(object);
     /*
-    RigidBody* body = _object->GetComponent<RigidBody>();
+    RigidBody* body = object->GetComponent<RigidBody>();
     const BoundingSphere boundingSphere(body->GetPosition(), body->GetMaxDistanceFromCentre());
     if(m_root == nullptr){
-        m_root = new BoundingVolumeHierarchyNode<BoundingSphere>(nullptr, boundingSphere, _object);
+        m_root = new BoundingVolumeHierarchyNode<BoundingSphere>(nullptr, boundingSphere, object);
     }
     else{
-        m_root->Insert(_object, boundingSphere);
+        m_root->Insert(object, boundingSphere);
     }
     */
 }
 
-void IPhysics::World::RemoveObject(Object* _object){
-    RemoveForceRegistration(_object);
+void IPhysics::World::RemoveObject(Object* object){
+    RemoveForceRegistration(object);
     m_objects.erase(
         std::ranges::remove(
             m_objects,
-            _object).begin(),
+            object).begin(),
             m_objects.end());
 }
 
@@ -93,17 +93,17 @@ void IPhysics::World::RemoveLastObject() {
     m_objects.pop_back();
 }
 
-void IPhysics::World::AddForceRegistration(Object* _object,
-                                           const std::shared_ptr<ForceGenerator>& _forceGenerator){
-    m_registry.Add(_object, _forceGenerator);
+void IPhysics::World::AddForceRegistration(Object* object,
+                                           const std::shared_ptr<ForceGenerator>& forceGenerator){
+    m_registry.Add(object, forceGenerator);
 }
 
-void IPhysics::World::RemoveForceRegistration(Object* _object){
-    m_registry.Remove(_object);
+void IPhysics::World::RemoveForceRegistration(Object* object){
+    m_registry.Remove(object);
 }
 
-void IPhysics::World::SetPhysicsState(bool _state){
-    m_physicsState = _state;
+void IPhysics::World::SetPhysicsState(bool state){
+    m_physicsState = state;
 }
 
 // Queries
@@ -112,8 +112,8 @@ const std::vector<IPhysics::Object*>& IPhysics::World::GetObjects()  {
 }
 
 const IPhysics::ForceRegistration& IPhysics::World::GetForceRegistration(
-    Object* _object) const{
-    return *m_registry.Get(_object);
+    Object* object) const{
+    return *m_registry.Get(object);
 }
 
 const IPhysics::ForceRegistry& IPhysics::World::GetForceRegistry() const{

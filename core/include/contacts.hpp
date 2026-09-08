@@ -20,16 +20,16 @@ namespace IPhysics{
         Vector3 relativeContactPosition[2];
 
         public:
-        void SetBodyData(RigidBody* _one, RigidBody* _two, real _friction, real _restitution);
+        void SetBodyData(RigidBody* one, RigidBody* two, real friction, real restitution);
         protected:
         void MatchAwakeState();
         void CreateContactBasis();
-        Vector3 CalculateFrictionlessImpulse(Matrix3* _inverseInertiaTensor);
-        void ApplyVelocityChange(Vector3 _velocityChange[2], Vector3 _rotationChange[2]);
-        void ApplyPositionChange(Vector3 _linearChange[2], Vector3 _angularChange[2], real _penetration);
-        void CalculateInternals(real _duration);
-        Vector3 CalculateLocalVelocity(unsigned _bodyIndex, real _duration);
-        void CalculateDesiredDeltaVelocity(real _duration);
+        Vector3 CalculateFrictionlessImpulse(Matrix3* inverseInertiaTensor);
+        void ApplyVelocityChange(Vector3 velocityChange[2], Vector3 rotationChange[2]);
+        void ApplyPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], real penetration);
+        void CalculateInternals(real duration);
+        Vector3 CalculateLocalVelocity(unsigned bodyIndex, real duration);
+        void CalculateDesiredDeltaVelocity(real duration);
         void SwapBodies();
         void CalculateContactBasis();
     };
@@ -43,10 +43,10 @@ namespace IPhysics{
         public:
         unsigned positionIterationsUsed;
         unsigned velocityIterationsUsed;
-        void ResolveContacts(Contact* _contactArray, unsigned _numberOfContacts, real _duration);
+        void ResolveContacts(Contact* contactArray, unsigned numberOfContacts, real duration);
         protected:
-        void PrepareContacts(Contact* _contactArray, unsigned _numberOfContacts, real _duration);
-        void AdjustVelocities(Contact* _contactArray, unsigned _numberOfContacts, real _duration);
-        void AdjustPositions(Contact* _contactArray, unsigned _numberOfContacts, real _duration);
+        void PrepareContacts(Contact* contactArray, unsigned numberOfContacts, real duration);
+        void AdjustVelocities(Contact* contactArray, unsigned numberOfContacts, real duration);
+        void AdjustPositions(Contact* contactArray, unsigned numberOfContacts, real duration);
     };
 }

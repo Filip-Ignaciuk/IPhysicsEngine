@@ -17,9 +17,9 @@ namespace IPhysics{
         real GetScale();
         Color GetColor();
 
-        void SetMesh(Mesh* _mesh);
-        void SetScale(float _scale);
-        void SetColor(Color _color);
+        void SetMesh(Mesh* mesh);
+        void SetScale(float scale);
+        void SetColor(Color color);
 
     };
 }

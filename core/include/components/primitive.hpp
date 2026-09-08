@@ -16,7 +16,7 @@ namespace IPhysics
         Matrix4 offset;
         Matrix4 transform;
         CollisionPrimitiveType type;
-        Vector3 GetAxis(unsigned _index) const;
+        Vector3 GetAxis(unsigned index) const;
     };
 
     class CollisionSphere : public CollisionPrimitive{

@@ -11,15 +11,15 @@ namespace IPhysics{
         virtual ~ForceGenerator() = default;
 
         // Mutators
-        virtual void UpdateForce(RigidBody* _rigidBody, real _duration) = 0;
+        virtual void UpdateForce(RigidBody* rigidBody, real duration) = 0;
     };
 
     struct ForceRegistration{
         RigidBody* rigidBody;
         std::shared_ptr<ForceGenerator> forceGenerator;
 
-        bool operator==(const ForceRegistration& _other) const {
-            return rigidBody == _other.rigidBody && forceGenerator == _other.forceGenerator;
+        bool operator==(const ForceRegistration& other) const {
+            return rigidBody == other.rigidBody && forceGenerator == other.forceGenerator;
         }
     };
 
@@ -29,15 +29,15 @@ namespace IPhysics{
         ForceRegistry();
 
         // Mutators
-        void Add(Object* _object, const std::shared_ptr<ForceGenerator> &_forceGenerator);
-        void Remove(Object* _object, const std::shared_ptr<ForceGenerator>& _forceGenerator);
-        void Remove(Object* _object);
+        void Add(Object* object, const std::shared_ptr<ForceGenerator> &forceGenerator);
+        void Remove(Object* object, const std::shared_ptr<ForceGenerator>& forceGenerator);
+        void Remove(Object* object);
         void RemoveAll();
         void Clear();
-        void UpdateForces(real _duration);
+        void UpdateForces(real duration);
 
         // Queries
-        const ForceRegistration* Get(Object* _object) const;
+        const ForceRegistration* Get(Object* object) const;
 
     protected:
         std::vector<ForceRegistration> registrations;

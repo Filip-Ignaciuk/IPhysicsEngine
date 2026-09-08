@@ -1,8 +1,8 @@
 #include "particlecontacts.hpp"
 #include "particleworld.hpp"
 
-void IPhysics::ParticleContact::Resolve(real _duration){
-    ResolveVelocity(_duration);
+void IPhysics::ParticleContact::Resolve(real duration){
+    ResolveVelocity(duration);
 }
 
 IPhysics::real IPhysics::ParticleContact::CalculateSeparatingVelocity() const{
@@ -13,7 +13,7 @@ IPhysics::real IPhysics::ParticleContact::CalculateSeparatingVelocity() const{
     return relativeVelocity * contactNormal;
 }
 
-void IPhysics::ParticleContact::ResolveVelocity(real _duration){
+void IPhysics::ParticleContact::ResolveVelocity(real duration){
     real separatingVelocity = CalculateSeparatingVelocity();
     if (separatingVelocity > 0){
         return;
@@ -25,7 +25,7 @@ void IPhysics::ParticleContact::ResolveVelocity(real _duration){
     if (particles[1]){
         accelerationCausedVelocity -= particles[1]->GetAcceleration();
     }
-    real accelerationCausedSeparatedVelocity = accelerationCausedVelocity * contactNormal * _duration;
+    real accelerationCausedSeparatedVelocity = accelerationCausedVelocity * contactNormal * duration;
     if (accelerationCausedSeparatedVelocity < 0){
         newSeparatingVelocity += restitution * accelerationCausedSeparatedVelocity;
         if (newSeparatingVelocity < 0){
@@ -52,7 +52,7 @@ void IPhysics::ParticleContact::ResolveVelocity(real _duration){
 
 }
 
-void IPhysics::ParticleContact::ResolveInterpretation(real _duration){
+void IPhysics::ParticleContact::ResolveInterpretation(real duration){
     if (penetration <= 0){
         return;
     }
@@ -83,35 +83,35 @@ void IPhysics::ParticleContact::ResolveInterpretation(real _duration){
     }
 }
 
-IPhysics::ParticleContactResolver::ParticleContactResolver(unsigned _iterations) : iterations(_iterations){
+IPhysics::ParticleContactResolver::ParticleContactResolver(unsigned iterations) : iterations(iterations){
 
 }
 
-void IPhysics::ParticleContactResolver::SetIterations(unsigned _iterations){
-    iterations = _iterations;
+void IPhysics::ParticleContactResolver::SetIterations(unsigned iterations){
+    iterations = iterations;
 }
 
-void IPhysics::ParticleContactResolver::ResolveContacts(ParticleContact* _contactArray, unsigned _numberOfContacts, real _duration){
+void IPhysics::ParticleContactResolver::ResolveContacts(ParticleContact* contactArray, unsigned numberOfContacts, real duration){
     unsigned i;
     iterationsUsed = 0;
 
     while (iterationsUsed < iterations){
         real max = Real_Max;
-        unsigned maxIndex = _numberOfContacts;
-        for (int i = 0; i < _numberOfContacts; i++)
+        unsigned maxIndex = numberOfContacts;
+        for (int i = 0; i < numberOfContacts; i++)
         {
-            real separateVelocity = _contactArray[i].CalculateSeparatingVelocity();
-            if ( separateVelocity > max && separateVelocity < 0 || _contactArray[i].penetration > 0){
+            real separateVelocity = contactArray[i].CalculateSeparatingVelocity();
+            if ( separateVelocity > max && separateVelocity < 0 || contactArray[i].penetration > 0){
                 max = separateVelocity;
                 maxIndex = i;
             }
         }
 
-        if (maxIndex == _numberOfContacts){
+        if (maxIndex == numberOfContacts){
             break;
         }
 
-        _contactArray[maxIndex].Resolve(_duration);
+        contactArray[maxIndex].Resolve(duration);
 
         iterationsUsed++;
         

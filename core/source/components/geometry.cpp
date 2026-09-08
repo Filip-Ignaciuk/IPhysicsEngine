@@ -16,14 +16,14 @@ Color IPhysics::Geometry::GetColor(){
     return m_color;
 }
 
-void IPhysics::Geometry::SetMesh(Mesh* _mesh){
-    m_mesh = _mesh;
+void IPhysics::Geometry::SetMesh(Mesh* mesh){
+    m_mesh = mesh;
 }
 
-void IPhysics::Geometry::SetScale(float _scale){
-    m_scale = _scale;
+void IPhysics::Geometry::SetScale(float scale){
+    m_scale = scale;
 }
 
-void IPhysics::Geometry::SetColor(Color _color){
-    m_color = _color;
+void IPhysics::Geometry::SetColor(Color color){
+    m_color = color;
 }

@@ -7,20 +7,20 @@ namespace IPhysics{
         Particle* particles[2];
         protected:
         real CurrentLength() const;
-        virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) = 0;
+        virtual unsigned AddContact(ParticleContact* contact, unsigned limit) = 0;
     };
 
     class ParticleCable : public ParticleLink{
         public:
         real maxLength;
         real restitution;
-        virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) const;
+        virtual unsigned AddContact(ParticleContact* contact, unsigned limit) const;
     };
 
     class ParticleRod : public ParticleLink{
         public:
         real length;
         real CurrentLength() const;
-        virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) const;
+        virtual unsigned AddContact(ParticleContact* contact, unsigned limit) const;
     };
 }

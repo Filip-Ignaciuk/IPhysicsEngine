@@ -6,12 +6,12 @@
 namespace IPhysics {
     class RealGravityBarnesHutCuda : public IPhysics::ForceGenerator {
     public:
-        explicit RealGravityBarnesHutCuda(const IPhysics::real& _gravityConstant);
+        explicit RealGravityBarnesHutCuda(const IPhysics::real& gravityConstant);
 
-        void AddObject(IPhysics::Object* _object);
-        void RemoveObject(IPhysics::Object* _object);
+        void AddObject(IPhysics::Object* object);
+        void RemoveObject(IPhysics::Object* object);
 
-        void UpdateForce(IPhysics::RigidBody* _rigidBody, IPhysics::real _duration) override;
+        void UpdateForce(IPhysics::RigidBody* rigidBody, IPhysics::real duration) override;
     private:
         void CreateTree();
     };

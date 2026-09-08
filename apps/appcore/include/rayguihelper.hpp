@@ -8,7 +8,7 @@ namespace IApp {
         IPhysics::real result;
     };
 
-    CharBufferResultStore* CharBufferToReal(char _buffer[64]);
+    CharBufferResultStore* CharBufferToReal(char buffer[64]);
 }
 
 

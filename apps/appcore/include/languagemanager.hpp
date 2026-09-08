@@ -15,8 +15,8 @@ namespace IApp{
         static std::unordered_map<std::string, std::string> extensions;
         public:
         static void Initialise();
-        static void LoadLanguage(std::string& _filename);
-        static std::string GetText(const std::string& _key);
+        static void LoadLanguage(std::string& filename);
+        static std::string GetText(const std::string& key);
         static std::vector<std::string> GetLanguageStrings();
     };
 }

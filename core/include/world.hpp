@@ -16,22 +16,22 @@ namespace IPhysics
         public:
         // Mutators
         void StartFrame();
-        void RunPhysics(real _timestep);
+        void RunPhysics(real timestep);
 
-        void AddObject(Object* _object);
-        void RemoveObject(Object* _object);
+        void AddObject(Object* object);
+        void RemoveObject(Object* object);
         void RemoveLastObject();
 
-        void AddForceRegistration(Object* _object,
-            const std::shared_ptr<ForceGenerator>& _forceGenerator);
-        void RemoveForceRegistration(Object* _object);
+        void AddForceRegistration(Object* object,
+            const std::shared_ptr<ForceGenerator>& forceGenerator);
+        void RemoveForceRegistration(Object* object);
 
-        void SetPhysicsState(bool _state);
+        void SetPhysicsState(bool state);
 
         // Queries
         [[nodiscard]] const std::vector<Object*>& GetObjects();
 
-        [[nodiscard]] const ForceRegistration& GetForceRegistration(Object* _object) const;
+        [[nodiscard]] const ForceRegistration& GetForceRegistration(Object* object) const;
 
         [[nodiscard]] const ForceRegistry& GetForceRegistry() const;
 

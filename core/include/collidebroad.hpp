@@ -20,7 +20,7 @@ namespace IPhysics{
         BoundingVolumeHierarchyNode* parent;
 
 
-        BoundingVolumeHierarchyNode(BoundingVolumeHierarchyNode* _parent, const BoundingVolumeClass _volume, Object* _object) : parent(_parent), volume(_volume), object(_object){
+        BoundingVolumeHierarchyNode(BoundingVolumeHierarchyNode* parent, const BoundingVolumeClass volume, Object* object) : parent(parent), volume(volume), object(object){
             children[0] = children[1] = nullptr;
         }
 
@@ -28,29 +28,29 @@ namespace IPhysics{
             return object != nullptr;
         }
 
-        unsigned GetPotentialContacts(PotentialContact* _contacts, unsigned _limit) const{
-            if(IsLeaf() || _limit == 0){
+        unsigned GetPotentialContacts(PotentialContact* contacts, unsigned limit) const{
+            if(IsLeaf() || limit == 0){
                 return 0;
             }
-            return children[0]->GetPotentialContactsWith(children[1], _contacts, _limit);
+            return children[0]->GetPotentialContactsWith(children[1], contacts, limit);
         }
 
-        void Insert(Object* _newObject, const BoundingVolumeClass _newVolume){
+        void Insert(Object* newObject, const BoundingVolumeClass newVolume){
             if(IsLeaf()){
                 children[0] = new BoundingVolumeHierarchyNode<BoundingVolumeClass>(this, volume, object);
 
-                children[1] = new BoundingVolumeHierarchyNode<BoundingVolumeClass>(this, _newVolume, _newObject);
+                children[1] = new BoundingVolumeHierarchyNode<BoundingVolumeClass>(this, newVolume, newObject);
 
                 this->object = nullptr;
 
                 RecalculateBoundingVolume();
             }
             else{
-                if(children[0]->volume.GetGrowth(_newVolume) < children[1]->volume.GetGrowth(_newVolume)){
-                    children[0]->Insert(_newObject, _newVolume);
+                if(children[0]->volume.GetGrowth(newVolume) < children[1]->volume.GetGrowth(newVolume)){
+                    children[0]->Insert(newObject, newVolume);
                 }
                 else{
-                    children[1]->Insert(_newObject, _newVolume);
+                    children[1]->Insert(newObject, newVolume);
                 }
             }
         }
@@ -96,36 +96,36 @@ namespace IPhysics{
         
 
         protected:
-        bool Overlaps(const BoundingVolumeHierarchyNode<BoundingVolumeClass>* _other) const{
-            return volume.Overlaps(&_other->volume);
+        bool Overlaps(const BoundingVolumeHierarchyNode<BoundingVolumeClass>* other) const{
+            return volume.Overlaps(&other->volume);
         }
 
-        unsigned GetPotentialContactsWith(const BoundingVolumeHierarchyNode<BoundingVolumeClass>* _other, PotentialContact* _contacts, unsigned _limit) const{
-            if(!Overlaps(_other) || _limit == 0){
+        unsigned GetPotentialContactsWith(const BoundingVolumeHierarchyNode<BoundingVolumeClass>* other, PotentialContact* contacts, unsigned limit) const{
+            if(!Overlaps(other) || limit == 0){
                 return 0;
             }
 
-            if(IsLeaf() && _other->IsLeaf()){
-                _contacts->object[0] = object;
-                _contacts->object[1] = _other->object;
+            if(IsLeaf() && other->IsLeaf()){
+                contacts->object[0] = object;
+                contacts->object[1] = other->object;
                 return 1;
             }
 
-            if(_other->IsLeaf() || (!IsLeaf() && volume.GetSize() >= _other->volume.GetSize())){
-                unsigned count = children[0]->GetPotentialContactsWith(_other, _contacts, _limit);
+            if(other->IsLeaf() || (!IsLeaf() && volume.GetSize() >= other->volume.GetSize())){
+                unsigned count = children[0]->GetPotentialContactsWith(other, contacts, limit);
 
-                if(_limit > count){
-                    return count + children[1]->GetPotentialContactsWith(_other, _contacts + count, _limit - count);
+                if(limit > count){
+                    return count + children[1]->GetPotentialContactsWith(other, contacts + count, limit - count);
                 }
                 else{
                     return count;
                 }
             }
             else{
-                unsigned count = GetPotentialContactsWith(_other->children[0], _contacts, _limit);
+                unsigned count = GetPotentialContactsWith(other->children[0], contacts, limit);
 
-                if (_limit > count){
-                    return count + GetPotentialContactsWith(_other->children[1], _contacts + count, _limit - count);
+                if (limit > count){
+                    return count + GetPotentialContactsWith(other->children[1], contacts + count, limit - count);
                 }
                 else return count;
 
@@ -150,9 +150,9 @@ namespace IPhysics{
     struct BoundingSphere{
         Vector3 m_centre;
         real m_radius;
-        BoundingSphere(const Vector3& _centre, real _radius);
-        BoundingSphere(const BoundingSphere& _one, const BoundingSphere& _two);
-        bool Overlaps(const BoundingSphere* _other) const;
+        BoundingSphere(const Vector3& centre, real radius);
+        BoundingSphere(const BoundingSphere& one, const BoundingSphere& two);
+        bool Overlaps(const BoundingSphere* other) const;
         real GetGrowth(const BoundingSphere &other) const;
         real GetSize() const;
     };

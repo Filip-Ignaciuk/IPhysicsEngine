@@ -7,28 +7,28 @@ namespace IPhysics {
     class Aero : public ForceGenerator{
     public:
         // Constructors
-        Aero(const Matrix3& _tensor,
-            const Vector3& _localPosition,
-            const Vector3* _windSpeed);
+        Aero(const Matrix3& tensor,
+            const Vector3& localPosition,
+            const Vector3* windSpeed);
 
         // Mutators
-        void UpdateForce(RigidBody* _rigidBody, real _duration) override;
+        void UpdateForce(RigidBody* rigidBody, real duration) override;
     protected:
         Matrix3 m_tensor;
         Vector3 m_localPosition;
         const Vector3* m_windSpeed;
 
-        void UpdateForceFromTensor(RigidBody* _body, real _duration, const Matrix3& _tensor) const;
+        void UpdateForceFromTensor(RigidBody* body, real duration, const Matrix3& tensor) const;
     };
 
     class AeroControl : public Aero{
     public:
         // Constructors
-        AeroControl(const Matrix3& _base, const Matrix3& _minimumTensor, const Matrix3& _maximumTensor, const Vector3& _localPosition, const Vector3* _windSpeed);
+        AeroControl(const Matrix3& base, const Matrix3& minimumTensor, const Matrix3& maximumTensor, const Vector3& localPosition, const Vector3* windSpeed);
 
         // Mutators
-        void SetControl(real _value);
-        void UpdateForce(RigidBody* _rigidBody, real _duration) override;
+        void SetControl(real value);
+        void UpdateForce(RigidBody* rigidBody, real duration) override;
 
     protected:
         Matrix3 m_maxTensor;

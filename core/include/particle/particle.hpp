@@ -14,16 +14,16 @@ namespace IPhysics{
 
         public:
             Particle();
-            Particle(Vector3 _position, real _damping, real _inverseMass);
+            Particle(Vector3 position, real damping, real inverseMass);
 
-            void SetMass(real _mass);
-            void SetInverseMass(real _inverseMass);
-            void SetDamping(real _damping);
-            void SetPosition(Vector3 _position);
-            void SetVelocity(Vector3 _velocity);
-            void SetAcceleration(Vector3 _acceleration);
-            void AddForce(Vector3 _force);
-            virtual bool Integrate(real _duration);
+            void SetMass(real mass);
+            void SetInverseMass(real inverseMass);
+            void SetDamping(real damping);
+            void SetPosition(Vector3 position);
+            void SetVelocity(Vector3 velocity);
+            void SetAcceleration(Vector3 acceleration);
+            void AddForce(Vector3 force);
+            virtual bool Integrate(real duration);
             void ClearAccumulator();
         
             real GetKineticEnergy() const;

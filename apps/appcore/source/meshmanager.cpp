@@ -23,24 +23,24 @@ void IApp::MeshManager::Unload(){
     models.clear();
 }
 
-Mesh* IApp::MeshManager::GetMesh(std::string _meshName){
-    MeshMap::iterator mapIterator = meshes.find(_meshName);
+Mesh* IApp::MeshManager::GetMesh(std::string meshName){
+    MeshMap::iterator mapIterator = meshes.find(meshName);
     if(mapIterator != meshes.end()){
         return &mapIterator->second;
     }
     return nullptr;
 }
 
-Model* IApp::MeshManager::GetModel(std::string _modelName){
-    ModelMap::iterator mapIterator = models.find(_modelName);
+Model* IApp::MeshManager::GetModel(std::string modelName){
+    ModelMap::iterator mapIterator = models.find(modelName);
     if(mapIterator != models.end()){
         return &mapIterator->second;
     }
     return nullptr;
 }
 
-Color IApp::MeshManager::GetColor(std::string _colour){
-    MeshColours::iterator mapIterator = meshColours.find(_colour);
+Color IApp::MeshManager::GetColor(std::string colour){
+    MeshColours::iterator mapIterator = meshColours.find(colour);
     if(mapIterator != meshColours.end()){
         return mapIterator->second;
     }

@@ -19,13 +19,13 @@ namespace IPhysics{
         Vector3 contactNormal;
 
         protected:
-        void Resolve(real _duration);
+        void Resolve(real duration);
 
         real CalculateSeparatingVelocity() const;
 
         private:
-        void ResolveVelocity(real _duration);
-        void ResolveInterpretation(real _duration);
+        void ResolveVelocity(real duration);
+        void ResolveInterpretation(real duration);
     };
 
     class ParticleContactResolver{
@@ -33,16 +33,16 @@ namespace IPhysics{
         unsigned iterations;
         unsigned iterationsUsed;
         public:
-        ParticleContactResolver(unsigned _iterations);
-        void SetIterations(unsigned _iterations);
-        void ResolveContacts(ParticleContact* _contactArray, unsigned _numberOfContacts, real _duration);
+        ParticleContactResolver(unsigned iterations);
+        void SetIterations(unsigned iterations);
+        void ResolveContacts(ParticleContact* contactArray, unsigned numberOfContacts, real duration);
 
     };
 
     class ParticleContactGenerator
     {
         public:
-        virtual unsigned AddContact(ParticleContact* _contact, unsigned _limit) const = 0;
+        virtual unsigned AddContact(ParticleContact* contact, unsigned limit) const = 0;
     };
 
 

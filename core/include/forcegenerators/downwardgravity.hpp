@@ -7,10 +7,10 @@ namespace IPhysics {
     class DownwardGravity : public ForceGenerator{
     public:
         // Constructors
-        explicit DownwardGravity(const Vector3& _gravity);
+        explicit DownwardGravity(const Vector3& gravity);
 
         // Mutators
-        void UpdateForce(RigidBody* _rigidBody, real _duration) override;
+        void UpdateForce(RigidBody* rigidBody, real duration) override;
     private:
         Vector3 m_gravity;
     };

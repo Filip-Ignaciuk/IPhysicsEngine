@@ -4,8 +4,8 @@ IPhysics::FireworkRule::FireworkRule() : type(0), minAge(0), maxAge(0), minVeloc
 
 }
 
-void IPhysics::FireworkRule::Initialise(unsigned _payloadCount){
-    FireworkRule::payloadCount = _payloadCount;
+void IPhysics::FireworkRule::Initialise(unsigned payloadCount){
+    FireworkRule::payloadCount = payloadCount;
     payloads = new Payload[payloadCount];
     for (unsigned i = 0; i < payloadCount; i++)
     {
@@ -14,56 +14,56 @@ void IPhysics::FireworkRule::Initialise(unsigned _payloadCount){
     
 }
 
-void IPhysics::FireworkRule::SetParameters(unsigned _type, real _minAge, real _maxAge, const Vector3& _minVelocity, const Vector3& _maxVelocity, real _damping){
-    FireworkRule::type = _type;
-    FireworkRule::minAge = _minAge;
-    FireworkRule::maxAge = _maxAge;
-    FireworkRule::minVelocity = _minVelocity;
-    FireworkRule::maxVelocity = _maxVelocity;
-    FireworkRule::damping = _damping;
+void IPhysics::FireworkRule::SetParameters(unsigned type, real minAge, real maxAge, const Vector3& minVelocity, const Vector3& maxVelocity, real damping){
+    FireworkRule::type = type;
+    FireworkRule::minAge = minAge;
+    FireworkRule::maxAge = maxAge;
+    FireworkRule::minVelocity = minVelocity;
+    FireworkRule::maxVelocity = maxVelocity;
+    FireworkRule::damping = damping;
 }
 
 
 
-void IPhysics::FireworkRule::Create(Firework* _firework, const Firework* _parent) const{
-    _firework->SetType(type);
-    _firework->SetAge(RandomReal(minAge, maxAge));
+void IPhysics::FireworkRule::Create(Firework* firework, const Firework* parent) const{
+    firework->SetType(type);
+    firework->SetAge(RandomReal(minAge, maxAge));
 
     Vector3 velocity;
-    if (_parent){
-        _firework->SetPosition(_parent->GetPosition());
-        velocity += _parent->GetVelocity();
+    if (parent){
+        firework->SetPosition(parent->GetPosition());
+        velocity += parent->GetVelocity();
     }
     else{
         int positionx = RandomInt(0, 3) - 1;
         Vector3 start(positionx * 5.0f, 0,0);
-        _firework->SetPosition(start);
+        firework->SetPosition(start);
 
     }
     velocity += RandomVector3(minVelocity, maxVelocity);
-    _firework->SetVelocity(velocity);
+    firework->SetVelocity(velocity);
 
-    _firework->SetMass(1);
-    _firework->SetDamping(damping);
-    _firework->ClearAccumulator();
+    firework->SetMass(1);
+    firework->SetDamping(damping);
+    firework->ClearAccumulator();
 }
 
 IPhysics::Firework::Firework() : m_age(0), m_type(0), Particle(){
 
 }
 
-bool IPhysics::Firework::Integrate(real _duration){
-    Particle::Integrate(_duration);
-    m_age -= _duration;
+bool IPhysics::Firework::Integrate(real duration){
+    Particle::Integrate(duration);
+    m_age -= duration;
     return (m_age < 0) || (m_position.GetY() < 0);
 }
 
-void IPhysics::Firework::SetType(unsigned _type){
-    m_type = _type;
+void IPhysics::Firework::SetType(unsigned type){
+    m_type = type;
 }   
 
-void IPhysics::Firework::SetAge(unsigned _age){
-    m_age = _age;
+void IPhysics::Firework::SetAge(unsigned age){
+    m_age = age;
 }
 
 unsigned IPhysics::Firework::GetType(){
@@ -74,19 +74,19 @@ IPhysics::real IPhysics::Firework::GetAge(){
     return m_age;
 }
 
-void IPhysics::FireworkManager::Create(unsigned _type, const Firework* _parent){
-    FireworkRule* rule = fireworkRules + (_type - 1);
+void IPhysics::FireworkManager::Create(unsigned type, const Firework* parent){
+    FireworkRule* rule = fireworkRules + (type - 1);
 
-    rule->Create(&fireworks[nextFirework], _parent);
+    rule->Create(&fireworks[nextFirework], parent);
 
     nextFirework = (nextFirework + 1) % maxFireworks;
 }
 
-void IPhysics::FireworkManager::Create(unsigned _type, unsigned _number, const Firework* _parent)
+void IPhysics::FireworkManager::Create(unsigned type, unsigned number, const Firework* parent)
 {
-    for (unsigned i = 0; i < _number; i++)
+    for (unsigned i = 0; i < number; i++)
     {
-        Create(_type, _parent);
+        Create(type, parent);
     }
 }
 
@@ -187,11 +187,11 @@ void IPhysics::FireworkManager::Initialise(){
 }
 
 
-int IPhysics::FireworkManager::Update(real _duration){
+int IPhysics::FireworkManager::Update(real duration){
     int pay = 0;
     for (Firework* firework = fireworks; firework < fireworks + maxFireworks; firework++){
         if (firework->GetType() > 0){
-            if (firework->Integrate(_duration)){
+            if (firework->Integrate(duration)){
                 FireworkRule* rule = fireworkRules + (firework->GetType() - 1);
 
                 firework->SetType(0);
