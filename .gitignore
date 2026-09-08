@@ -1,3 +1,11 @@
 build/
 build-web/
 personal/
+.cache/
+.idea/
+.vscode/
+.DS_Store
+.clang-format
+.clangd
+.clangd.nsight.example
+.gitattributes
