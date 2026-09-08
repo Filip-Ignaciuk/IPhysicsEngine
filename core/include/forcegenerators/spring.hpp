@@ -1,7 +1,7 @@
 #ifndef IPHYSICS_SPRING_HPP
 #define IPHYSICS_SPRING_HPP
 
-#include "forceGenerator.hpp"
+#include "forcegenerator.hpp"
 
 #include "core.hpp"
 

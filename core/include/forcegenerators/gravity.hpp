@@ -1,7 +1,7 @@
 #ifndef IPHYSICS_GRAVITY_HPP
 #define IPHYSICS_GRAVITY_HPP
 
-#include "ForceGenerator.hpp"
+#include "forcegenerator.hpp"
 
 namespace IPhysics {
     class Gravity : public ForceGenerator{

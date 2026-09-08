@@ -1,5 +1,7 @@
 #include "forcegenerator.hpp"
 
+#include <iterator>
+
 IPhysics::ForceRegistry::ForceRegistry(){
     constexpr std::vector<ForceRegistration> temporary;
     registrations = temporary;
@@ -23,7 +25,7 @@ void IPhysics::ForceRegistry::Remove(Object* _object){
     auto* rigidBody = _object->GetComponent<RigidBody>();
     for(const ForceRegistration& forceRegistration : registrations){
         if(forceRegistration.rigidBody == rigidBody){
-            registrations.erase(remove(registrations.begin(), registrations.end(), forceRegistration), registrations.end());
+            std::erase(registrations, forceRegistration);
         }
     }
 }
@@ -32,10 +34,10 @@ void IPhysics::ForceRegistry::RemoveAll() {
     registrations.clear();
 }
 
-IPhysics::ForceRegistration* IPhysics::ForceRegistry::Get(Object* _object) const {
-    for (ForceRegistration forceRegistration : registrations) {
-        if (forceRegistration.rigidBody == _object->GetComponent<RigidBody>()) {
-            return &forceRegistration;
+const IPhysics::ForceRegistration* IPhysics::ForceRegistry::Get(Object* _object) const {
+    for (const ForceRegistration& registration : registrations) {
+        if (registration.rigidBody == _object->GetComponent<RigidBody>()) {
+            return &registration;
         }
     }
     return nullptr;
@@ -50,7 +52,7 @@ void IPhysics::ForceRegistry::UpdateForces(real _duration){
 
     while (iterator != registrations.end())
     {
-        ForceRegistration forceRegistration = *iterator;
+        const ForceRegistration& forceRegistration = *iterator;
         forceRegistration.forceGenerator->UpdateForce(forceRegistration.rigidBody, _duration);
         ++iterator;
     }

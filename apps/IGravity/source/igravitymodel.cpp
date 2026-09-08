@@ -6,6 +6,7 @@
 
 #include "gravity.hpp"
 #include "barneshutgravity.hpp"
+#include "cudagravity.cuh"
 
 /*
  * IGravityModel
@@ -28,7 +29,8 @@ void IGravityModel::UpdateSimulation() {
         m_world.RunPhysics(m_timeStep);
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        std::cout << duration.count() << std::endl;
+    }
+    else{
     }
 }
 
@@ -57,9 +59,8 @@ void IGravityModel::UpdateNumberOfParticles(int _count) {
     else {
 
         std::shared_ptr<IPhysics::Gravity> force_generator
-            = std::make_shared<IPhysics::BarnesHutGravity>(
-                6.674 * pow(10, -11),
-                0.5);
+            = std::make_shared<IPhysics::CudaGravity>(
+                6.674 * pow(10, -11));
         for (int i = 0; i < boundedCount; ++i) {
             // Creating object
             auto* object = new IPhysics::Object();
@@ -75,10 +76,21 @@ void IGravityModel::UpdateNumberOfParticles(int _count) {
             // Adding it to world
             m_world.AddObject(object);
             force_generator->AddObject(object);
-            m_world.AddForceRegistration(object, force_generator);
+
+
+
+            if(!hasForceReg){
+                hasForceReg = true;
+                m_world.AddForceRegistration(object, force_generator);
+            }
         }
     }
 }
+
+void IGravityModel::SetSimulationPause(bool _wantsPaused){
+    m_world.SetPhysicsState(_wantsPaused);
+}
+
 
 // Queries
 const std::vector<IPhysics::Object*>& IGravityModel::GetParticles() {
@@ -98,4 +110,8 @@ IPhysics::Vector3 IGravityModel::RandomGalaxyPosition() {
     IPhysics::real xPosition = 0 + r * RealCos(theta);
     IPhysics::real yPosition = 0 + r * RealSin(theta);
     return {xPosition, yPosition, 0};
+}
+
+bool IGravityModel::IsSimulationPaused(){
+    return m_world.GetPhysicsState();
 }

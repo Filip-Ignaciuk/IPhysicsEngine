@@ -29,6 +29,7 @@ private:
 
     const static Rectangle standardLeftBox;
 
+    void UpdateControls();
     void UpdateCamera();
     void UpdateParticles() const;
 

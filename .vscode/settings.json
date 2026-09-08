@@ -6,12 +6,5 @@
     "/Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot/include",
     "/Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot/include/c++/v1"
   ],
-  "C_Cpp.intelliSenseEngine": "disabled",
-  "clangd.path": "/opt/homebrew/opt/llvm/bin/clangd",
-  "clangd.arguments": [
-    "--compile-commands-dir=${workspaceFolder}/build-web",
-    "--background-index",
-    "--pch-storage=memory",
-    "-j=8"
-  ]
+  "nsight.cuda.languageSupport.provider": "cpptools"
 }

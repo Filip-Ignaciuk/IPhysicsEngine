@@ -13,12 +13,7 @@ void IPhysics::BarnesHutGravity::AddObject(IPhysics::Object* _object) {
 }
 
 void IPhysics::BarnesHutGravity::RemoveObject(IPhysics::Object* _object) {
-    m_rigidBodies.erase(
-    remove(
-        m_rigidBodies.begin(),
-        m_rigidBodies.end(),
-        _object->GetComponent<IPhysics::RigidBody>()),
-        m_rigidBodies.end());
+    std::erase(m_rigidBodies, _object->GetComponent<IPhysics::RigidBody>());
 }
 
 void IPhysics::BarnesHutGravity::UpdateForce(
@@ -26,6 +21,7 @@ void IPhysics::BarnesHutGravity::UpdateForce(
     if (totalProcessedParticles == m_rigidBodies.size()) {
         totalProcessedParticles = 0;
     }
+    
     if (totalProcessedParticles == 0) {
         CreateTree();
     }

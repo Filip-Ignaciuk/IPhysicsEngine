@@ -1,7 +1,7 @@
 #ifndef IPHYSICS_DOWNWARDGRAVITY_HPP
 #define IPHYSICS_DOWNWARDGRAVITY_HPP
 
-#include "ForceGenerator.hpp"
+#include "forcegenerator.hpp"
 
 namespace IPhysics {
     class DownwardGravity : public ForceGenerator{

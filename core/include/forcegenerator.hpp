@@ -1,9 +1,6 @@
 #ifndef IPHYSICS_FORCEGENERATOR_HPP
 #define IPHYSICS_FORCEGENERATOR_HPP
 
-#include <vector>
-#include <memory>
-
 #include "rigidbody.hpp"
 #include "object.hpp"
 
@@ -40,7 +37,7 @@ namespace IPhysics{
         void UpdateForces(real _duration);
 
         // Queries
-        ForceRegistration* Get(Object* _object) const;
+        const ForceRegistration* Get(Object* _object) const;
 
     protected:
         std::vector<ForceRegistration> registrations;

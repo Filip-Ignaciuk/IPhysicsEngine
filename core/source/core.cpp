@@ -109,7 +109,7 @@ IPhysics::real IPhysics::Vector3::ScalarProduct(const Vector3& _vector) const{
 }
 
 IPhysics::real IPhysics::Vector3::Magnitude() const{
-    return IPhysics::RealSqrt(x * x + y * y + z * z);
+    return RealSqrt(x * x + y * y + z * z);
 }
 
 IPhysics::real IPhysics::Vector3::SquareMagnitude() const{

@@ -41,7 +41,7 @@ namespace IPhysics
         static constexpr unsigned MAX_CONTACTS = 256;
 
         std::vector<Object*> m_objects;
-        bool m_physicsState = true;
+        bool m_physicsState = false;
 
         BoundingVolumeHierarchyNode<BoundingSphere>* m_root = nullptr;
         ContactResolver m_contactResolver{};

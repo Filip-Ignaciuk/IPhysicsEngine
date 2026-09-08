@@ -5,7 +5,7 @@
 #include "raygui.h"
 
 IGravity::IGravity() {
-    IPhysics::real timeStep = 1.0f / 60.0f;
+    constexpr IPhysics::real timeStep = 1.0f / 60.0f;
     m_iGravityModel = new IGravityModel(timeStep);
     m_iGravityController = new IGravityController();
     m_iGravityView = new IGravityView(m_iGravityModel, m_iGravityController, m_screenWidth, m_screenHeight);
@@ -16,6 +16,7 @@ IGravity::IGravity() {
 
 void IGravity::Run() const {
     InitWindow(m_screenWidth, m_screenHeight, "IGravity");
+    TraceLog(LOG_INFO, "window opened");
     SetTargetFPS(m_frameRate);
 
     while (!WindowShouldClose()) {

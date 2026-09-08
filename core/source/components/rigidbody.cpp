@@ -161,7 +161,7 @@ const IPhysics::Vector3& IPhysics::RigidBody::GetAcceleration() const{
 }
 
 const IPhysics::Vector3& IPhysics::RigidBody::GetForce() const{
-    return  m_lastFrameAcceleration * (1 / m_inverseMass);
+    return {m_lastFrameAcceleration * (1 / m_inverseMass)};
 }
 
 

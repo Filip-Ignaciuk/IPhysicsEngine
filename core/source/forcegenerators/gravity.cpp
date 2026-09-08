@@ -11,12 +11,7 @@ void IPhysics::Gravity::AddObject(Object* _object){
 }
 
 void IPhysics::Gravity::RemoveObject(Object* _object){
-    m_rigidBodies.erase(
-        remove(
-            m_rigidBodies.begin(),
-            m_rigidBodies.end(),
-            _object->GetComponent<RigidBody>()),
-            m_rigidBodies.end());
+    std::erase(m_rigidBodies, _object->GetComponent<RigidBody>());
 }
 
 void IPhysics::Gravity::UpdateForce(RigidBody* _rigidBody, real _duration){

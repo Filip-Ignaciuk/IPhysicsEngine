@@ -20,11 +20,16 @@ public:
 
     void UpdateNumberOfParticles(int _count);
 
+    void SetSimulationPause(bool _wantsPaused);
+
     // Queries
-    [[nodiscard]] const std::vector<IPhysics::Object*>& GetParticles() ;
+    [[nodiscard]] const std::vector<IPhysics::Object*>& GetParticles();
+    [[nodiscard]] bool IsSimulationPaused();
 
 private:
     const int MAXIMUM_PARTICLE_COUNT = 100000;
+
+    bool hasForceReg = false;
 
     const IPhysics::real m_timeStep;
 

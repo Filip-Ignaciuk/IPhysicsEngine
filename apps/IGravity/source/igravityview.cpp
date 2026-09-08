@@ -23,6 +23,8 @@ IGravityView::IGravityView(IGravityModel* _iGravityModel,
 void IGravityView::Display() {
     UpdateCamera();
 
+    UpdateControls();
+
     BeginDrawing();
 
     ClearBackground(DARKGRAY);
@@ -35,6 +37,12 @@ void IGravityView::Display() {
 
     EndDrawing();
 
+}
+
+void IGravityView::UpdateControls(){
+    if(IsKeyPressed(KEY_SPACE)){
+        m_iGravityModel->SetSimulationPause(!m_iGravityModel->IsSimulationPaused());
+    }
 }
 
 void IGravityView::UpdateCamera() {
