@@ -1,17 +1,20 @@
-#pragma once
-#include "component.hpp"
+#ifndef IPHYSICS_INFORMATION_HPP
+#define IPHYSICS_INFORMATION_HPP
 #include <string>
 
-namespace IPhysics{
-    class Information : public Component{
-        private:
-        std::string m_name;
+#include "component.hpp"
 
-        public:
-        Information();
+namespace IPhysics {
+class Information : public Component {
+ private:
+  std::string m_name;
 
-        std::string GetName();
-        void SetName(std::string& name);
+ public:
+  Information();
 
-    };
-}
+  std::string GetName();
+  void SetName(std::string& name);
+};
+}  // namespace IPhysics
+
+#endif

@@ -3,75 +3,67 @@
 #include <cmath>
 
 #include "raylib.h"
-
 #include "raymath.h"
 
 IGravityView::IGravityView(IGravityModel* iGravityModel,
-    IGravityController* iGravityController,
-    int screenWidth,
-    int screenHeight) :
-    m_iGravityModel(iGravityModel),
-    m_iGravityController(iGravityController),
-    m_screenWidth(screenWidth),
-    m_screenHeight(screenHeight)
-{
-    camera = {static_cast<float>(m_screenWidth) / 2,
-    static_cast<float>(m_screenHeight) / 2};
-    camera.zoom = 1.0f;
+                           IGravityController* iGravityController,
+                           int screenWidth, int screenHeight)
+    : m_iGravityModel(iGravityModel),
+      m_iGravityController(iGravityController),
+      m_screenWidth(screenWidth),
+      m_screenHeight(screenHeight) {
+  camera = {static_cast<float>(m_screenWidth) / 2,
+            static_cast<float>(m_screenHeight) / 2};
+  camera.zoom = 1.0f;
 }
 
 void IGravityView::Display() {
-    UpdateCamera();
+  UpdateCamera();
 
-    UpdateControls();
+  UpdateControls();
 
-    BeginDrawing();
+  BeginDrawing();
 
-    ClearBackground(DARKGRAY);
+  ClearBackground(DARKGRAY);
 
-    BeginMode2D(camera);
+  BeginMode2D(camera);
 
-    UpdateParticles();
+  UpdateParticles();
 
-    EndMode2D();
+  EndMode2D();
 
-    EndDrawing();
-
+  EndDrawing();
 }
 
-void IGravityView::UpdateControls(){
-    if(IsKeyPressed(KEY_SPACE)){
-        m_iGravityModel->SetSimulationPause(!m_iGravityModel->IsSimulationPaused());
-    }
+void IGravityView::UpdateControls() {
+  if (IsKeyPressed(KEY_SPACE)) {
+    m_iGravityModel->SetSimulationPause(!m_iGravityModel->IsSimulationPaused());
+  }
 }
 
 void IGravityView::UpdateCamera() {
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
-    {
-        const Vector2 delta = Vector2Scale(
-            m_iGravityController->GetLatestMouseDelta(), -1.0f/camera.zoom);
-        camera.target = Vector2Add(camera.target, delta);
-    }
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+    const Vector2 delta = Vector2Scale(
+        m_iGravityController->GetLatestMouseDelta(), -1.0f / camera.zoom);
+    camera.target = Vector2Add(camera.target, delta);
+  }
 
-    if (m_iGravityController->GetLatestMouseWheelMove() != 0) {
-        Vector2 mouseWorldPos = GetScreenToWorld2D(
-            m_iGravityController->GetLatestMousePosition(), camera);
-        camera.offset = m_iGravityController->GetLatestMousePosition();
-        camera.target = mouseWorldPos;
-        float scale = 0.2f * m_iGravityController->GetLatestMouseWheelMove();
-        camera.zoom = Clamp(
-            expf(logf(camera.zoom) + scale), 0.125f, 64.0f);
-    }
+  if (m_iGravityController->GetLatestMouseWheelMove() != 0) {
+    Vector2 mouseWorldPos = GetScreenToWorld2D(
+        m_iGravityController->GetLatestMousePosition(), camera);
+    camera.offset = m_iGravityController->GetLatestMousePosition();
+    camera.target = mouseWorldPos;
+    float scale = 0.2f * m_iGravityController->GetLatestMouseWheelMove();
+    camera.zoom = Clamp(expf(logf(camera.zoom) + scale), 0.125f, 64.0f);
+  }
 }
 
 void IGravityView::UpdateParticles() const {
-    for (int i = 0; i < m_iGravityModel->GetParticles().size(); ++i) {
-        IPhysics::Object* obj = m_iGravityModel->GetParticles()[i];
-        const auto* rigidbody = obj->GetComponent<IPhysics::RigidBody>();
-        const Vector2 position{
-            .x = static_cast<float>(rigidbody->GetPosition().x),
-            .y = static_cast<float>(rigidbody->GetPosition().y)
-        };
-        DrawCircleV(position, 1.0f, RED);
-    }
+  for (int i = 0; i < m_iGravityModel->GetParticles().size(); ++i) {
+    IPhysics::Object* obj = m_iGravityModel->GetParticles()[i];
+    const auto* rigidbody = obj->GetComponent<IPhysics::RigidBody>();
+    const Vector2 position{.x = static_cast<float>(rigidbody->GetPosition().x),
+                           .y = static_cast<float>(rigidbody->GetPosition().y)};
+    DrawCircleV(position, 1.0f, RED);
+  }
 }

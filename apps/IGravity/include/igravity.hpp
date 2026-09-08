@@ -6,21 +6,21 @@
 #include "igravityview.hpp"
 
 class IGravity {
-public:
-    // Constructors
-    IGravity();
+ public:
+  // Constructors
+  IGravity();
 
-    // Mutators
-    void Run() const;
+  // Mutators
+  void Run() const;
 
-private:
-    IGravityModel* m_iGravityModel;
-    IGravityView* m_iGravityView;
-    IGravityController* m_iGravityController;
+ private:
+  IGravityModel* m_iGravityModel;
+  IGravityView* m_iGravityView;
+  IGravityController* m_iGravityController;
 
-    const int m_screenWidth = 1280;
-    const int m_screenHeight = 720;
-    const int m_frameRate = 60;
+  const int m_screenWidth = 1280;
+  const int m_screenHeight = 720;
+  const int m_frameRate = 60;
 };
 
 #endif

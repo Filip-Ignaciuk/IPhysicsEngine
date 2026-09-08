@@ -1,6 +1,3 @@
 #include "object.hpp"
 
-IPhysics::Object::Object(){
-
-}
-
+IPhysics::Object::Object() {}

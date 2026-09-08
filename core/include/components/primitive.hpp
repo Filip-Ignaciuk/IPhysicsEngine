@@ -1,37 +1,35 @@
-#pragma once
+#ifndef IPHYSICS_PRIMITIVE_HPP
+#define IPHYSICS_PRIMITIVE_HPP
 #include "components/component.hpp"
 #include "components/rigidbody.hpp"
 
-namespace IPhysics
-{
-    enum CollisionPrimitiveType{
-        SPHERE,
-        PLANE,
-        BOX
-    };
+namespace IPhysics {
+enum CollisionPrimitiveType { SPHERE, PLANE, BOX };
 
-    class CollisionPrimitive : public Component{
-        public:
-        RigidBody* rigidbody;
-        Matrix4 offset;
-        Matrix4 transform;
-        CollisionPrimitiveType type;
-        Vector3 GetAxis(unsigned index) const;
-    };
+class CollisionPrimitive : public Component {
+ public:
+  RigidBody* rigidbody;
+  Matrix4 offset;
+  Matrix4 transform;
+  CollisionPrimitiveType type;
+  Vector3 GetAxis(unsigned index) const;
+};
 
-    class CollisionSphere : public CollisionPrimitive{
-        public:
-        real radius;
-    };
+class CollisionSphere : public CollisionPrimitive {
+ public:
+  real radius;
+};
 
-    class CollisionPlane : public CollisionPrimitive{
-        public:
-        Vector3 normal;
-        real offset;
-    };
+class CollisionPlane : public CollisionPrimitive {
+ public:
+  Vector3 normal;
+  real offset;
+};
 
-    class CollisionBox : public CollisionPrimitive{
-        public:
-        Vector3 halfSize;
-    };
-}
+class CollisionBox : public CollisionPrimitive {
+ public:
+  Vector3 halfSize;
+};
+}  // namespace IPhysics
+
+#endif

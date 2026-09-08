@@ -1,52 +1,51 @@
-#pragma once
+#ifndef IPHYSICS_PARTICLECONTACTS_HPP
+#define IPHYSICS_PARTICLECONTACTS_HPP
 #include "particle.hpp"
 
-namespace IPhysics{
-    class ParticleContactResolver;
+namespace IPhysics {
+class ParticleContactResolver;
 
-    class ParticleContact{
+class ParticleContact {
+  friend class ParticleContactResolver;
 
-        friend class ParticleContactResolver;
+ public:
+  Particle* particles[2];
+  Vector3 particleMovement[2];
 
-        public:
-        Particle* particles[2];
-        Vector3 particleMovement[2];
+  real restitution;
 
-        real restitution;
+  real penetration;
 
-        real penetration;
+  Vector3 contactNormal;
 
-        Vector3 contactNormal;
+ protected:
+  void Resolve(real duration);
 
-        protected:
-        void Resolve(real duration);
+  real CalculateSeparatingVelocity() const;
 
-        real CalculateSeparatingVelocity() const;
+ private:
+  void ResolveVelocity(real duration);
+  void ResolveInterpretation(real duration);
+};
 
-        private:
-        void ResolveVelocity(real duration);
-        void ResolveInterpretation(real duration);
-    };
+class ParticleContactResolver {
+ protected:
+  unsigned iterations;
+  unsigned iterationsUsed;
 
-    class ParticleContactResolver{
-        protected:
-        unsigned iterations;
-        unsigned iterationsUsed;
-        public:
-        ParticleContactResolver(unsigned iterations);
-        void SetIterations(unsigned iterations);
-        void ResolveContacts(ParticleContact* contactArray, unsigned numberOfContacts, real duration);
+ public:
+  ParticleContactResolver(unsigned iterations);
+  void SetIterations(unsigned iterations);
+  void ResolveContacts(ParticleContact* contactArray, unsigned numberOfContacts,
+                       real duration);
+};
 
-    };
+class ParticleContactGenerator {
+ public:
+  virtual unsigned AddContact(ParticleContact* contact,
+                              unsigned limit) const = 0;
+};
 
-    class ParticleContactGenerator
-    {
-        public:
-        virtual unsigned AddContact(ParticleContact* contact, unsigned limit) const = 0;
-    };
+}  // namespace IPhysics
 
-
-
-
-}
-
+#endif

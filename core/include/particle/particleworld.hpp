@@ -1,56 +1,58 @@
-#pragma once
+#ifndef IPHYSICS_PARTICLEWORLD_HPP
+#define IPHYSICS_PARTICLEWORLD_HPP
 #include <vector>
 
 #include "particle.hpp"
 #include "particleforcegenerator.hpp"
 #include "particlelink.hpp"
 
-namespace IPhysics
-{
-    class ParticleWorld{
-        public:
-        typedef std::vector<Particle*> Particles;
-        typedef std::vector<ParticleContactGenerator*> ContactGenerators;
+namespace IPhysics {
+class ParticleWorld {
+ public:
+  typedef std::vector<Particle*> Particles;
+  typedef std::vector<ParticleContactGenerator*> ContactGenerators;
 
-        ParticleWorld(unsigned maxContacts, unsigned iterations = 0);
+  ParticleWorld(unsigned maxContacts, unsigned iterations = 0);
 
-        void StartFrame();
+  void StartFrame();
 
-        unsigned GenerateContacts();
-        
-        void Integrate(real duration);
+  unsigned GenerateContacts();
 
-        void RunPhysics(real duration);
+  void Integrate(real duration);
 
-        Particles& GetParticles();
+  void RunPhysics(real duration);
 
-        ContactGenerators& GetParticleContactGenerator();
+  Particles& GetParticles();
 
-        ParticleForceRegistry& GetParticleForceRegistry();
+  ContactGenerators& GetParticleContactGenerator();
 
-        protected:
+  ParticleForceRegistry& GetParticleForceRegistry();
 
-        bool calculateIterations;
+ protected:
+  bool calculateIterations;
 
-        Particles particles;
+  Particles particles;
 
-        ParticleForceRegistry particleForceRegistry;
-        ParticleContactResolver particleContactResolvers;
+  ParticleForceRegistry particleForceRegistry;
+  ParticleContactResolver particleContactResolvers;
 
-        ContactGenerators contactGenerators;
+  ContactGenerators contactGenerators;
 
-        ParticleContact* contacts;
+  ParticleContact* contacts;
 
-        unsigned maxContacts;
+  unsigned maxContacts;
+};
 
-    };
+class ParticleGroundContactGenerator
+    : public IPhysics::ParticleContactGenerator {
+ private:
+  std::vector<IPhysics::Particle*>* particles;
+  real restitution;
 
-    class ParticleGroundContactGenerator : public IPhysics::ParticleContactGenerator{
-        private:
-        std::vector<IPhysics::Particle *>* particles;
-        real restitution;
-        public:
-        void Init(std::vector<IPhysics::Particle *>* particles, real restitution);
-        virtual unsigned AddContact(ParticleContact* contact, unsigned limit) const;
-    };
-}
+ public:
+  void Init(std::vector<IPhysics::Particle*>* particles, real restitution);
+  virtual unsigned AddContact(ParticleContact* contact, unsigned limit) const;
+};
+}  // namespace IPhysics
+
+#endif
