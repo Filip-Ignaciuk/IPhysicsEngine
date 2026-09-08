@@ -17,12 +17,12 @@ namespace IApp{
     public:
         static void LoadDefaults();
         static void Unload();
-        static Mesh* GetMesh(std::string _meshName);
-        static Model* GetModel(std::string _modelName);
-        static Color GetColor(std::string _colour);
+        static Mesh* GetMesh(std::string meshName);
+        static Model* GetModel(std::string modelName);
+        static Color GetColor(std::string colour);
         static std::vector<std::string> GetMeshStrings();
         static std::vector<std::string> GetColourStrings();
-        static void SetMesh(std::string& _meshName, Mesh* _mesh);
+        static void SetMesh(std::string& meshName, Mesh* mesh);
 
     };
 }

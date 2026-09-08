@@ -6,57 +6,57 @@ namespace IPhysics
 
     }
 
-    IPhysics::Particle::Particle(Vector3 _position, real _damping, real _inverseMass) : m_position(_position), m_damping(_damping), m_inverseMass(_inverseMass){
+    IPhysics::Particle::Particle(Vector3 position, real damping, real inverseMass) : m_position(position), m_damping(damping), m_inverseMass(inverseMass){
 
     }
 
-    void IPhysics::Particle::SetMass(real _mass){
+    void IPhysics::Particle::SetMass(real mass){
         if (m_inverseMass <= 0.0f){
             return;
         }
-        m_inverseMass = 1 / _mass;
+        m_inverseMass = 1 / mass;
     }
 
-    void IPhysics::Particle::SetInverseMass(real _inverseMass){
+    void IPhysics::Particle::SetInverseMass(real inverseMass){
         if (m_inverseMass < 0.0f){
             return;
         }
-        m_inverseMass = _inverseMass;
+        m_inverseMass = inverseMass;
     }
 
-    void IPhysics::Particle::SetDamping(real _damping){
-        m_damping = _damping;
+    void IPhysics::Particle::SetDamping(real damping){
+        m_damping = damping;
     }
 
-    void IPhysics::Particle::SetPosition(Vector3 _position){
-        m_position = _position;
+    void IPhysics::Particle::SetPosition(Vector3 position){
+        m_position = position;
     }
 
-    void IPhysics::Particle::SetVelocity(Vector3 _velocity){
-        m_velocity = _velocity;
+    void IPhysics::Particle::SetVelocity(Vector3 velocity){
+        m_velocity = velocity;
     }
 
-    void IPhysics::Particle::SetAcceleration(Vector3 _acceleration){
-        m_acceleration = _acceleration;
+    void IPhysics::Particle::SetAcceleration(Vector3 acceleration){
+        m_acceleration = acceleration;
     }
 
-    bool IPhysics::Particle::Integrate(real _duration){
+    bool IPhysics::Particle::Integrate(real duration){
         // Reject infinite masses.
         if (m_inverseMass <= 0.0f){
             return false;
         }
 
         // Update linear position.
-        m_position.AddScaledVector(m_velocity, _duration);
+        m_position.AddScaledVector(m_velocity, duration);
 
         // Work out acceleration from force.
         Vector3 resultingAcceleration = m_acceleration;
         resultingAcceleration.AddScaledVector(m_forceAccumulated, m_inverseMass);
 
         // Update linear velocity.
-        m_velocity.AddScaledVector(resultingAcceleration, _duration);
+        m_velocity.AddScaledVector(resultingAcceleration, duration);
         // Add drag.
-        m_velocity *= RealPow(m_damping, _duration);
+        m_velocity *= RealPow(m_damping, duration);
 
         // Clear forces.
         ClearAccumulator();
@@ -101,8 +101,8 @@ namespace IPhysics
         return 1 / m_inverseMass;
     }
 
-    void IPhysics::Particle::AddForce(Vector3 _force){
-        m_forceAccumulated += _force;
+    void IPhysics::Particle::AddForce(Vector3 force){
+        m_forceAccumulated += force;
     }
     
 }

@@ -13,8 +13,8 @@
  */
 
 // Constructors
-IGravityModel::IGravityModel(IPhysics::real _timeStep)
-    : m_timeStep(_timeStep) {
+IGravityModel::IGravityModel(IPhysics::real timeStep)
+    : m_timeStep(timeStep) {
 }
 
 // Mutators
@@ -35,19 +35,19 @@ void IGravityModel::UpdateSimulation() {
 }
 
 // Can both increase and decrease the number of particles based on the count provided.
-void IGravityModel::UpdateNumberOfParticles(int _count) {
+void IGravityModel::UpdateNumberOfParticles(int count) {
     int boundedCount = 0;
-    // Check if _count is larger than maximum or smaller than minimum.
-    if (_count > MAXIMUM_PARTICLE_COUNT - m_numberOfParticles) {
+    // Check if count is larger than maximum or smaller than minimum.
+    if (count > MAXIMUM_PARTICLE_COUNT - m_numberOfParticles) {
         // Bound to maximum allowed increase, AKA add maximum amount of particles.
         boundedCount = MAXIMUM_PARTICLE_COUNT - m_numberOfParticles;
     }
-    else if (_count < -m_numberOfParticles) {
+    else if (count < -m_numberOfParticles) {
         // Bound to minimum allowed decrease, AKA delete all particles.
         boundedCount = -m_numberOfParticles;
     }
     else {
-        boundedCount = _count;
+        boundedCount = count;
     }
 
     if (boundedCount < 0) {
@@ -87,8 +87,8 @@ void IGravityModel::UpdateNumberOfParticles(int _count) {
     }
 }
 
-void IGravityModel::SetSimulationPause(bool _wantsPaused){
-    m_world.SetPhysicsState(_wantsPaused);
+void IGravityModel::SetSimulationPause(bool wantsPaused){
+    m_world.SetPhysicsState(wantsPaused);
 }
 
 

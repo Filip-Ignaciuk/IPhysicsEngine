@@ -8,31 +8,31 @@
 IPhysics::Vector3::Vector3() : x(0), y(0), z(0){
 };
 
-IPhysics::Vector3::Vector3(real _x, real _y, real _z) : x(_x), y(_y), z(_z){
+IPhysics::Vector3::Vector3(real x, real y, real z) : x(x), y(y), z(z){
 
 };
 
 // Operators
-void IPhysics::Vector3::operator*=(const real _value){
-    x *= _value;
-    y *= _value;
-    z *= _value;
+void IPhysics::Vector3::operator*=(const real value){
+    x *= value;
+    y *= value;
+    z *= value;
 }
 
-void IPhysics::Vector3::operator+=(const Vector3& _vector){
-    x += _vector.x;
-    y += _vector.y;
-    z += _vector.z;
+void IPhysics::Vector3::operator+=(const Vector3& vector){
+    x += vector.x;
+    y += vector.y;
+    z += vector.z;
 }
 
-void IPhysics::Vector3::operator-=(const Vector3& _vector){
-    x -= _vector.x;
-    y -= _vector.y;
-    z -= _vector.z;
+void IPhysics::Vector3::operator-=(const Vector3& vector){
+    x -= vector.x;
+    y -= vector.y;
+    z -= vector.z;
 }
 
-void IPhysics::Vector3::operator%=(const Vector3& _vector){
-    *this = VectorProduct(_vector);
+void IPhysics::Vector3::operator%=(const Vector3& vector){
+    *this = VectorProduct(vector);
 }
 
 IPhysics::real IPhysics::Vector3::operator[](unsigned i) const{
@@ -47,39 +47,39 @@ IPhysics::real& IPhysics::Vector3::operator[](unsigned i){
     return z;
 }
 
-IPhysics::Vector3 IPhysics::Vector3::operator+(const Vector3& _vector) const{
-    return {x + _vector.x, y + _vector.y, z + _vector.z};
+IPhysics::Vector3 IPhysics::Vector3::operator+(const Vector3& vector) const{
+    return {x + vector.x, y + vector.y, z + vector.z};
 }
 
-IPhysics::Vector3 IPhysics::Vector3::operator-(const Vector3& _vector) const{
-    return {x - _vector.x, y - _vector.y, z - _vector.z};
+IPhysics::Vector3 IPhysics::Vector3::operator-(const Vector3& vector) const{
+    return {x - vector.x, y - vector.y, z - vector.z};
 }
 
-IPhysics::real IPhysics::Vector3::operator*(const Vector3& _vector) const{
-    return x * _vector.x + y * _vector.y + z * _vector.z;
+IPhysics::real IPhysics::Vector3::operator*(const Vector3& vector) const{
+    return x * vector.x + y * vector.y + z * vector.z;
 }
 
 // Dot product
-IPhysics::Vector3 IPhysics::Vector3::operator*(const IPhysics::real& _magnitude) const{
-    return {x * _magnitude, y * _magnitude, z * _magnitude};
+IPhysics::Vector3 IPhysics::Vector3::operator*(const IPhysics::real& magnitude) const{
+    return {x * magnitude, y * magnitude, z * magnitude};
 }
 
 // Cross product
-IPhysics::Vector3 IPhysics::Vector3::operator%(const Vector3& _vector) const{
-    return {y * _vector.z - z * _vector.y, z * _vector.x - x * _vector.z, x * _vector.y - y * _vector.x};
+IPhysics::Vector3 IPhysics::Vector3::operator%(const Vector3& vector) const{
+    return {y * vector.z - z * vector.y, z * vector.x - x * vector.z, x * vector.y - y * vector.x};
 }
 
 // Mutators
-void IPhysics::Vector3::AddScaledVector(const Vector3& _vector,  real scale){
-    x += _vector.x * scale;
-    y += _vector.y * scale;
-    z += _vector.z * scale;
+void IPhysics::Vector3::AddScaledVector(const Vector3& vector,  real scale){
+    x += vector.x * scale;
+    y += vector.y * scale;
+    z += vector.z * scale;
 };
 
-void IPhysics::Vector3::ComponentProductUpdate(const Vector3& _vector){
-    x *= _vector.x;
-    y *= _vector.y;
-    z *= _vector.z;
+void IPhysics::Vector3::ComponentProductUpdate(const Vector3& vector){
+    x *= vector.x;
+    y *= vector.y;
+    z *= vector.z;
 };
 
 void IPhysics::Vector3::Clear(){
@@ -96,16 +96,16 @@ void IPhysics::Vector3::Normalise(){
 };
 
 // Queries
-IPhysics::Vector3 IPhysics::Vector3::ComponentProduct(const Vector3& _vector) const{
-    return {x * _vector.x, y * _vector.y, z * _vector.z};
+IPhysics::Vector3 IPhysics::Vector3::ComponentProduct(const Vector3& vector) const{
+    return {x * vector.x, y * vector.y, z * vector.z};
 }
 
-IPhysics::Vector3 IPhysics::Vector3::VectorProduct(const Vector3& _vector) const{
-    return {y * _vector.z - z * _vector.y, z * _vector.x - x * _vector.z, x * _vector.y - y * _vector.x};
+IPhysics::Vector3 IPhysics::Vector3::VectorProduct(const Vector3& vector) const{
+    return {y * vector.z - z * vector.y, z * vector.x - x * vector.z, x * vector.y - y * vector.x};
 }
 
-IPhysics::real IPhysics::Vector3::ScalarProduct(const Vector3& _vector) const{
-    return x * _vector.x + y * _vector.y + z * _vector.z;
+IPhysics::real IPhysics::Vector3::ScalarProduct(const Vector3& vector) const{
+    return x * vector.x + y * vector.y + z * vector.z;
 }
 
 IPhysics::real IPhysics::Vector3::Magnitude() const{
@@ -117,14 +117,14 @@ IPhysics::real IPhysics::Vector3::SquareMagnitude() const{
 };
 
 // Static
-void IPhysics::Vector3::MakeOrthonormalBasis(Vector3* _vectorA, Vector3* _vectorB, Vector3* _vectorC){
-    _vectorA->Normalise();
-    *_vectorC = (*_vectorA) % (*_vectorB);
-    if (_vectorC->SquareMagnitude() == 0.0){
+void IPhysics::Vector3::MakeOrthonormalBasis(Vector3* vectorA, Vector3* vectorB, Vector3* vectorC){
+    vectorA->Normalise();
+    *vectorC = (*vectorA) % (*vectorB);
+    if (vectorC->SquareMagnitude() == 0.0){
         return;
     }
-    _vectorC->Normalise();
-    *_vectorB = (*_vectorC) % (*_vectorA);
+    vectorC->Normalise();
+    *vectorB = (*vectorC) % (*vectorA);
 }
 
 /*
@@ -135,30 +135,30 @@ void IPhysics::Vector3::MakeOrthonormalBasis(Vector3* _vectorA, Vector3* _vector
 IPhysics::Quaternion::Quaternion() : r(0.0f), i(0.0f), j(0.0f), k(0.0f){
 }
 
-IPhysics::Quaternion::Quaternion(real _r, real _i, real _j, real _k) : r(_r), i(_i), j(_j), k(_k){
+IPhysics::Quaternion::Quaternion(real r, real i, real j, real k) : r(r), i(i), j(j), k(k){
 
 }
 
 // Operators
-void IPhysics::Quaternion::operator*= (const Quaternion& _multiplier){
+void IPhysics::Quaternion::operator*= (const Quaternion& multiplier){
     Quaternion quaternion = *this;
-    r = quaternion.r*_multiplier.r - quaternion.i*_multiplier.i -
-    quaternion.j*_multiplier.j - quaternion.k*_multiplier.k;
-    i = quaternion.r*_multiplier.i + quaternion.i*_multiplier.r +
-    quaternion.j*_multiplier.k - quaternion.k*_multiplier.j;
-    j = quaternion.r*_multiplier.j + quaternion.j*_multiplier.r +
-    quaternion.k*_multiplier.i - quaternion.i*_multiplier.k;
-    k = quaternion.r*_multiplier.k + quaternion.k*_multiplier.r +
-    quaternion.i*_multiplier.j - quaternion.j*_multiplier.i;
+    r = quaternion.r*multiplier.r - quaternion.i*multiplier.i -
+    quaternion.j*multiplier.j - quaternion.k*multiplier.k;
+    i = quaternion.r*multiplier.i + quaternion.i*multiplier.r +
+    quaternion.j*multiplier.k - quaternion.k*multiplier.j;
+    j = quaternion.r*multiplier.j + quaternion.j*multiplier.r +
+    quaternion.k*multiplier.i - quaternion.i*multiplier.k;
+    k = quaternion.r*multiplier.k + quaternion.k*multiplier.r +
+    quaternion.i*multiplier.j - quaternion.j*multiplier.i;
 }
 
 // Mutators
-void IPhysics::Quaternion::AddScaledVector(const Vector3& _vector3, real _scale){
+void IPhysics::Quaternion::AddScaledVector(const Vector3& vector3, real scale){
     Quaternion q{
         0,
-        _vector3.x * _scale,
-        _vector3.y * _scale,
-        _vector3.z * _scale
+        vector3.x * scale,
+        vector3.y * scale,
+        vector3.z * scale
     };
     constexpr real HALF = static_cast<real>(0.5);
     q *= *this;
@@ -168,21 +168,21 @@ void IPhysics::Quaternion::AddScaledVector(const Vector3& _vector3, real _scale)
     k += q.k * HALF;
 }
 
-void IPhysics::Quaternion::RotateByVector(const Vector3& _vector3){
-    const Quaternion q{0, _vector3.x, _vector3.y, _vector3.z};
+void IPhysics::Quaternion::RotateByVector(const Vector3& vector3){
+    const Quaternion q{0, vector3.x, vector3.y, vector3.z};
     (*this) *= q;
 }
 
-void IPhysics::Quaternion::SetFromEuler(real _x, real _y, real _z) {
+void IPhysics::Quaternion::SetFromEuler(real x, real y, real z) {
     // Setting it initially to an identity quaternion
     r = 1;
     i = 0;
     j = 0;
     k = 0;
 
-    const Quaternion q1{RealCos(_z/2), 0 , 0 , RealSin(_z/2)};
-    const Quaternion q2{RealCos(_y/2), 0 , RealSin(_y/2) , 0};
-    const Quaternion q3{RealCos(_x/2), RealSin(_x/2) , 0 , 0};
+    const Quaternion q1{RealCos(z/2), 0 , 0 , RealSin(z/2)};
+    const Quaternion q2{RealCos(y/2), 0 , RealSin(y/2) , 0};
+    const Quaternion q3{RealCos(x/2), RealSin(x/2) , 0 , 0};
 
     (*this) *= q1;
     (*this) *= q2;
@@ -217,127 +217,127 @@ IPhysics::Matrix3::Matrix3(){
     
 }
 
-IPhysics::Matrix3::Matrix3(const Matrix3& _other){
+IPhysics::Matrix3::Matrix3(const Matrix3& other){
     for (int i = 0; i < 9; i++)
     {
-        data[i] = _other.data[i];
+        data[i] = other.data[i];
     }
 }
 
-IPhysics::Matrix3::Matrix3(real _a1, real _a2, real _a3, real _b1, real _b2, real _b3, real _c1, real _c2, real _c3){
-    data[0] = _a1;
-    data[1] = _a2;
-    data[2] = _a3;
-    data[3] = _b1;
-    data[4] = _b2;
-    data[5] = _b3;
-    data[6] = _c1;
-    data[7] = _c2;
-    data[8] = _c3;
+IPhysics::Matrix3::Matrix3(real a1, real a2, real a3, real b1, real b2, real b3, real c1, real c2, real c3){
+    data[0] = a1;
+    data[1] = a2;
+    data[2] = a3;
+    data[3] = b1;
+    data[4] = b2;
+    data[5] = b3;
+    data[6] = c1;
+    data[7] = c2;
+    data[8] = c3;
 }
 
 // Operators
-IPhysics::Matrix3 IPhysics::Matrix3::operator*(const Matrix3& _other) const{
+IPhysics::Matrix3 IPhysics::Matrix3::operator*(const Matrix3& other) const{
     return {
-        data[0]*_other.data[0] + data[1]*_other.data[3] + data[2]*_other.data[6],
-        data[0]*_other.data[1] + data[1]*_other.data[4] + data[2]*_other.data[7],
-        data[0]*_other.data[2] + data[1]*_other.data[5] + data[2]*_other.data[8],
-        data[3]*_other.data[0] + data[4]*_other.data[3] + data[5]*_other.data[6],
-        data[3]*_other.data[1] + data[4]*_other.data[4] + data[5]*_other.data[7],
-        data[3]*_other.data[2] + data[4]*_other.data[5] + data[5]*_other.data[8],
-        data[6]*_other.data[0] + data[7]*_other.data[3] + data[8]*_other.data[6],
-        data[6]*_other.data[1] + data[7]*_other.data[4] + data[8]*_other.data[7],
-        data[6]*_other.data[2] + data[7]*_other.data[5] + data[8]*_other.data[8]
+        data[0]*other.data[0] + data[1]*other.data[3] + data[2]*other.data[6],
+        data[0]*other.data[1] + data[1]*other.data[4] + data[2]*other.data[7],
+        data[0]*other.data[2] + data[1]*other.data[5] + data[2]*other.data[8],
+        data[3]*other.data[0] + data[4]*other.data[3] + data[5]*other.data[6],
+        data[3]*other.data[1] + data[4]*other.data[4] + data[5]*other.data[7],
+        data[3]*other.data[2] + data[4]*other.data[5] + data[5]*other.data[8],
+        data[6]*other.data[0] + data[7]*other.data[3] + data[8]*other.data[6],
+        data[6]*other.data[1] + data[7]*other.data[4] + data[8]*other.data[7],
+        data[6]*other.data[2] + data[7]*other.data[5] + data[8]*other.data[8]
     };
 }
 
-void IPhysics::Matrix3::operator*=(const Matrix3& _other){
-    real t1 = data[0] * _other.data[0] + data[1] * _other.data[3] + data[2] * _other.data[6];
-    real t2 = data[0] * _other.data[1] + data[1] * _other.data[4] + data[2] * _other.data[7];
-    real t3 = data[0] * _other.data[2] + data[1] * _other.data[5] + data[2] * _other.data[8];
+void IPhysics::Matrix3::operator*=(const Matrix3& other){
+    real t1 = data[0] * other.data[0] + data[1] * other.data[3] + data[2] * other.data[6];
+    real t2 = data[0] * other.data[1] + data[1] * other.data[4] + data[2] * other.data[7];
+    real t3 = data[0] * other.data[2] + data[1] * other.data[5] + data[2] * other.data[8];
     data[0] = t1;
     data[1] = t2;
     data[2] = t3;
-    t1 = data[3]*_other.data[0] + data[4]*_other.data[3] + data[5]*_other.data[6];
-    t2 = data[3]*_other.data[1] + data[4]*_other.data[4] + data[5]*_other.data[7];
-    t3 = data[3]*_other.data[2] + data[4]*_other.data[5] + data[5]*_other.data[8];
+    t1 = data[3]*other.data[0] + data[4]*other.data[3] + data[5]*other.data[6];
+    t2 = data[3]*other.data[1] + data[4]*other.data[4] + data[5]*other.data[7];
+    t3 = data[3]*other.data[2] + data[4]*other.data[5] + data[5]*other.data[8];
     data[3] = t1;
     data[4] = t2;
     data[5] = t3;
-    t1 = data[6]*_other.data[0] + data[7]*_other.data[3] + data[8]*_other.data[6];
-    t2 = data[6]*_other.data[1] + data[7]*_other.data[4] + data[8]*_other.data[7];
-    t3 = data[6]*_other.data[2] + data[7]*_other.data[5] + data[8]*_other.data[8];
+    t1 = data[6]*other.data[0] + data[7]*other.data[3] + data[8]*other.data[6];
+    t2 = data[6]*other.data[1] + data[7]*other.data[4] + data[8]*other.data[7];
+    t3 = data[6]*other.data[2] + data[7]*other.data[5] + data[8]*other.data[8];
     data[6] = t1;
     data[7] = t2;
     data[8] = t3;
 }
 
-IPhysics::Vector3 IPhysics::Matrix3::operator*(const Vector3& _vector3) const{
+IPhysics::Vector3 IPhysics::Matrix3::operator*(const Vector3& vector3) const{
     return {
-        _vector3.x * data[0] + _vector3.y * data[1] + _vector3.z * data[2],
-        _vector3.x * data[3] + _vector3.y * data[4] + _vector3.z * data[5],
-        _vector3.x * data[6] + _vector3.y * data[7] + _vector3.z * data[8]
+        vector3.x * data[0] + vector3.y * data[1] + vector3.z * data[2],
+        vector3.x * data[3] + vector3.y * data[4] + vector3.z * data[5],
+        vector3.x * data[6] + vector3.y * data[7] + vector3.z * data[8]
     };
 }
 
 // Mutators
-void IPhysics::Matrix3::SetInverse(const Matrix3& _matrix){
-    const real t1 = _matrix.data[0]*_matrix.data[4];
-    const real t2 = _matrix.data[0]*_matrix.data[5];
-    const real t3 = _matrix.data[1]*_matrix.data[3];
-    const real t4 = _matrix.data[2]*_matrix.data[3];
-    const real t5 = _matrix.data[1]*_matrix.data[6];
-    const real t6 = _matrix.data[2]*_matrix.data[6];
-    const real det = (t1*_matrix.data[8] - t2*_matrix.data[7] - t3*_matrix.data[8]+
-    t4*_matrix.data[7] + t5*_matrix.data[5] - t6*_matrix.data[4]);
+void IPhysics::Matrix3::SetInverse(const Matrix3& matrix){
+    const real t1 = matrix.data[0]*matrix.data[4];
+    const real t2 = matrix.data[0]*matrix.data[5];
+    const real t3 = matrix.data[1]*matrix.data[3];
+    const real t4 = matrix.data[2]*matrix.data[3];
+    const real t5 = matrix.data[1]*matrix.data[6];
+    const real t6 = matrix.data[2]*matrix.data[6];
+    const real det = (t1*matrix.data[8] - t2*matrix.data[7] - t3*matrix.data[8]+
+    t4*matrix.data[7] + t5*matrix.data[5] - t6*matrix.data[4]);
     if (det == static_cast<real>(0.0f)) return;
     real inverse = static_cast<real>(1.0f)/det;
 
-    data[0] = (_matrix.data[4]*_matrix.data[8]-_matrix.data[5]*_matrix.data[7])*inverse;
-    data[1] = -(_matrix.data[1]*_matrix.data[8]-_matrix.data[2]*_matrix.data[7])*inverse;
-    data[2] = (_matrix.data[1]*_matrix.data[5]-_matrix.data[2]*_matrix.data[4])*inverse;
-    data[3] = -(_matrix.data[3]*_matrix.data[8]-_matrix.data[5]*_matrix.data[6])*inverse;
-    data[4] = (_matrix.data[0]*_matrix.data[8]-t6)*inverse;
+    data[0] = (matrix.data[4]*matrix.data[8]-matrix.data[5]*matrix.data[7])*inverse;
+    data[1] = -(matrix.data[1]*matrix.data[8]-matrix.data[2]*matrix.data[7])*inverse;
+    data[2] = (matrix.data[1]*matrix.data[5]-matrix.data[2]*matrix.data[4])*inverse;
+    data[3] = -(matrix.data[3]*matrix.data[8]-matrix.data[5]*matrix.data[6])*inverse;
+    data[4] = (matrix.data[0]*matrix.data[8]-t6)*inverse;
     data[5] = -(t2-t4)*inverse;
-    data[6] = (_matrix.data[3]*_matrix.data[7]-_matrix.data[4]*_matrix.data[6])*inverse;
-    data[7] = -(_matrix.data[0]*_matrix.data[7]-t5)*inverse;
+    data[6] = (matrix.data[3]*matrix.data[7]-matrix.data[4]*matrix.data[6])*inverse;
+    data[7] = -(matrix.data[0]*matrix.data[7]-t5)*inverse;
     data[8] = (t1-t3)*inverse;
 }
 
-void IPhysics::Matrix3::SetTranspose(const Matrix3& _matrix){
-    data[0] = _matrix.data[0];
-    data[1] = _matrix.data[3];
-    data[2] = _matrix.data[6];
-    data[3] = _matrix.data[1];
-    data[4] = _matrix.data[4];
-    data[5] = _matrix.data[7];
-    data[6] = _matrix.data[2];
-    data[7] = _matrix.data[5];
-    data[8] = _matrix.data[8];
+void IPhysics::Matrix3::SetTranspose(const Matrix3& matrix){
+    data[0] = matrix.data[0];
+    data[1] = matrix.data[3];
+    data[2] = matrix.data[6];
+    data[3] = matrix.data[1];
+    data[4] = matrix.data[4];
+    data[5] = matrix.data[7];
+    data[6] = matrix.data[2];
+    data[7] = matrix.data[5];
+    data[8] = matrix.data[8];
 }
 
-void IPhysics::Matrix3::SetOrientation(const Quaternion& _quaternion){
-    data[0] = 1 - (2*_quaternion.j*_quaternion.j + 2*_quaternion.k*_quaternion.k);
-    data[1] = 2*_quaternion.i*_quaternion.j + 2*_quaternion.k*_quaternion.r;
-    data[2] = 2*_quaternion.i*_quaternion.k - 2*_quaternion.j*_quaternion.r;
-    data[3] = 2*_quaternion.i*_quaternion.j - 2*_quaternion.k*_quaternion.r;
-    data[4] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.k*_quaternion.k);
-    data[5] = 2*_quaternion.j*_quaternion.k + 2*_quaternion.i*_quaternion.r;
-    data[6] = 2*_quaternion.i*_quaternion.k + 2*_quaternion.j*_quaternion.r;
-    data[7] = 2*_quaternion.j*_quaternion.k - 2*_quaternion.i*_quaternion.r;
-    data[8] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.j*_quaternion.j);
+void IPhysics::Matrix3::SetOrientation(const Quaternion& quaternion){
+    data[0] = 1 - (2*quaternion.j*quaternion.j + 2*quaternion.k*quaternion.k);
+    data[1] = 2*quaternion.i*quaternion.j + 2*quaternion.k*quaternion.r;
+    data[2] = 2*quaternion.i*quaternion.k - 2*quaternion.j*quaternion.r;
+    data[3] = 2*quaternion.i*quaternion.j - 2*quaternion.k*quaternion.r;
+    data[4] = 1 - (2*quaternion.i*quaternion.i + 2*quaternion.k*quaternion.k);
+    data[5] = 2*quaternion.j*quaternion.k + 2*quaternion.i*quaternion.r;
+    data[6] = 2*quaternion.i*quaternion.k + 2*quaternion.j*quaternion.r;
+    data[7] = 2*quaternion.j*quaternion.k - 2*quaternion.i*quaternion.r;
+    data[8] = 1 - (2*quaternion.i*quaternion.i + 2*quaternion.j*quaternion.j);
 }
 
-void IPhysics::Matrix3::SetComponents(const Vector3& _componentOne, const Vector3& _componentTwo, const Vector3& _componentThree){
-    data[0] = _componentOne.x;
-    data[1] = _componentTwo.x;
-    data[2] = _componentThree.x;
-    data[3] = _componentOne.y;
-    data[4] = _componentTwo.y;
-    data[5] = _componentThree.y;
-    data[6] = _componentOne.z;
-    data[7] = _componentTwo.z;
-    data[8] = _componentThree.z;
+void IPhysics::Matrix3::SetComponents(const Vector3& componentOne, const Vector3& componentTwo, const Vector3& componentThree){
+    data[0] = componentOne.x;
+    data[1] = componentTwo.x;
+    data[2] = componentThree.x;
+    data[3] = componentOne.y;
+    data[4] = componentTwo.y;
+    data[5] = componentThree.y;
+    data[6] = componentOne.z;
+    data[7] = componentTwo.z;
+    data[8] = componentThree.z;
 }
 
 void IPhysics::Matrix3::Invert(){
@@ -357,24 +357,24 @@ IPhysics::Matrix3 IPhysics::Matrix3::Transpose() const{
     return result;
 }
 
-IPhysics::Vector3 IPhysics::Matrix3::Transform(const Vector3& _vector3) const{
-    return (*this) * _vector3;
+IPhysics::Vector3 IPhysics::Matrix3::Transform(const Vector3& vector3) const{
+    return (*this) * vector3;
 }
 
-IPhysics::Vector3 IPhysics::Matrix3::TransformTranspose(const Vector3& _vector3) const{
+IPhysics::Vector3 IPhysics::Matrix3::TransformTranspose(const Vector3& vector3) const{
     return {
-        _vector3.x * data[0] + _vector3.y * data[3] + _vector3.z * data[6],
-        _vector3.x * data[1] + _vector3.y * data[4] + _vector3.z * data[7],
-        _vector3.x * data[2] + _vector3.y * data[5] + _vector3.z * data[8]
+        vector3.x * data[0] + vector3.y * data[3] + vector3.z * data[6],
+        vector3.x * data[1] + vector3.y * data[4] + vector3.z * data[7],
+        vector3.x * data[2] + vector3.y * data[5] + vector3.z * data[8]
     };
 }
 
 // Static
-IPhysics::Matrix3 IPhysics::Matrix3::LinearInterpolate(const Matrix3& _startMatrix, const Matrix3& _endMatrix, real _proportion){
+IPhysics::Matrix3 IPhysics::Matrix3::LinearInterpolate(const Matrix3& startMatrix, const Matrix3& endMatrix, real proportion){
     Matrix3 result;
-    real omp = 1.0f - _proportion;
+    real omp = 1.0f - proportion;
     for (unsigned i = 0; i < 9; i++){
-        result.data[i] = _startMatrix.data[i] * omp + _endMatrix.data[i] * _proportion;
+        result.data[i] = startMatrix.data[i] * omp + endMatrix.data[i] * proportion;
     }
     return result;
 }
@@ -387,90 +387,90 @@ IPhysics::Matrix3 IPhysics::Matrix3::LinearInterpolate(const Matrix3& _startMatr
 IPhysics::Matrix4::Matrix4() = default;
 
 // Operators
-IPhysics::Matrix4 IPhysics::Matrix4::operator*(const Matrix4& _other) const{
+IPhysics::Matrix4 IPhysics::Matrix4::operator*(const Matrix4& other) const{
     Matrix4 result{};
-    result.data[0] = _other.data[0]*data[0] + _other.data[4]*data[1] +
-    _other.data[8]*data[2];
-    result.data[4] = _other.data[0]*data[4] + _other.data[4]*data[5] +
-    _other.data[8]*data[6];
-    result.data[8] = _other.data[0]*data[8] + _other.data[4]*data[9] +
-    _other.data[8]*data[10];
-    result.data[1] = _other.data[1]*data[0] + _other.data[5]*data[1] +
-    _other.data[9]*data[2];
-    result.data[5] = _other.data[1]*data[4] + _other.data[5]*data[5] +
-    _other.data[9]*data[6];
-    result.data[9] = _other.data[1]*data[8] + _other.data[5]*data[9] +
-    _other.data[9]*data[10];
-    result.data[2] = _other.data[2]*data[0] + _other.data[6]*data[1] +
-    _other.data[10]*data[2];
-    result.data[6] = _other.data[2]*data[4] + _other.data[6]*data[5] +
-    _other.data[10]*data[6];
-    result.data[10] = _other.data[2]*data[8] + _other.data[6]*data[9] +
-    _other.data[10]*data[10];
-    result.data[3] = _other.data[3]*data[0] + _other.data[7]*data[1] +
-    _other.data[11]*data[2] + data[3];
-    result.data[7] = _other.data[3]*data[4] + _other.data[7]*data[5] +
-    _other.data[11]*data[6] + data[7];
-    result.data[11] = _other.data[3]*data[8] + _other.data[7]*data[9] +
-    _other.data[11]*data[10] + data[11];
+    result.data[0] = other.data[0]*data[0] + other.data[4]*data[1] +
+    other.data[8]*data[2];
+    result.data[4] = other.data[0]*data[4] + other.data[4]*data[5] +
+    other.data[8]*data[6];
+    result.data[8] = other.data[0]*data[8] + other.data[4]*data[9] +
+    other.data[8]*data[10];
+    result.data[1] = other.data[1]*data[0] + other.data[5]*data[1] +
+    other.data[9]*data[2];
+    result.data[5] = other.data[1]*data[4] + other.data[5]*data[5] +
+    other.data[9]*data[6];
+    result.data[9] = other.data[1]*data[8] + other.data[5]*data[9] +
+    other.data[9]*data[10];
+    result.data[2] = other.data[2]*data[0] + other.data[6]*data[1] +
+    other.data[10]*data[2];
+    result.data[6] = other.data[2]*data[4] + other.data[6]*data[5] +
+    other.data[10]*data[6];
+    result.data[10] = other.data[2]*data[8] + other.data[6]*data[9] +
+    other.data[10]*data[10];
+    result.data[3] = other.data[3]*data[0] + other.data[7]*data[1] +
+    other.data[11]*data[2] + data[3];
+    result.data[7] = other.data[3]*data[4] + other.data[7]*data[5] +
+    other.data[11]*data[6] + data[7];
+    result.data[11] = other.data[3]*data[8] + other.data[7]*data[9] +
+    other.data[11]*data[10] + data[11];
     return result;
 }
 
-IPhysics::Vector3 IPhysics::Matrix4::operator*(const Vector3& _vector3) const{
+IPhysics::Vector3 IPhysics::Matrix4::operator*(const Vector3& vector3) const{
     return {
-        _vector3.x * data[0] + _vector3.y * data[1] + _vector3.z * data[2] + data[3], 
-        _vector3.x * data[4] + _vector3.y * data[5] + _vector3.z * data[6] + data[7], 
-        _vector3.x * data[8] + _vector3.y * data[9] + _vector3.z * data[10] + data[11]
+        vector3.x * data[0] + vector3.y * data[1] + vector3.z * data[2] + data[3],
+        vector3.x * data[4] + vector3.y * data[5] + vector3.z * data[6] + data[7],
+        vector3.x * data[8] + vector3.y * data[9] + vector3.z * data[10] + data[11]
     };
 }
 
 // Mutators
-void IPhysics::Matrix4::SetInverse(const Matrix4& _matrix){
+void IPhysics::Matrix4::SetInverse(const Matrix4& matrix){
     real det = GetDeterminant();
     if (det == 0) return;
     det = static_cast<real>(1.0f)/det;
-    data[0] = (-_matrix.data[9]*_matrix.data[6]+_matrix.data[5]*_matrix.data[10])*det;
-    data[4] = (_matrix.data[8]*_matrix.data[6]-_matrix.data[4]*_matrix.data[10])*det;
-    data[8] = (-_matrix.data[8]*_matrix.data[5]+_matrix.data[4]*_matrix.data[9]*_matrix.data[15])*det;
-    data[1] = (_matrix.data[9]*_matrix.data[2]-_matrix.data[1]*_matrix.data[10])*det;
-    data[5] = (-_matrix.data[8]*_matrix.data[2]+_matrix.data[0]*_matrix.data[10])*det;
-    data[9] = (_matrix.data[8]*_matrix.data[1]-_matrix.data[0]*_matrix.data[9]*_matrix.data[15])*det;
-    data[2] = (-_matrix.data[5]*_matrix.data[2]+_matrix.data[1]*_matrix.data[6]*_matrix.data[15])*det;
-    data[6] = (+_matrix.data[4]*_matrix.data[2]-_matrix.data[0]*_matrix.data[6]*_matrix.data[15])*det;
-    data[10] = (-_matrix.data[4]*_matrix.data[1]+_matrix.data[0]*_matrix.data[5]*_matrix.data[15])*det;
-    data[3] = (_matrix.data[9]*_matrix.data[6]*_matrix.data[3]
-    -_matrix.data[5]*_matrix.data[10]*_matrix.data[3]
-    -_matrix.data[9]*_matrix.data[2]*_matrix.data[7]
-    +_matrix.data[1]*_matrix.data[10]*_matrix.data[7]
-    +_matrix.data[5]*_matrix.data[2]*_matrix.data[11]
-    -_matrix.data[1]*_matrix.data[6]*_matrix.data[11])*det;
-    data[7] = (-_matrix.data[8]*_matrix.data[6]*_matrix.data[3]
-    +_matrix.data[4]*_matrix.data[10]*_matrix.data[3]
-    +_matrix.data[8]*_matrix.data[2]*_matrix.data[7]
-    -_matrix.data[0]*_matrix.data[10]*_matrix.data[7]
-    -_matrix.data[4]*_matrix.data[2]*_matrix.data[11]
-    +_matrix.data[0]*_matrix.data[6]*_matrix.data[11])*det;
-    data[11] =(_matrix.data[8]*_matrix.data[5]*_matrix.data[3]
-    -_matrix.data[4]*_matrix.data[9]*_matrix.data[3]
-    -_matrix.data[8]*_matrix.data[1]*_matrix.data[7]
-    +_matrix.data[0]*_matrix.data[9]*_matrix.data[7]
-    +_matrix.data[4]*_matrix.data[1]*_matrix.data[11]
-    -_matrix.data[0]*_matrix.data[5]*_matrix.data[11])*det;
+    data[0] = (-matrix.data[9]*matrix.data[6]+matrix.data[5]*matrix.data[10])*det;
+    data[4] = (matrix.data[8]*matrix.data[6]-matrix.data[4]*matrix.data[10])*det;
+    data[8] = (-matrix.data[8]*matrix.data[5]+matrix.data[4]*matrix.data[9]*matrix.data[15])*det;
+    data[1] = (matrix.data[9]*matrix.data[2]-matrix.data[1]*matrix.data[10])*det;
+    data[5] = (-matrix.data[8]*matrix.data[2]+matrix.data[0]*matrix.data[10])*det;
+    data[9] = (matrix.data[8]*matrix.data[1]-matrix.data[0]*matrix.data[9]*matrix.data[15])*det;
+    data[2] = (-matrix.data[5]*matrix.data[2]+matrix.data[1]*matrix.data[6]*matrix.data[15])*det;
+    data[6] = (+matrix.data[4]*matrix.data[2]-matrix.data[0]*matrix.data[6]*matrix.data[15])*det;
+    data[10] = (-matrix.data[4]*matrix.data[1]+matrix.data[0]*matrix.data[5]*matrix.data[15])*det;
+    data[3] = (matrix.data[9]*matrix.data[6]*matrix.data[3]
+    -matrix.data[5]*matrix.data[10]*matrix.data[3]
+    -matrix.data[9]*matrix.data[2]*matrix.data[7]
+    +matrix.data[1]*matrix.data[10]*matrix.data[7]
+    +matrix.data[5]*matrix.data[2]*matrix.data[11]
+    -matrix.data[1]*matrix.data[6]*matrix.data[11])*det;
+    data[7] = (-matrix.data[8]*matrix.data[6]*matrix.data[3]
+    +matrix.data[4]*matrix.data[10]*matrix.data[3]
+    +matrix.data[8]*matrix.data[2]*matrix.data[7]
+    -matrix.data[0]*matrix.data[10]*matrix.data[7]
+    -matrix.data[4]*matrix.data[2]*matrix.data[11]
+    +matrix.data[0]*matrix.data[6]*matrix.data[11])*det;
+    data[11] =(matrix.data[8]*matrix.data[5]*matrix.data[3]
+    -matrix.data[4]*matrix.data[9]*matrix.data[3]
+    -matrix.data[8]*matrix.data[1]*matrix.data[7]
+    +matrix.data[0]*matrix.data[9]*matrix.data[7]
+    +matrix.data[4]*matrix.data[1]*matrix.data[11]
+    -matrix.data[0]*matrix.data[5]*matrix.data[11])*det;
 }
 
-void IPhysics::Matrix4::SetOrientationAndPos(const Quaternion& _quaternion, const Vector3& _position){
-    data[0] = 1 - (2*_quaternion.j*_quaternion.j + 2*_quaternion.k*_quaternion.k);
-    data[1] = 2*_quaternion.i*_quaternion.j + 2*_quaternion.k*_quaternion.r;
-    data[2] = 2*_quaternion.i*_quaternion.k - 2*_quaternion.j*_quaternion.r;
-    data[3] = _position.x;
-    data[4] = 2*_quaternion.i*_quaternion.j - 2*_quaternion.k*_quaternion.r;
-    data[5] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.k*_quaternion.k);
-    data[6] = 2*_quaternion.j*_quaternion.k + 2*_quaternion.i*_quaternion.r;
-    data[7] = _position.y;
-    data[8] = 2*_quaternion.i*_quaternion.k + 2*_quaternion.j*_quaternion.r;
-    data[9] = 2*_quaternion.j*_quaternion.k - 2*_quaternion.i*_quaternion.r;
-    data[10] = 1 - (2*_quaternion.i*_quaternion.i + 2*_quaternion.j*_quaternion.j);
-    data[11] = _position.z;
+void IPhysics::Matrix4::SetOrientationAndPos(const Quaternion& quaternion, const Vector3& position){
+    data[0] = 1 - (2*quaternion.j*quaternion.j + 2*quaternion.k*quaternion.k);
+    data[1] = 2*quaternion.i*quaternion.j + 2*quaternion.k*quaternion.r;
+    data[2] = 2*quaternion.i*quaternion.k - 2*quaternion.j*quaternion.r;
+    data[3] = position.x;
+    data[4] = 2*quaternion.i*quaternion.j - 2*quaternion.k*quaternion.r;
+    data[5] = 1 - (2*quaternion.i*quaternion.i + 2*quaternion.k*quaternion.k);
+    data[6] = 2*quaternion.j*quaternion.k + 2*quaternion.i*quaternion.r;
+    data[7] = position.y;
+    data[8] = 2*quaternion.i*quaternion.k + 2*quaternion.j*quaternion.r;
+    data[9] = 2*quaternion.j*quaternion.k - 2*quaternion.i*quaternion.r;
+    data[10] = 1 - (2*quaternion.i*quaternion.i + 2*quaternion.j*quaternion.j);
+    data[11] = position.z;
 }
 
 void IPhysics::Matrix4::Invert(){
@@ -493,12 +493,12 @@ IPhysics::Matrix4 IPhysics::Matrix4::Inverse() const{
     return result;
 }
 
-IPhysics::Vector3 IPhysics::Matrix4::Transform(const Vector3& _vector3) const{
-    return (*this) * _vector3;
+IPhysics::Vector3 IPhysics::Matrix4::Transform(const Vector3& vector3) const{
+    return (*this) * vector3;
 }
 
-IPhysics::Vector3 IPhysics::Matrix4::TransformInverse(const Vector3& _vector3) const{
-    Vector3 tmp = _vector3;
+IPhysics::Vector3 IPhysics::Matrix4::TransformInverse(const Vector3& vector3) const{
+    Vector3 tmp = vector3;
     tmp.x = tmp.x - data[3];
     tmp.y = tmp.y - data[7];
     tmp.z = tmp.z -= data[11];
@@ -515,85 +515,85 @@ IPhysics::Vector3 IPhysics::Matrix4::TransformInverse(const Vector3& _vector3) c
     };
 }
 
-IPhysics::Vector3 IPhysics::Matrix4::TransformDirection(const Vector3& _vector3) const{
+IPhysics::Vector3 IPhysics::Matrix4::TransformDirection(const Vector3& vector3) const{
     return {
-        _vector3.x * data[0] +
-        _vector3.y * data[1] +
-        _vector3.z * data[2],
-        _vector3.x * data[4] +
-        _vector3.y * data[5] +
-        _vector3.z * data[6],
-        _vector3.x * data[8] +
-        _vector3.y * data[9] +
-        _vector3.z * data[10]
+        vector3.x * data[0] +
+        vector3.y * data[1] +
+        vector3.z * data[2],
+        vector3.x * data[4] +
+        vector3.y * data[5] +
+        vector3.z * data[6],
+        vector3.x * data[8] +
+        vector3.y * data[9] +
+        vector3.z * data[10]
     };
 }
 
-IPhysics::Vector3 IPhysics::Matrix4::TransformInverseDirection(const Vector3& _vector3) const{
+IPhysics::Vector3 IPhysics::Matrix4::TransformInverseDirection(const Vector3& vector3) const{
     return {
-        _vector3.x * data[0] +
-        _vector3.y * data[4] +
-        _vector3.z * data[8],
-        _vector3.x * data[1] +
-        _vector3.y * data[5] +
-        _vector3.z * data[9],
-        _vector3.x * data[2] +
-        _vector3.y * data[6] +
-        _vector3.z * data[10]
+        vector3.x * data[0] +
+        vector3.y * data[4] +
+        vector3.z * data[8],
+        vector3.x * data[1] +
+        vector3.y * data[5] +
+        vector3.z * data[9],
+        vector3.x * data[2] +
+        vector3.y * data[6] +
+        vector3.z * data[10]
     };
 }
 
-IPhysics::Vector3 IPhysics::Matrix4::GetAxisVector(int _index) const{
-    return {data[_index], data[_index + 4], data[_index + 8]};
+IPhysics::Vector3 IPhysics::Matrix4::GetAxisVector(int index) const{
+    return {data[index], data[index + 4], data[index + 8]};
 }
 
 /*
  * Random number generator
  */
-IPhysics::real IPhysics::RandomStore::RandomReal(real _lowerBound, real _upperbound){
-    std::uniform_real_distribution<real> doubleDistribution(_lowerBound, _upperbound);
+IPhysics::real IPhysics::RandomStore::RandomReal(real lowerBound, real upperbound){
+    std::uniform_real_distribution<real> doubleDistribution(lowerBound, upperbound);
     return doubleDistribution(RandomStore::generator);
 }
 
-int IPhysics::RandomStore::RandomInt(int _lowerBound, int _upperbound){
-    std::uniform_int_distribution<int> intDistribution(_lowerBound, _upperbound);
+int IPhysics::RandomStore::RandomInt(int lowerBound, int upperbound){
+    std::uniform_int_distribution<int> intDistribution(lowerBound, upperbound);
     return intDistribution(RandomStore::generator);
 }
 
-IPhysics::Vector3 IPhysics::RandomStore::RandomVector3(const Vector3 &_lowerBound, const Vector3 &_upperbound){
-    return {RandomReal(_lowerBound.x, _upperbound.x), RandomReal(_lowerBound.y, _upperbound.y), RandomReal(_lowerBound.z, _upperbound.z)};
+IPhysics::Vector3 IPhysics::RandomStore::RandomVector3(const Vector3 &lowerBound, const Vector3 &upperbound){
+    return {RandomReal(lowerBound.x, upperbound.x), RandomReal(lowerBound.y, upperbound.y), RandomReal(lowerBound.z, upperbound.z)};
 }
 
 /*
  * Local and world transforms
  */
-IPhysics::Vector3 IPhysics::LocalWorldTransforms::LocalToWorld(const Vector3& _local, const Matrix4& _transform){
-    return _transform.Transform(_local);
+IPhysics::Vector3 IPhysics::LocalWorldTransforms::LocalToWorld(const Vector3& local, const Matrix4& transform){
+    return transform.Transform(local);
 }
 
-IPhysics::Vector3 IPhysics::LocalWorldTransforms::WorldToLocal(const Vector3& _world, const Matrix4& _transform){
-    return _transform.TransformInverse(_world);
+IPhysics::Vector3 IPhysics::LocalWorldTransforms::WorldToLocal(const Vector3& world, const Matrix4& transform){
+    return transform.TransformInverse(world);
 }
 
-IPhysics::Vector3 IPhysics::LocalWorldTransforms::LocalToWorldDirection(const Vector3& _local, const Matrix4& _transform){
-    return _transform.TransformDirection(_local);
+IPhysics::Vector3 IPhysics::LocalWorldTransforms::LocalToWorldDirection(const Vector3& local, const Matrix4& transform){
+    return transform.TransformDirection(local);
 }
 
-IPhysics::Vector3 IPhysics::LocalWorldTransforms::WorldToLocalDirection(const Vector3& _world, const Matrix4& _transform){
-    return _transform.TransformInverseDirection(_world);
+IPhysics::Vector3 IPhysics::LocalWorldTransforms::WorldToLocalDirection(const Vector3& world, const Matrix4& transform){
+    return transform.TransformInverseDirection(world);
 }
 
 /*
  *  Mathematical operations on real.
  */
-IPhysics::real IPhysics::RealSqrt(real _value){
-    return std::sqrt(_value);
+IPhysics::real IPhysics::RealSqrt(real value){
+    return std::sqrt(value);
 }
 
-IPhysics::real IPhysics::RealPow(real _value, real _power){
-    return std::pow(_value, _power);
+IPhysics::real IPhysics::RealPow(real value, real power){
+    return std::pow(value, power);
 }
 
-IPhysics::real IPhysics::RealAbs(real _value){
-    return std::abs(_value);
+IPhysics::real IPhysics::RealAbs(real value){
+    return std::abs(value);
 }

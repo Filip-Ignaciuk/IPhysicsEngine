@@ -5,22 +5,22 @@ IPhysics::real IPhysics::ParticleLink::CurrentLength() const{
     return relativePosition.Magnitude();
 }
 
-unsigned IPhysics::ParticleCable::AddContact(ParticleContact* _contact, unsigned _limit) const{
+unsigned IPhysics::ParticleCable::AddContact(ParticleContact* contact, unsigned limit) const{
     real length = CurrentLength();
 
     if (length < maxLength){
         return 0;
     }
 
-    _contact->particles[0] = particles[0];
-    _contact->particles[1] = particles[1];
+    contact->particles[0] = particles[0];
+    contact->particles[1] = particles[1];
 
     Vector3 normal = particles[1]->GetPosition() - particles[0]->GetPosition();
     normal.Normalise();
-    _contact->contactNormal = normal;
+    contact->contactNormal = normal;
 
-    _contact->penetration = length - maxLength;
-    _contact->restitution = restitution;
+    contact->penetration = length - maxLength;
+    contact->restitution = restitution;
 
     return 1;
 }
@@ -30,27 +30,27 @@ IPhysics::real IPhysics::ParticleRod::CurrentLength() const{
     return displacement.Magnitude();
 }
 
-unsigned IPhysics::ParticleRod::AddContact(ParticleContact* _contact, unsigned _limit) const{
+unsigned IPhysics::ParticleRod::AddContact(ParticleContact* contact, unsigned limit) const{
     real currentLength = CurrentLength();
     if (currentLength == length){
         return 0;
     }
 
-    _contact->particles[0] = particles[0];
-    _contact->particles[1] = particles[1];
+    contact->particles[0] = particles[0];
+    contact->particles[1] = particles[1];
 
     Vector3 normal = particles[1]->GetPosition() - particles[0]->GetPosition();
     normal.Normalise();
     if (currentLength > length){
-        _contact->contactNormal = normal;
-        _contact->penetration = currentLength - length;
+        contact->contactNormal = normal;
+        contact->penetration = currentLength - length;
     }
     else{
-        _contact->contactNormal = normal * -1;
-        _contact->penetration = length - currentLength;
+        contact->contactNormal = normal * -1;
+        contact->penetration = length - currentLength;
     }
 
-    _contact->restitution = 0;
+    contact->restitution = 0;
 
     return 1;
 }

@@ -1,24 +1,24 @@
 #include "rayguihelper.hpp"
 #include <string>
 
-IApp::CharBufferResultStore* IApp::CharBufferToReal(char _buffer[64]){
+IApp::CharBufferResultStore* IApp::CharBufferToReal(char buffer[64]){
     auto* charBufferResultStore = new CharBufferResultStore();
     charBufferResultStore->isValid = true;
     std::string stringForm;
     // Check if is digit
     for (size_t i = 0; i < 64; i++)
     {
-        if(_buffer[i] == '\0'){
+        if(buffer[i] == '\0'){
             break;
         }
 
 
-        if(_buffer[i] !=  '.' && _buffer[i] != '\0' && !std::isdigit(_buffer[i])){
+        if(buffer[i] !=  '.' && buffer[i] != '\0' && !std::isdigit(buffer[i])){
             charBufferResultStore->isValid = false;
             return charBufferResultStore;
         }
 
-        stringForm = stringForm + _buffer[i];
+        stringForm = stringForm + buffer[i];
 
     }
     if(stringForm.size() == 0){

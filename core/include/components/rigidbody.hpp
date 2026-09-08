@@ -8,32 +8,32 @@ namespace IPhysics
     public:
         // Constructors
         RigidBody();
-        RigidBody(const Vector3& _originalPosition, const Quaternion& _originalOrientation, const real& _inverseMass, const real& _linearDamping, const real& _angularDamping, const Matrix3& _inverseInertiaTensor);
+        RigidBody(const Vector3& originalPosition, const Quaternion& originalOrientation, const real& inverseMass, const real& linearDamping, const real& angularDamping, const Matrix3& inverseInertiaTensor);
 
         // Mutators
-        void Integrate(real _duration);
-        void AddForce(const Vector3& _vector);
-        void AddForceAtPoint(const Vector3& _vector, const Vector3& _point);
-        void AddForceAtBodyPoint(const Vector3& _vector, const Vector3& _point);
+        void Integrate(real duration);
+        void AddForce(const Vector3& vector);
+        void AddForceAtPoint(const Vector3& vector, const Vector3& point);
+        void AddForceAtBodyPoint(const Vector3& vector, const Vector3& point);
         void ClearAccumulators();
         void CalculateDerivedData();
 
-        void SetPosition(const Vector3& _position);
-        void SetOrientation(const Quaternion& _quaternion);
-        void SetMass(real _mass);
-        void SetIsAwake(bool _isAwake);
-        void SetInverseMass(real _inverseMass);
-        void SetLinearDamping(real _linearDamping);
-        void SetAngularDamping(real _angularDamping);
-        void SetInverseInertiaTensor(const Matrix3& _inertiaTensor);
-        void SetMaxDistanceFromCentre(real _distance);
+        void SetPosition(const Vector3& position);
+        void SetOrientation(const Quaternion& quaternion);
+        void SetMass(real mass);
+        void SetIsAwake(bool isAwake);
+        void SetInverseMass(real inverseMass);
+        void SetLinearDamping(real linearDamping);
+        void SetAngularDamping(real angularDamping);
+        void SetInverseInertiaTensor(const Matrix3& inertiaTensor);
+        void SetMaxDistanceFromCentre(real distance);
 
-        void AddVelocity(const Vector3& _velocity);
-        void AddRotation(const Vector3& _rotation);
+        void AddVelocity(const Vector3& velocity);
+        void AddRotation(const Vector3& rotation);
 
         // Queries
-        [[nodiscard]] Vector3 GetPointInLocalSpace(const Vector3& _point) const;
-        [[nodiscard]] Vector3 GetPointInWorldSpace(const Vector3& _point) const;
+        [[nodiscard]] Vector3 GetPointInLocalSpace(const Vector3& point) const;
+        [[nodiscard]] Vector3 GetPointInWorldSpace(const Vector3& point) const;
         [[nodiscard]] real GetMass() const;
         [[nodiscard]] bool GetIsAwake() const;
         [[nodiscard]] real GetInverseMass() const;
@@ -74,8 +74,8 @@ namespace IPhysics
         Vector3 m_lastFrameAcceleration;
 
     private:
-        static void CalculateTransformMatrix(Matrix4& _transformMatrix, const Vector3& _position, const Quaternion& _orientation);
-        static void CalculateTransformInertiaTensor(Matrix3& _iitWorld, const Quaternion& _quaternion, const Matrix3& _iitBody, const Matrix4& _rotmat);
+        static void CalculateTransformMatrix(Matrix4& transformMatrix, const Vector3& position, const Quaternion& orientation);
+        static void CalculateTransformInertiaTensor(Matrix3& iitWorld, const Quaternion& quaternion, const Matrix3& iitBody, const Matrix4& rotmat);
     };
 }
 

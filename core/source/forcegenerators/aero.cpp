@@ -1,36 +1,36 @@
 #include "aero.hpp"
 
 // Constructors
-IPhysics::Aero::Aero(const Matrix3& _tensor,
-    const Vector3& _localPosition,
-    const Vector3* _windSpeed) :
-    m_tensor(_tensor),
-    m_localPosition(_localPosition),
-    m_windSpeed(_windSpeed)
+IPhysics::Aero::Aero(const Matrix3& tensor,
+    const Vector3& localPosition,
+    const Vector3* windSpeed) :
+    m_tensor(tensor),
+    m_localPosition(localPosition),
+    m_windSpeed(windSpeed)
 {
 }
 
 // Mutators
-void IPhysics::Aero::UpdateForce(RigidBody* _rigidBody, real _duration){
-    Aero::UpdateForceFromTensor(_rigidBody, _duration, m_tensor);
+void IPhysics::Aero::UpdateForce(RigidBody* rigidBody, real duration){
+    Aero::UpdateForceFromTensor(rigidBody, duration, m_tensor);
 }
 
-void IPhysics::Aero::UpdateForceFromTensor(RigidBody* _body,
-    real _duration,
-    const Matrix3& _tensor) const {
+void IPhysics::Aero::UpdateForceFromTensor(RigidBody* body,
+    real duration,
+    const Matrix3& tensor) const {
     // Calculate total velocity from wind and body
-    Vector3 velocity = _body->GetVelocity();
+    Vector3 velocity = body->GetVelocity();
     velocity += *m_windSpeed;
 
     // Calculate the velocity in body coordinates
     Vector3 bodyVelocity =
-        _body->GetTransformMatrix().TransformInverseDirection(velocity);
+        body->GetTransformMatrix().TransformInverseDirection(velocity);
 
     // Calculate the force in body coordinates
     Vector3 bodyForce = m_tensor.Transform(bodyVelocity);
-    Vector3 force = _body->GetTransformMatrix().TransformDirection(bodyForce);
+    Vector3 force = body->GetTransformMatrix().TransformDirection(bodyForce);
 
-    _body->AddForceAtBodyPoint(force, m_localPosition);
+    body->AddForceAtBodyPoint(force, m_localPosition);
 }
 
 /*
@@ -38,27 +38,27 @@ void IPhysics::Aero::UpdateForceFromTensor(RigidBody* _body,
  */
 
 // Constructors
-IPhysics::AeroControl::AeroControl(const Matrix3& _base,
-    const Matrix3& _minimumTensor,
-    const Matrix3& _maximumTensor,
-    const Vector3& _localPosition,
-    const Vector3* _windSpeed) :
-    Aero(_base, _localPosition, _windSpeed),
-    m_maxTensor(_maximumTensor),
-    m_minTensor(_minimumTensor),
+IPhysics::AeroControl::AeroControl(const Matrix3& base,
+    const Matrix3& minimumTensor,
+    const Matrix3& maximumTensor,
+    const Vector3& localPosition,
+    const Vector3* windSpeed) :
+    Aero(base, localPosition, windSpeed),
+    m_maxTensor(maximumTensor),
+    m_minTensor(minimumTensor),
     m_controlSetting(0)
 
 {
 }
 
 // Mutators
-void IPhysics::AeroControl::SetControl(real _value){
-    m_controlSetting = _value;
+void IPhysics::AeroControl::SetControl(real value){
+    m_controlSetting = value;
 }
 
-void IPhysics::AeroControl::UpdateForce(RigidBody* _rigidBody, real _duration){
+void IPhysics::AeroControl::UpdateForce(RigidBody* rigidBody, real duration){
     Matrix3 tensor = GetTensor();
-    Aero::UpdateForceFromTensor(_rigidBody, _duration, tensor);
+    Aero::UpdateForceFromTensor(rigidBody, duration, tensor);
 }
 
 IPhysics::Matrix3 IPhysics::AeroControl::GetTensor(){

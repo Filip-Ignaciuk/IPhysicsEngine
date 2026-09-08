@@ -9,7 +9,7 @@ namespace IPhysics{
         // Deconstructors
         virtual ~ParticleForceGenerator() = default;
 
-        virtual void UpdateForce(Particle* _particle, real _duration) = 0;
+        virtual void UpdateForce(Particle* particle, real duration) = 0;
     };
 
     struct ParticleForceRegistration
@@ -17,8 +17,8 @@ namespace IPhysics{
         Particle* particle;
         ParticleForceGenerator* particleForceGenerator;
 
-        bool operator==(const ParticleForceRegistration& _other) const {
-            return particle == _other.particle && particleForceGenerator == _other.particleForceGenerator;
+        bool operator==(const ParticleForceRegistration& other) const {
+            return particle == other.particle && particleForceGenerator == other.particleForceGenerator;
         }
     };
 
@@ -28,10 +28,10 @@ namespace IPhysics{
 
         public:
         ParticleForceRegistry();
-        void Add(Particle* _particle, ParticleForceGenerator* _particleForceGenerator);
-        void Remove(Particle* _particle, ParticleForceGenerator* _particleForceGenerator);
+        void Add(Particle* particle, ParticleForceGenerator* particleForceGenerator);
+        void Remove(Particle* particle, ParticleForceGenerator* particleForceGenerator);
         void Clear();
-        void UpdateForces(real _duration);
+        void UpdateForces(real duration);
     
         std::vector<ParticleForceRegistration> GetRegistrations();
     };
@@ -40,8 +40,8 @@ namespace IPhysics{
         private:
         Vector3 gravity;
         public:
-        ParticleGravity(const Vector3& _gravity);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleGravity(const Vector3& gravity);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
     class ParticleDrag : public ParticleForceGenerator{
@@ -49,8 +49,8 @@ namespace IPhysics{
         real k1;
         real k2;
         public:
-        ParticleDrag(const real& _k1, const real& _k2);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleDrag(const real& k1, const real& k2);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
     class ParticleRealGravity : public ParticleForceGenerator{
@@ -58,8 +58,8 @@ namespace IPhysics{
         real gravitationalConstant;
         std::vector<ParticleForceRegistration>* registrations;
         public:
-        ParticleRealGravity(std::vector<ParticleForceRegistration>* _registrations, real _gravitationalConstant);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleRealGravity(std::vector<ParticleForceRegistration>* registrations, real gravitationalConstant);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
     class ParticleSpring : public ParticleForceGenerator{
@@ -68,8 +68,8 @@ namespace IPhysics{
         real springConstant;
         real restLength;
         public:
-        ParticleSpring(Particle* _otherParticle, real _springConsant, real _restLength);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleSpring(Particle* otherParticle, real springConsant, real restLength);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
     class ParticleAnchoredSpring : public ParticleForceGenerator{
@@ -78,8 +78,8 @@ namespace IPhysics{
         real springConstant;
         real restLength;
         public:
-        ParticleAnchoredSpring(Vector3 _anchoredPosition, real _springConsant, real _restLength);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleAnchoredSpring(Vector3 anchoredPosition, real springConsant, real restLength);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
     class ParticleBungee : public ParticleForceGenerator{
@@ -88,8 +88,8 @@ namespace IPhysics{
         real springConstant;
         real restLength;
         public:
-        ParticleBungee(Particle* _otherParticle, real _springConsant, real _restLength);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleBungee(Particle* otherParticle, real springConsant, real restLength);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
     class ParticleAnchoredBungee : public ParticleForceGenerator{
@@ -98,8 +98,8 @@ namespace IPhysics{
         real springConstant;
         real restLength;
         public:
-        ParticleAnchoredBungee(Vector3 _anchoredPosition, real _springConsant, real _restLength);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleAnchoredBungee(Vector3 anchoredPosition, real springConsant, real restLength);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
     class ParticleBuoyancy : public ParticleForceGenerator{
@@ -109,8 +109,8 @@ namespace IPhysics{
         real waterHeight;
         real liquidDensity;
         public:
-        ParticleBuoyancy(real _maxDepth, real _volume, real _waterHeight, real _liquidDensity);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleBuoyancy(real maxDepth, real volume, real waterHeight, real liquidDensity);
+        void UpdateForce(Particle* particle, real duration) override;
     };
     
     class ParticleFakeAnchoredSpring : public ParticleForceGenerator{
@@ -119,8 +119,8 @@ namespace IPhysics{
         real springConstant;
         real damping;
         public:
-        ParticleFakeAnchoredSpring(Vector3 _anchoredPosition, real _springConstant, real _damping);
-        void UpdateForce(Particle* _particle, real _duration) override;
+        ParticleFakeAnchoredSpring(Vector3 anchoredPosition, real springConstant, real damping);
+        void UpdateForce(Particle* particle, real duration) override;
     };
 
 }

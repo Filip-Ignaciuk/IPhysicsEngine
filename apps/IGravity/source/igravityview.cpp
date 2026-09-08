@@ -6,14 +6,14 @@
 
 #include "raymath.h"
 
-IGravityView::IGravityView(IGravityModel* _iGravityModel,
-    IGravityController* _iGravityController,
-    int _screenWidth,
-    int _screenHeight) :
-    m_iGravityModel(_iGravityModel),
-    m_iGravityController(_iGravityController),
-    m_screenWidth(_screenWidth),
-    m_screenHeight(_screenHeight)
+IGravityView::IGravityView(IGravityModel* iGravityModel,
+    IGravityController* iGravityController,
+    int screenWidth,
+    int screenHeight) :
+    m_iGravityModel(iGravityModel),
+    m_iGravityController(iGravityController),
+    m_screenWidth(screenWidth),
+    m_screenHeight(screenHeight)
 {
     camera = {static_cast<float>(m_screenWidth) / 2,
     static_cast<float>(m_screenHeight) / 2};

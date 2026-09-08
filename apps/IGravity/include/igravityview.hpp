@@ -9,10 +9,10 @@
 class IGravityView {
 public:
     // Constructors
-    IGravityView(IGravityModel* _iGravityModel,
-        IGravityController* _iGravityController,
-        int _screenWidth,
-        int _screenHeight);
+    IGravityView(IGravityModel* iGravityModel,
+        IGravityController* iGravityController,
+        int screenWidth,
+        int screenHeight);
 
     // Mutators
     void Display();

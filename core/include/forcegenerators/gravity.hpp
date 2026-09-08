@@ -7,12 +7,12 @@ namespace IPhysics {
     class Gravity : public ForceGenerator{
     public:
         // Constructors
-        explicit Gravity(const real& _gravityConstant);
+        explicit Gravity(const real& gravityConstant);
 
         // Mutators
-        virtual void AddObject(Object* _object);
-        virtual void RemoveObject(Object* _object);
-        void UpdateForce(RigidBody* _rigidBody, real _duration) override;
+        virtual void AddObject(Object* object);
+        virtual void RemoveObject(Object* object);
+        void UpdateForce(RigidBody* rigidBody, real duration) override;
     protected:
         real m_gravityConstant;
         std::vector<RigidBody*> m_rigidBodies;

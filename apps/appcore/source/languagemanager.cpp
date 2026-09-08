@@ -20,16 +20,16 @@ void IApp::LanguageManager::Initialise(){
     extensions.emplace("Svenska" , "sv.json");
 }
 
-void IApp::LanguageManager::LoadLanguage(std::string& _language){
-    std::ifstream file(languagesDirectory + extensions.at(_language));
+void IApp::LanguageManager::LoadLanguage(std::string& language){
+    std::ifstream file(languagesDirectory + extensions.at(language));
     if(file){
         currentLanguage.clear();
         currentLanguage = nlohmann::json::parse(file);
     }
 }
 
-std::string IApp::LanguageManager::GetText(const std::string& _key){
-    return currentLanguage[_key].get<std::string>();
+std::string IApp::LanguageManager::GetText(const std::string& key){
+    return currentLanguage[key].get<std::string>();
 }
 
 std::vector<std::string> IApp::LanguageManager::GetLanguageStrings(){

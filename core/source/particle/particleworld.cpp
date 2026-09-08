@@ -1,8 +1,8 @@
 #include "particleworld.hpp"
 
-IPhysics::ParticleWorld::ParticleWorld(unsigned _maxContacts, unsigned _iterations) : particleContactResolvers(_maxContacts), maxContacts(_iterations){
+IPhysics::ParticleWorld::ParticleWorld(unsigned maxContacts, unsigned iterations) : particleContactResolvers(maxContacts), maxContacts(iterations){
     contacts = new ParticleContact[maxContacts];
-    calculateIterations = (_iterations == 0);
+    calculateIterations = (iterations == 0);
 }
 
 void IPhysics::ParticleWorld::StartFrame(){
@@ -30,17 +30,17 @@ unsigned IPhysics::ParticleWorld::GenerateContacts(){
     return maxContacts - limit;
 }
 
-void IPhysics::ParticleWorld::Integrate(real _duration){
+void IPhysics::ParticleWorld::Integrate(real duration){
     for (int i = 0; i < particles.size(); i++)
     {
-        particles[i]->Integrate(_duration);
+        particles[i]->Integrate(duration);
     }
     
 }
 
-void IPhysics::ParticleWorld::RunPhysics(real _duration){
-    particleForceRegistry.UpdateForces(_duration);
-    Integrate(_duration);
+void IPhysics::ParticleWorld::RunPhysics(real duration){
+    particleForceRegistry.UpdateForces(duration);
+    Integrate(duration);
 
     unsigned usedContacts = GenerateContacts();
 
@@ -48,7 +48,7 @@ void IPhysics::ParticleWorld::RunPhysics(real _duration){
         if (calculateIterations){
             particleContactResolvers.SetIterations(usedContacts * 2);
         }
-        particleContactResolvers.ResolveContacts(contacts, usedContacts, _duration);
+        particleContactResolvers.ResolveContacts(contacts, usedContacts, duration);
     }
     
 }
@@ -65,26 +65,26 @@ IPhysics::ParticleForceRegistry& IPhysics::ParticleWorld::GetParticleForceRegist
     return particleForceRegistry;
 }
 
-void IPhysics::ParticleGroundContactGenerator::Init(IPhysics::ParticleWorld::Particles* _particles, real _restitution){
-    particles = _particles;
-    restitution = _restitution;
+void IPhysics::ParticleGroundContactGenerator::Init(IPhysics::ParticleWorld::Particles* particles, real restitution){
+    particles = particles;
+    restitution = restitution;
 }
 
-unsigned IPhysics::ParticleGroundContactGenerator::AddContact(ParticleContact* _contact, unsigned _limit) const{
+unsigned IPhysics::ParticleGroundContactGenerator::AddContact(ParticleContact* contact, unsigned limit) const{
     unsigned count = 0;
     for (auto particle : *particles)
     {
         real yCoordinate = particle->GetPosition().GetY();
         if (yCoordinate < 0){
-            _contact->contactNormal = Up;
-            _contact->particles[0] = particle;
-            _contact->particles[1] = nullptr;
-            _contact->penetration = -yCoordinate;
-            _contact->restitution = restitution;
-            _contact++;
+            contact->contactNormal = Up;
+            contact->particles[0] = particle;
+            contact->particles[1] = nullptr;
+            contact->penetration = -yCoordinate;
+            contact->restitution = restitution;
+            contact++;
             count++;
         }
-        if (count >= _limit){
+        if (count >= limit){
         return count;
         }
     }

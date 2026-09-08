@@ -1,23 +1,23 @@
 #include "barneshutgravity.hpp"
 
 IPhysics::BarnesHutGravity::BarnesHutGravity(
-    IPhysics::real _gravityConstant,
+    IPhysics::real gravityConstant,
     IPhysics::real thresholdValue) :
-    Gravity(_gravityConstant),
+    Gravity(gravityConstant),
     thresholdValue(thresholdValue) {
     CreateTreeRoot();
 }
 
-void IPhysics::BarnesHutGravity::AddObject(IPhysics::Object* _object) {
-    m_rigidBodies.emplace_back(_object->GetComponent<IPhysics::RigidBody>());
+void IPhysics::BarnesHutGravity::AddObject(IPhysics::Object* object) {
+    m_rigidBodies.emplace_back(object->GetComponent<IPhysics::RigidBody>());
 }
 
-void IPhysics::BarnesHutGravity::RemoveObject(IPhysics::Object* _object) {
-    std::erase(m_rigidBodies, _object->GetComponent<IPhysics::RigidBody>());
+void IPhysics::BarnesHutGravity::RemoveObject(IPhysics::Object* object) {
+    std::erase(m_rigidBodies, object->GetComponent<IPhysics::RigidBody>());
 }
 
 void IPhysics::BarnesHutGravity::UpdateForce(
-    IPhysics::RigidBody* _rigidBody, IPhysics::real _duration) {
+    IPhysics::RigidBody* rigidBody, IPhysics::real duration) {
     if (totalProcessedParticles == m_rigidBodies.size()) {
         totalProcessedParticles = 0;
     }
@@ -26,7 +26,7 @@ void IPhysics::BarnesHutGravity::UpdateForce(
         CreateTree();
     }
 
-    _rigidBody->AddForce(TraverseNode(root, _rigidBody));
+    rigidBody->AddForce(TraverseNode(root, rigidBody));
     ++totalProcessedParticles;
 }
 
@@ -59,38 +59,38 @@ void IPhysics::BarnesHutGravity::CreateTreeRoot() {
    }
 }
 
-void IPhysics::BarnesHutGravity::AddObjectToNode(bhtn* _node, IPhysics::RigidBody* _rigidBody) {
+void IPhysics::BarnesHutGravity::AddObjectToNode(bhtn* node, IPhysics::RigidBody* rigidBody) {
     // Empty Leaf
-    if (_node->IsExternalNode() && _node->rigidBody == nullptr) {
-        _node->rigidBody = _rigidBody;
-        _node->mass = _rigidBody->GetMass();
-        _node->centreOfMass = _rigidBody->GetPosition();
+    if (node->IsExternalNode() && node->rigidBody == nullptr) {
+        node->rigidBody = rigidBody;
+        node->mass = rigidBody->GetMass();
+        node->centreOfMass = rigidBody->GetPosition();
 
         return;
     }
     // Internal Node
     // Update values along the way
-    if (!_node->IsExternalNode()) {
+    if (!node->IsExternalNode()) {
         // Update centre of mass and total mass
-        const IPhysics::real totalMass = _node->mass + _rigidBody->GetMass();
+        const IPhysics::real totalMass = node->mass + rigidBody->GetMass();
         IPhysics::Vector3 newCentreOfMass{};
         newCentreOfMass.x =
-            (_node->centreOfMass.x * _node->mass
-            + _rigidBody->GetPosition().x * _rigidBody->GetMass()) / totalMass;
+            (node->centreOfMass.x * node->mass
+            + rigidBody->GetPosition().x * rigidBody->GetMass()) / totalMass;
         newCentreOfMass.y =
-            (_node->centreOfMass.y * _node->mass
-        + _rigidBody->GetPosition().y * _rigidBody->GetMass()) / totalMass;
-        _node->mass = totalMass;
-        _node->centreOfMass = newCentreOfMass;
+            (node->centreOfMass.y * node->mass
+        + rigidBody->GetPosition().y * rigidBody->GetMass()) / totalMass;
+        node->mass = totalMass;
+        node->centreOfMass = newCentreOfMass;
 
         // Add object to correct quadrant.
-        const bool isEast = _rigidBody->GetPosition().x >= _node->midPoint.x;
-        const bool isSouth = _rigidBody->GetPosition().y <= _node->midPoint.y;
+        const bool isEast = rigidBody->GetPosition().x >= node->midPoint.x;
+        const bool isSouth = rigidBody->GetPosition().y <= node->midPoint.y;
         if (isEast) {
-            AddObjectToNode((isSouth ? _node->se : _node->ne), _rigidBody);
+            AddObjectToNode((isSouth ? node->se : node->ne), rigidBody);
         }
         else {
-            AddObjectToNode((isSouth ? _node->sw : _node->nw), _rigidBody);
+            AddObjectToNode((isSouth ? node->sw : node->nw), rigidBody);
         }
 
         return;
@@ -101,84 +101,84 @@ void IPhysics::BarnesHutGravity::AddObjectToNode(bhtn* _node, IPhysics::RigidBod
 
     // Creating children nodes.
     auto* nw = new bhtn();
-    nw->width = _node->width / 2;
+    nw->width = node->width / 2;
     nw->midPoint = IPhysics::Vector3{
-        _node->midPoint.x - (_node->width / 2),
-        _node->midPoint.y + (_node->width / 2),
+        node->midPoint.x - (node->width / 2),
+        node->midPoint.y + (node->width / 2),
         0
     };
-    _node->nw = nw;
+    node->nw = nw;
 
     auto* ne = new bhtn();
-    ne->width = _node->width / 2;
+    ne->width = node->width / 2;
     ne->midPoint = IPhysics::Vector3{
-        _node->midPoint.x + (_node->width / 2),
-        _node->midPoint.y + (_node->width / 2),
+        node->midPoint.x + (node->width / 2),
+        node->midPoint.y + (node->width / 2),
         0
     };
-    _node->ne = ne;
+    node->ne = ne;
 
     auto* sw = new bhtn();
-    sw->width = _node->width / 2;
+    sw->width = node->width / 2;
     sw->midPoint = IPhysics::Vector3{
-        _node->midPoint.x - (_node->width / 2),
-        _node->midPoint.y - (_node->width / 2),
+        node->midPoint.x - (node->width / 2),
+        node->midPoint.y - (node->width / 2),
         0
     };
-    _node->sw = sw;
+    node->sw = sw;
 
     auto* se = new bhtn();
-    se->width = _node->width / 2;
+    se->width = node->width / 2;
     se->midPoint = IPhysics::Vector3{
-        _node->midPoint.x + (_node->width / 2),
-        _node->midPoint.y - (_node->width / 2),
+        node->midPoint.x + (node->width / 2),
+        node->midPoint.y - (node->width / 2),
         0
     };
-    _node->se = se;
+    node->se = se;
 
     // Update centre of mass and total mass
-    const IPhysics::real totalMass = _node->mass + _rigidBody->GetMass();
+    const IPhysics::real totalMass = node->mass + rigidBody->GetMass();
     IPhysics::Vector3 newCentreOfMass{};
     newCentreOfMass.x =
-        (_node->centreOfMass.x * _node->mass
-        + _rigidBody->GetPosition().x * _rigidBody->GetMass()) / totalMass;
+        (node->centreOfMass.x * node->mass
+        + rigidBody->GetPosition().x * rigidBody->GetMass()) / totalMass;
     newCentreOfMass.y =
-        (_node->centreOfMass.y * _node->mass
-    + _rigidBody->GetPosition().y * _rigidBody->GetMass()) / totalMass;
-    _node->mass = totalMass;
-    _node->centreOfMass = newCentreOfMass;
+        (node->centreOfMass.y * node->mass
+    + rigidBody->GetPosition().y * rigidBody->GetMass()) / totalMass;
+    node->mass = totalMass;
+    node->centreOfMass = newCentreOfMass;
 
     // Add first object to correct quadrant.
-    const bool isEastfirst = _rigidBody->GetPosition().x >= _node->midPoint.x;
-    const bool isSouthfirst = _rigidBody->GetPosition().y <= _node->midPoint.y;
+    const bool isEastfirst = rigidBody->GetPosition().x >= node->midPoint.x;
+    const bool isSouthfirst = rigidBody->GetPosition().y <= node->midPoint.y;
     if (isEastfirst) {
-        AddObjectToNode((isSouthfirst ? _node->se : _node->ne), _rigidBody);
+        AddObjectToNode((isSouthfirst ? node->se : node->ne), rigidBody);
     }
     else {
-        AddObjectToNode((isSouthfirst ? _node->sw : _node->nw), _rigidBody);
+        AddObjectToNode((isSouthfirst ? node->sw : node->nw), rigidBody);
     }
 
     // Add second object to correct quadrant.
-    const bool isEastSecond = _node->rigidBody->GetPosition().x >= _node->midPoint.x;
-    const bool isSouthSecond = _node->rigidBody->GetPosition().y <= _node->midPoint.y;
+    const bool isEastSecond = node->rigidBody->GetPosition().x >= node->midPoint.x;
+    const bool isSouthSecond = node->rigidBody->GetPosition().y <= node->midPoint.y;
     if (isEastSecond) {
-        AddObjectToNode((isSouthSecond ? _node->se : _node->ne), _node->rigidBody);
+        AddObjectToNode((isSouthSecond ? node->se : node->ne), node->rigidBody);
     }
     else {
-        AddObjectToNode((isSouthSecond ? _node->sw : _node->nw), _node->rigidBody);
+        AddObjectToNode((isSouthSecond ? node->sw : node->nw), node->rigidBody);
     }
 
-    _node->rigidBody = nullptr;
+    node->rigidBody = nullptr;
 }
 
 IPhysics::Vector3 IPhysics::BarnesHutGravity::CalculateGravityForce(
-    IPhysics::real _mass1,
-    const IPhysics::Vector3& _centreOfMass1,
-    IPhysics::real _mass2,
-    const IPhysics::Vector3& _centreOfMass2) const {
+    IPhysics::real mass1,
+    const IPhysics::Vector3& centreOfMass1,
+    IPhysics::real mass2,
+    const IPhysics::Vector3& centreOfMass2) const {
 
-    const IPhysics::real totalMass = _mass1 * _mass2;
-    const IPhysics::Vector3 distance = _centreOfMass1 - _centreOfMass2;
+    const IPhysics::real totalMass = mass1 * mass2;
+    const IPhysics::Vector3 distance = centreOfMass1 - centreOfMass2;
     const IPhysics::real distanceMagnitude = distance.Magnitude();
 
     const IPhysics::real forceMagnitude = -1 * m_gravityConstant
@@ -187,40 +187,40 @@ IPhysics::Vector3 IPhysics::BarnesHutGravity::CalculateGravityForce(
 }
 
 IPhysics::Vector3 IPhysics::BarnesHutGravity::TraverseNode(
-    const bhtn *_node,
-    const IPhysics::RigidBody* _rigidBody) {
+    const bhtn *node,
+    const IPhysics::RigidBody* rigidBody) {
     IPhysics::Vector3 totalForce{0, 0, 0};
 
-    if (_node->IsExternalNode()) {
-        if (_node->rigidBody == nullptr) {
+    if (node->IsExternalNode()) {
+        if (node->rigidBody == nullptr) {
             return totalForce;
         }
-        if (_node->rigidBody == _rigidBody) {
+        if (node->rigidBody == rigidBody) {
             return totalForce;
         }
         totalForce += CalculateGravityForce(
-            _rigidBody->GetMass(),
-            _rigidBody->GetPosition(),
-            _node->rigidBody->GetMass(),
-            _node->rigidBody->GetPosition());
+            rigidBody->GetMass(),
+            rigidBody->GetPosition(),
+            node->rigidBody->GetMass(),
+            node->rigidBody->GetPosition());
         }
     else {
-        const IPhysics::Vector3 displacementBetweenMasses = _rigidBody->GetPosition()
-        - _node->centreOfMass;
+        const IPhysics::Vector3 displacementBetweenMasses = rigidBody->GetPosition()
+        - node->centreOfMass;
         IPhysics::real distanceBetweenMasses = displacementBetweenMasses.Magnitude();
 
-        if ((_node->width / distanceBetweenMasses) < thresholdValue) {
+        if ((node->width / distanceBetweenMasses) < thresholdValue) {
             totalForce += CalculateGravityForce(
-        _rigidBody->GetMass(),
-        _rigidBody->GetPosition(),
-        _node->mass,
-        _node->centreOfMass);
+        rigidBody->GetMass(),
+        rigidBody->GetPosition(),
+        node->mass,
+        node->centreOfMass);
         }
         else {
-            totalForce += TraverseNode(_node->nw, _rigidBody);
-            totalForce += TraverseNode(_node->ne, _rigidBody);
-            totalForce += TraverseNode(_node->sw, _rigidBody);
-            totalForce += TraverseNode(_node->se, _rigidBody);
+            totalForce += TraverseNode(node->nw, rigidBody);
+            totalForce += TraverseNode(node->ne, rigidBody);
+            totalForce += TraverseNode(node->sw, rigidBody);
+            totalForce += TraverseNode(node->se, rigidBody);
         }
     }
     return totalForce;

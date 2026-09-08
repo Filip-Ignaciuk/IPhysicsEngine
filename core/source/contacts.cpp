@@ -1,10 +1,10 @@
 #include "contacts.hpp"
 
-void IPhysics::Contact::SetBodyData(RigidBody* _one, RigidBody* _two, real _friction, real _restitution){
-    body[0] = _one;
-    body[1] = _two;
-    friction = _friction;
-    restitution = _restitution;
+void IPhysics::Contact::SetBodyData(RigidBody* one, RigidBody* two, real friction, real restitution){
+    body[0] = one;
+    body[1] = two;
+    friction = friction;
+    restitution = restitution;
 }
 
 void IPhysics::Contact::MatchAwakeState(){
@@ -57,18 +57,18 @@ void IPhysics::Contact::CreateContactBasis(){
     contactToWorld.SetComponents(contactNormal, contactTangent[0], contactTangent[1]);
 }
 
-IPhysics::Vector3 IPhysics::Contact::CalculateFrictionlessImpulse(Matrix3* _inverseInertiaTensor){
+IPhysics::Vector3 IPhysics::Contact::CalculateFrictionlessImpulse(Matrix3* inverseInertiaTensor){
     // Obtain the torque axis, the direction the object would start rotating if you applied a unit of impulse
     // at the contact point along the normal.
     Vector3 deltaVelocityWorld = relativeContactPosition[0] % contactNormal;
-    deltaVelocityWorld = _inverseInertiaTensor[0].Transform(deltaVelocityWorld);
+    deltaVelocityWorld = inverseInertiaTensor[0].Transform(deltaVelocityWorld);
     deltaVelocityWorld = deltaVelocityWorld % relativeContactPosition[0];
     real deltaVelocity = deltaVelocityWorld * contactNormal;
     deltaVelocity += body[0]->GetInverseMass();
 
     if(body[1]){
         Vector3 deltaVelocityWorldSecond = relativeContactPosition[1] % contactNormal;
-        deltaVelocityWorldSecond = _inverseInertiaTensor[1].Transform(deltaVelocityWorldSecond);
+        deltaVelocityWorldSecond = inverseInertiaTensor[1].Transform(deltaVelocityWorldSecond);
         deltaVelocityWorldSecond = deltaVelocityWorldSecond % relativeContactPosition[1];
         deltaVelocity += deltaVelocityWorldSecond * contactNormal;
         deltaVelocity += body[1]->GetInverseMass();
@@ -81,7 +81,7 @@ IPhysics::Vector3 IPhysics::Contact::CalculateFrictionlessImpulse(Matrix3* _inve
     return impulseContact;
 }
 
-void IPhysics::Contact::ApplyVelocityChange(Vector3 _velocityChange[2], Vector3 _rotationChange[2]){
+void IPhysics::Contact::ApplyVelocityChange(Vector3 velocityChange[2], Vector3 rotationChange[2]){
     // Get the inverse mass and inverse inertia tensor, both in world coordinates.
     Matrix3 inverseInertiaTensor[2];
     inverseInertiaTensor[0] = body[0]->GetInverseInertiaTensorWorld();
@@ -95,27 +95,27 @@ void IPhysics::Contact::ApplyVelocityChange(Vector3 _velocityChange[2], Vector3 
 
     Vector3 impulse = contactToWorld.Transform(impulseContact);
     Vector3 impulsiveTorque = relativeContactPosition[0] % impulse;
-    _rotationChange[0] = inverseInertiaTensor[0].Transform(impulsiveTorque);
-    _velocityChange[0].Clear();
-    _velocityChange[0].AddScaledVector(impulse, body[0]->GetInverseMass());
+    rotationChange[0] = inverseInertiaTensor[0].Transform(impulsiveTorque);
+    velocityChange[0].Clear();
+    velocityChange[0].AddScaledVector(impulse, body[0]->GetInverseMass());
 
-    body[0]->AddVelocity(_velocityChange[0]);
-    body[0]->AddRotation(_rotationChange[0]);
+    body[0]->AddVelocity(velocityChange[0]);
+    body[0]->AddRotation(rotationChange[0]);
 
     if(body[1]){
         Vector3 impulsiveTorque = impulse % relativeContactPosition[1];
-        _rotationChange[1] = inverseInertiaTensor[1].Transform(impulsiveTorque);
-        _velocityChange[1].Clear();
-        _velocityChange[1].AddScaledVector(impulse, -body[1]->GetInverseMass());
+        rotationChange[1] = inverseInertiaTensor[1].Transform(impulsiveTorque);
+        velocityChange[1].Clear();
+        velocityChange[1].AddScaledVector(impulse, -body[1]->GetInverseMass());
 
-        body[1]->AddVelocity(_velocityChange[1]);
-        body[1]->AddRotation(_rotationChange[1]);
+        body[1]->AddVelocity(velocityChange[1]);
+        body[1]->AddRotation(rotationChange[1]);
 
     }
 }
 
 
-void IPhysics::Contact::ApplyPositionChange(Vector3 _linearChange[2], Vector3 _angularChange[2], real _penetration){
+void IPhysics::Contact::ApplyPositionChange(Vector3 linearChange[2], Vector3 angularChange[2], real penetration){
     const real angularLimit = (real)0.2f;
     real angularMove[2];
     real linearMove[2];
@@ -140,7 +140,7 @@ void IPhysics::Contact::ApplyPositionChange(Vector3 _linearChange[2], Vector3 _a
     }
 }
 
-void IPhysics::Contact::CalculateInternals(real _duration){
+void IPhysics::Contact::CalculateInternals(real duration){
     if(!body[0]){
         SwapBodies();
     }
@@ -152,39 +152,39 @@ void IPhysics::Contact::CalculateInternals(real _duration){
         relativeContactPosition[1] = contactPoint - body[1]->GetPosition();
     }
 
-    contactVelocity = CalculateLocalVelocity(0, _duration);
+    contactVelocity = CalculateLocalVelocity(0, duration);
     if (body[1]){
-        contactVelocity -= CalculateLocalVelocity(1, _duration);
+        contactVelocity -= CalculateLocalVelocity(1, duration);
     }
 
-    CalculateDesiredDeltaVelocity(_duration);
+    CalculateDesiredDeltaVelocity(duration);
 }
 
-IPhysics::Vector3 IPhysics::Contact::CalculateLocalVelocity(unsigned _bodyIndex, real _duration){
-    RigidBody* thisBody = body[_bodyIndex];
+IPhysics::Vector3 IPhysics::Contact::CalculateLocalVelocity(unsigned bodyIndex, real duration){
+    RigidBody* thisBody = body[bodyIndex];
 
-    Vector3 velocity = thisBody->GetRotation() % relativeContactPosition[_bodyIndex];
+    Vector3 velocity = thisBody->GetRotation() % relativeContactPosition[bodyIndex];
     velocity += thisBody->GetVelocity();
 
     Vector3 localContactVelocity = contactToWorld.TransformTranspose(velocity);
 
-    Vector3 actualVelocity = thisBody->GetLastFrameAcceleration() * _duration;
+    Vector3 actualVelocity = thisBody->GetLastFrameAcceleration() * duration;
 
     return contactVelocity;
 
 
 }
 
-void IPhysics::Contact::CalculateDesiredDeltaVelocity(real _duration){
+void IPhysics::Contact::CalculateDesiredDeltaVelocity(real duration){
     const static real velocityLimit = (real)0.25f;
 
     real velocityFromAcceleration = 0;
 
     if(body[0]->GetIsAwake()){
-        velocityFromAcceleration += body[0]->GetLastFrameAcceleration() * _duration * contactNormal;
+        velocityFromAcceleration += body[0]->GetLastFrameAcceleration() * duration * contactNormal;
     }
     if(body[1] && body[1]->GetIsAwake()){
-        velocityFromAcceleration -= body[1]->GetLastFrameAcceleration() * _duration * contactNormal;
+        velocityFromAcceleration -= body[1]->GetLastFrameAcceleration() * duration * contactNormal;
     }
 
     // If the velocity is very low, limit the restitution.
@@ -241,26 +241,26 @@ void IPhysics::Contact::CalculateContactBasis(){
     contactToWorld.SetComponents(contactNormal, contactTangent[0], contactTangent[1]);
 }
 
-void IPhysics::ContactResolver::ResolveContacts(Contact* _contactArray, unsigned _numberOfContacts, real _duration){
-    if (_numberOfContacts == 0){
+void IPhysics::ContactResolver::ResolveContacts(Contact* contactArray, unsigned numberOfContacts, real duration){
+    if (numberOfContacts == 0){
         return;
     }
 
-    PrepareContacts(_contactArray, _numberOfContacts, _duration);
+    PrepareContacts(contactArray, numberOfContacts, duration);
 
-    AdjustPositions(_contactArray, _numberOfContacts, _duration);
+    AdjustPositions(contactArray, numberOfContacts, duration);
 
-    AdjustVelocities(_contactArray, _numberOfContacts, _duration);
+    AdjustVelocities(contactArray, numberOfContacts, duration);
 }
 
-void IPhysics::ContactResolver::PrepareContacts(Contact* _contactArray, unsigned numberOfContacts, real _duration){
-    Contact* lastContact = _contactArray + numberOfContacts;
-    for (Contact* contact = _contactArray; contact < lastContact; contact++){
-        contact->CalculateInternals(_duration);
+void IPhysics::ContactResolver::PrepareContacts(Contact* contactArray, unsigned numberOfContacts, real duration){
+    Contact* lastContact = contactArray + numberOfContacts;
+    for (Contact* contact = contactArray; contact < lastContact; contact++){
+        contact->CalculateInternals(duration);
     }
 }
 
-void IPhysics::ContactResolver::AdjustVelocities(Contact* _contactArray, unsigned numberOfContacts, real _duration){
+void IPhysics::ContactResolver::AdjustVelocities(Contact* contactArray, unsigned numberOfContacts, real duration){
     Vector3 velocityChange[2];
     Vector3 rotationChange[2];
     Vector3 deltaVelocity;
@@ -269,33 +269,33 @@ void IPhysics::ContactResolver::AdjustVelocities(Contact* _contactArray, unsigne
         real max = velocityEpsilon;
         unsigned index = numberOfContacts;
         for(unsigned i = 0; i < numberOfContacts; i++){
-            if(_contactArray[i].desiredDeltaVelocity > max){
-                max = _contactArray[i].desiredDeltaVelocity;
+            if(contactArray[i].desiredDeltaVelocity > max){
+                max = contactArray[i].desiredDeltaVelocity;
                 index = i;
             }
         }
         if (index == numberOfContacts){
             break;
         }
-        _contactArray[index].MatchAwakeState();
-        _contactArray[index].ApplyVelocityChange(velocityChange, rotationChange);
+        contactArray[index].MatchAwakeState();
+        contactArray[index].ApplyVelocityChange(velocityChange, rotationChange);
         
         // With the change in velocity of the two bodies, the update of contact
         // velocities means that some of the relative closing velocities need replacing.
         for(unsigned i = 0; i < numberOfContacts; i++){
             for(unsigned b = 0; b < 2; b++){
-                if(_contactArray[i].body[b]){
+                if(contactArray[i].body[b]){
                     for(unsigned d = 0; d < 2; d++){
-                        if(_contactArray[i].body[b] == _contactArray[index].body[d]){
-                            deltaVelocity = velocityChange[d] + rotationChange[d].VectorProduct(_contactArray[i].relativeContactPosition[b]);
+                        if(contactArray[i].body[b] == contactArray[index].body[d]){
+                            deltaVelocity = velocityChange[d] + rotationChange[d].VectorProduct(contactArray[i].relativeContactPosition[b]);
 
                             // The sign of the change is negative if we're dealing with the second body in a contact.
                             int sign = -1;
                             if(b == 0){
                                 sign = 1;
                             }
-                            _contactArray[i].contactVelocity += _contactArray->contactToWorld.TransformTranspose(deltaVelocity) * sign;
-                            _contactArray[i].CalculateDesiredDeltaVelocity(_duration);
+                            contactArray[i].contactVelocity += contactArray->contactToWorld.TransformTranspose(deltaVelocity) * sign;
+                            contactArray[i].CalculateDesiredDeltaVelocity(duration);
                         }
                     }
                 }
@@ -306,7 +306,7 @@ void IPhysics::ContactResolver::AdjustVelocities(Contact* _contactArray, unsigne
     }
 }
 
-void IPhysics::ContactResolver::AdjustPositions(Contact* _contactArray, unsigned numberOfContacts, real _duration){
+void IPhysics::ContactResolver::AdjustPositions(Contact* contactArray, unsigned numberOfContacts, real duration){
     unsigned i;
     unsigned index;
     Vector3 linearChange[2];
@@ -318,8 +318,8 @@ void IPhysics::ContactResolver::AdjustPositions(Contact* _contactArray, unsigned
         index = numberOfContacts;
         for (i = 0; i < numberOfContacts; i++)
         {
-            if(_contactArray[i].penetration > max){
-                max = _contactArray[i].penetration;
+            if(contactArray[i].penetration > max){
+                max = contactArray[i].penetration;
                 index = i;
             }
         }
@@ -327,18 +327,18 @@ void IPhysics::ContactResolver::AdjustPositions(Contact* _contactArray, unsigned
             break;
         }
 
-        _contactArray[index].MatchAwakeState();
-        _contactArray[index].ApplyPositionChange(linearChange, angularChange, max);
+        contactArray[index].MatchAwakeState();
+        contactArray[index].ApplyPositionChange(linearChange, angularChange, max);
 
         // Could potentially changed the penetration of other bodies, so update contacts.
         for (i = 0; i < numberOfContacts; i++){
             // Check each body in contact
             for(unsigned b = 0; b < 2; b++){
-                if(_contactArray[i].body[b]){
+                if(contactArray[i].body[b]){
                     // Check for a match with each body in the newly resolved contact.
                     for(unsigned d = 0; d < 2; d++){
-                        if(_contactArray[i].body[b] == _contactArray[index].body[d]){
-                            deltaPosition = linearChange[d] + angularChange[d].VectorProduct(_contactArray[i].relativeContactPosition[b]);
+                        if(contactArray[i].body[b] == contactArray[index].body[d]){
+                            deltaPosition = linearChange[d] + angularChange[d].VectorProduct(contactArray[i].relativeContactPosition[b]);
                             
                             // The sign of the change is positive if we're dealing with the second body in a contact,
                             // and negative otherwise
@@ -346,7 +346,7 @@ void IPhysics::ContactResolver::AdjustPositions(Contact* _contactArray, unsigned
                             if(b == 0){
                                 sign = -1;
                             }
-                            _contactArray[i].penetration += deltaPosition.ScalarProduct(_contactArray[i].contactNormal) * sign;
+                            contactArray[i].penetration += deltaPosition.ScalarProduct(contactArray[i].contactNormal) * sign;
                         }
                     }
                 }

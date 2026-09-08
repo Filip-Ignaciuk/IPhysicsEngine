@@ -9,14 +9,14 @@ namespace IPhysics {
     class Spring : public ForceGenerator {
     public:
         // Constructors
-        Spring(const Vector3& _localConnectionPoint,
-            RigidBody* _other,
+        Spring(const Vector3& localConnectionPoint,
+            RigidBody* other,
             const Vector3&, real
-            _springConstant,
-            real _restLength);
+            springConstant,
+            real restLength);
 
         // Mutators
-        void UpdateForce(RigidBody* _rigidBody, real _duration) override;
+        void UpdateForce(RigidBody* rigidBody, real duration) override;
     private:
         Vector3 m_localConnectionPoint;
         Vector3 m_localOtherConnectionPoint;

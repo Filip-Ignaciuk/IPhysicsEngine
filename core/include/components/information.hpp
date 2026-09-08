@@ -11,7 +11,7 @@ namespace IPhysics{
         Information();
 
         std::string GetName();
-        void SetName(std::string& _name);
+        void SetName(std::string& name);
 
     };
 }
