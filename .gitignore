@@ -9,3 +9,4 @@ personal/
 .clangd
 .clangd.nsight.example
 .gitattributes
+**/.DS_Store
