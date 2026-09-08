@@ -4,41 +4,43 @@
 #include "forcegenerator.hpp"
 
 namespace IPhysics {
-    class Aero : public ForceGenerator{
-    public:
-        // Constructors
-        Aero(const Matrix3& tensor,
-            const Vector3& localPosition,
-            const Vector3* windSpeed);
+class Aero : public ForceGenerator {
+ public:
+  // Constructors
+  Aero(const Matrix3& tensor, const Vector3& localPosition,
+       const Vector3* windSpeed);
 
-        // Mutators
-        void UpdateForce(RigidBody* rigidBody, real duration) override;
-    protected:
-        Matrix3 m_tensor;
-        Vector3 m_localPosition;
-        const Vector3* m_windSpeed;
+  // Mutators
+  void UpdateForce(RigidBody* rigidBody, real duration) override;
 
-        void UpdateForceFromTensor(RigidBody* body, real duration, const Matrix3& tensor) const;
-    };
+ protected:
+  Matrix3 m_tensor;
+  Vector3 m_localPosition;
+  const Vector3* m_windSpeed;
 
-    class AeroControl : public Aero{
-    public:
-        // Constructors
-        AeroControl(const Matrix3& base, const Matrix3& minimumTensor, const Matrix3& maximumTensor, const Vector3& localPosition, const Vector3* windSpeed);
+  void UpdateForceFromTensor(RigidBody* body, real duration,
+                             const Matrix3& tensor) const;
+};
 
-        // Mutators
-        void SetControl(real value);
-        void UpdateForce(RigidBody* rigidBody, real duration) override;
+class AeroControl : public Aero {
+ public:
+  // Constructors
+  AeroControl(const Matrix3& base, const Matrix3& minimumTensor,
+              const Matrix3& maximumTensor, const Vector3& localPosition,
+              const Vector3* windSpeed);
 
-    protected:
-        Matrix3 m_maxTensor;
-        Matrix3 m_minTensor;
-        real m_controlSetting;
+  // Mutators
+  void SetControl(real value);
+  void UpdateForce(RigidBody* rigidBody, real duration) override;
 
-    private:
-        Matrix3 GetTensor();
+ protected:
+  Matrix3 m_maxTensor;
+  Matrix3 m_minTensor;
+  real m_controlSetting;
 
-    };
-}
+ private:
+  Matrix3 GetTensor();
+};
+}  // namespace IPhysics
 
 #endif

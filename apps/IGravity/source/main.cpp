@@ -1,6 +1,6 @@
 #include "igravity.hpp"
 
 int main() {
-    IGravity app;
-    app.Run();
+  IGravity app;
+  app.Run();
 }

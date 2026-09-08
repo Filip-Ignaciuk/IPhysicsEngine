@@ -3,19 +3,19 @@
 #include <raylib.h>
 
 class IGravityController {
-    public:
-    IGravityController();
+ public:
+  IGravityController();
 
-    void Update();
+  void Update();
 
-    [[nodiscard]] float GetLatestMouseWheelMove() const;
-    [[nodiscard]] const Vector2& GetLatestMousePosition() const;
-    [[nodiscard]] const Vector2& GetLatestMouseDelta() const;
+  [[nodiscard]] float GetLatestMouseWheelMove() const;
+  [[nodiscard]] const Vector2& GetLatestMousePosition() const;
+  [[nodiscard]] const Vector2& GetLatestMouseDelta() const;
 
-private:
-    float m_latestWheelMove;
-    Vector2 m_latestMousePosition;
-    Vector2 m_latestMouseDelta;
+ private:
+  float m_latestWheelMove;
+  Vector2 m_latestMousePosition;
+  Vector2 m_latestMouseDelta;
 };
 
 #endif

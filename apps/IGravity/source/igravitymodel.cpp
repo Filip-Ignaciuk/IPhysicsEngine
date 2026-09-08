@@ -1,117 +1,103 @@
 #include "igravitymodel.hpp"
 
-#include <numbers>
 #include <chrono>
 #include <iostream>
+#include <numbers>
 
-#include "gravity.hpp"
 #include "barneshutgravity.hpp"
 #include "cudagravity.cuh"
+#include "gravity.hpp"
 
 /*
  * IGravityModel
  */
 
 // Constructors
-IGravityModel::IGravityModel(IPhysics::real timeStep)
-    : m_timeStep(timeStep) {
-}
+IGravityModel::IGravityModel(IPhysics::real timeStep) : m_timeStep(timeStep) {}
 
 // Mutators
-void IGravityModel::SetupSimulation() {
-    UpdateNumberOfParticles(100000);
-}
+void IGravityModel::SetupSimulation() { UpdateNumberOfParticles(100000); }
 
 void IGravityModel::UpdateSimulation() {
-    m_world.StartFrame();
-    if(m_world.GetPhysicsState()){
-        auto start = std::chrono::high_resolution_clock::now();
-        m_world.RunPhysics(m_timeStep);
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    }
-    else{
-    }
+  m_world.StartFrame();
+  if (m_world.GetPhysicsState()) {
+    auto start = std::chrono::high_resolution_clock::now();
+    m_world.RunPhysics(m_timeStep);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  } else {
+  }
 }
 
-// Can both increase and decrease the number of particles based on the count provided.
+// Can both increase and decrease the number of particles based on the count
+// provided.
 void IGravityModel::UpdateNumberOfParticles(int count) {
-    int boundedCount = 0;
-    // Check if count is larger than maximum or smaller than minimum.
-    if (count > MAXIMUM_PARTICLE_COUNT - m_numberOfParticles) {
-        // Bound to maximum allowed increase, AKA add maximum amount of particles.
-        boundedCount = MAXIMUM_PARTICLE_COUNT - m_numberOfParticles;
+  int boundedCount = 0;
+  // Check if count is larger than maximum or smaller than minimum.
+  if (count > MAXIMUM_PARTICLE_COUNT - m_numberOfParticles) {
+    // Bound to maximum allowed increase, AKA add maximum amount of particles.
+    boundedCount = MAXIMUM_PARTICLE_COUNT - m_numberOfParticles;
+  } else if (count < -m_numberOfParticles) {
+    // Bound to minimum allowed decrease, AKA delete all particles.
+    boundedCount = -m_numberOfParticles;
+  } else {
+    boundedCount = count;
+  }
+
+  if (boundedCount < 0) {
+    boundedCount = -boundedCount;
+    for (int i = 0; i < boundedCount; ++i) {
+      m_world.RemoveLastObject();
     }
-    else if (count < -m_numberOfParticles) {
-        // Bound to minimum allowed decrease, AKA delete all particles.
-        boundedCount = -m_numberOfParticles;
+  } else {
+    std::shared_ptr<IPhysics::Gravity> force_generator =
+        std::make_shared<IPhysics::CudaGravity>(6.674 * pow(10, -11));
+    for (int i = 0; i < boundedCount; ++i) {
+      // Creating object
+      auto* object = new IPhysics::Object();
+      auto* rigid_body = object->AddComponent<IPhysics::RigidBody>();
+      // Setting random location
+      IPhysics::Vector3 random_position = RandomGalaxyPosition();
+
+      rigid_body->SetPosition(random_position);
+      rigid_body->SetInverseMass(1.0 / (1.0 * pow(10, 12)));
+      rigid_body->SetLinearDamping(1.0f);
+
+      // Adding it to world
+      m_world.AddObject(object);
+      force_generator->AddObject(object);
+
+      if (!hasForceReg) {
+        hasForceReg = true;
+        m_world.AddForceRegistration(object, force_generator);
+      }
     }
-    else {
-        boundedCount = count;
-    }
-
-    if (boundedCount < 0) {
-        boundedCount = -boundedCount;
-        for (int i = 0; i < boundedCount; ++i) {
-            m_world.RemoveLastObject();
-        }
-    }
-    else {
-
-        std::shared_ptr<IPhysics::Gravity> force_generator
-            = std::make_shared<IPhysics::CudaGravity>(
-                6.674 * pow(10, -11));
-        for (int i = 0; i < boundedCount; ++i) {
-            // Creating object
-            auto* object = new IPhysics::Object();
-            auto* rigid_body = object->AddComponent<IPhysics::RigidBody>();
-            // Setting random location
-            IPhysics::Vector3 random_position
-            = RandomGalaxyPosition();
-
-            rigid_body->SetPosition(random_position);
-            rigid_body->SetInverseMass(1.0 / (1.0 * pow(10, 12)));
-            rigid_body->SetLinearDamping(1.0f);
-
-            // Adding it to world
-            m_world.AddObject(object);
-            force_generator->AddObject(object);
-
-
-
-            if(!hasForceReg){
-                hasForceReg = true;
-                m_world.AddForceRegistration(object, force_generator);
-            }
-        }
-    }
+  }
 }
 
-void IGravityModel::SetSimulationPause(bool wantsPaused){
-    m_world.SetPhysicsState(wantsPaused);
+void IGravityModel::SetSimulationPause(bool wantsPaused) {
+  m_world.SetPhysicsState(wantsPaused);
 }
-
 
 // Queries
 const std::vector<IPhysics::Object*>& IGravityModel::GetParticles() {
-    return m_world.GetObjects();
+  return m_world.GetObjects();
 }
 
 IPhysics::Vector3 IGravityModel::RandomGalaxyPosition() {
-    IPhysics::real scaleRadius = 40.0f;
+  IPhysics::real scaleRadius = 40.0f;
 
-    IPhysics::real randomNumber1 = IPhysics::RandomStore::RandomReal(0, 1);
-    IPhysics::real randomNumber2 = IPhysics::RandomStore::RandomReal(0, 1);
+  IPhysics::real randomNumber1 = IPhysics::RandomStore::RandomReal(0, 1);
+  IPhysics::real randomNumber2 = IPhysics::RandomStore::RandomReal(0, 1);
 
-    IPhysics::real r = -scaleRadius * log(1 - randomNumber1);
+  IPhysics::real r = -scaleRadius * log(1 - randomNumber1);
 
-    IPhysics::real theta = 2 * std::numbers::pi * randomNumber2;
+  IPhysics::real theta = 2 * std::numbers::pi * randomNumber2;
 
-    IPhysics::real xPosition = 0 + r * RealCos(theta);
-    IPhysics::real yPosition = 0 + r * RealSin(theta);
-    return {xPosition, yPosition, 0};
+  IPhysics::real xPosition = 0 + r * RealCos(theta);
+  IPhysics::real yPosition = 0 + r * RealSin(theta);
+  return {xPosition, yPosition, 0};
 }
 
-bool IGravityModel::IsSimulationPaused(){
-    return m_world.GetPhysicsState();
-}
+bool IGravityModel::IsSimulationPaused() { return m_world.GetPhysicsState(); }
