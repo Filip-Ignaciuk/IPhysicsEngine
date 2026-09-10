@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "gravity.hpp"
 #include "rayguihelper.hpp"
 #include "raylib.h"
 #include "raymath.h"
@@ -37,6 +38,7 @@
 #include "object.hpp"
 #include "raygui.h"
 #include "world.hpp"
+#include "rayguihelper.hpp"
 
 // Const information
 const static Vector3 origin = {0, 0, 0};
@@ -149,8 +151,9 @@ static std::vector<std::string> colourStrings;
 static std::string languageDropDownSelection;
 static std::vector<std::string> languageStrings;
 
-static IPhysics::RealGravity* realGravity =
-    new IPhysics::RealGravity(6.674 * pow(10, -11));
+static std::shared_ptr<IPhysics::Gravity> realGravity =
+        std::make_shared<IPhysics::Gravity>(6.674 * pow(10, -11));
+
 static std::string pauseButtonText = "#132#";
 
 // Information associated with add object window
@@ -424,12 +427,12 @@ static inline void AddObjectMenu() {
     isValidData = true;
 
     // Converting the char arrays to real values.
-    IApp::CharBufferResultStore::CharBufferResultStore* xCoordinate =
-        IApp::CharBufferResultStore::CharBufferToReal(textBufferXCoordinate);
-    IApp::CharBufferResultStore::CharBufferResultStore* yCoordinate =
-        IApp::CharBufferResultStore::CharBufferToReal(textBufferYCoordinate);
-    IApp::CharBufferResultStore::CharBufferResultStore* zCoordinate =
-        IApp::CharBufferResultStore::CharBufferToReal(textBufferZCoordinate);
+    IApp::CharBufferResultStore* xCoordinate =
+        IApp::CharBufferToReal(textBufferXCoordinate);
+    IApp::CharBufferResultStore* yCoordinate =
+        IApp::CharBufferToReal(textBufferYCoordinate);
+    IApp::CharBufferResultStore* zCoordinate =
+        IApp::CharBufferToReal(textBufferZCoordinate);
 
     if (!xCoordinate->isValid) {
       isValidData = false;
@@ -467,12 +470,12 @@ static inline void AddObjectMenu() {
           IApp::ErrorSeverity::NormalError);
     }
 
-    IPhysics::CharBufferResultStore* xOrientation =
-        IPhysics::CharBufferToReal(textBufferXOrientation);
-    IPhysics::CharBufferResultStore* yOrientation =
-        IPhysics::CharBufferToReal(textBufferYOrientation);
-    IPhysics::CharBufferResultStore* zOrientation =
-        IPhysics::CharBufferToReal(textBufferZOrientation);
+    IApp::CharBufferResultStore* xOrientation =
+        IApp::CharBufferToReal(textBufferXOrientation);
+    IApp::CharBufferResultStore* yOrientation =
+        IApp::CharBufferToReal(textBufferYOrientation);
+    IApp::CharBufferResultStore* zOrientation =
+        IApp::CharBufferToReal(textBufferZOrientation);
 
     if (!xOrientation->isValid) {
       isValidData = false;
@@ -537,8 +540,8 @@ static inline void AddObjectMenu() {
       }
     }
 
-    IPhysics::CharBufferResultStore* massResult =
-        IPhysics::CharBufferToReal(textBufferMass);
+    IApp::CharBufferResultStore* massResult =
+        IApp::CharBufferToReal(textBufferMass);
     if (!massResult->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
@@ -549,8 +552,8 @@ static inline void AddObjectMenu() {
           IApp::ErrorSeverity::NormalError);
     }
 
-    IPhysics::CharBufferResultStore* linearDampingResult =
-        IPhysics::CharBufferToReal(textBufferLinearDamping);
+    IApp::CharBufferResultStore* linearDampingResult =
+        IApp::CharBufferToReal(textBufferLinearDamping);
     if (!linearDampingResult->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
@@ -563,8 +566,8 @@ static inline void AddObjectMenu() {
           IApp::ErrorSeverity::NormalError);
     }
 
-    IPhysics::CharBufferResultStore* angularDampingResult =
-        IPhysics::CharBufferToReal(textBufferAngularDamping);
+    IApp::CharBufferResultStore* angularDampingResult =
+        IApp::CharBufferToReal(textBufferAngularDamping);
     if (!angularDampingResult->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
@@ -577,24 +580,24 @@ static inline void AddObjectMenu() {
           IApp::ErrorSeverity::NormalError);
     }
 
-    IPhysics::CharBufferResultStore* inverseInertiaResult1 =
-        IPhysics::CharBufferToReal(textBuffer1InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult2 =
-        IPhysics::CharBufferToReal(textBuffer2InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult3 =
-        IPhysics::CharBufferToReal(textBuffer3InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult4 =
-        IPhysics::CharBufferToReal(textBuffer4InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult5 =
-        IPhysics::CharBufferToReal(textBuffer5InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult6 =
-        IPhysics::CharBufferToReal(textBuffer6InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult7 =
-        IPhysics::CharBufferToReal(textBuffer7InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult8 =
-        IPhysics::CharBufferToReal(textBuffer8InverseInertiaTensor);
-    IPhysics::CharBufferResultStore* inverseInertiaResult9 =
-        IPhysics::CharBufferToReal(textBuffer9InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult1 =
+        IApp::CharBufferToReal(textBuffer1InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult2 =
+        IApp::CharBufferToReal(textBuffer2InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult3 =
+        IApp::CharBufferToReal(textBuffer3InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult4 =
+        IApp::CharBufferToReal(textBuffer4InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult5 =
+        IApp::CharBufferToReal(textBuffer5InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult6 =
+        IApp::CharBufferToReal(textBuffer6InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult7 =
+        IApp::CharBufferToReal(textBuffer7InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult8 =
+        IApp::CharBufferToReal(textBuffer8InverseInertiaTensor);
+    IApp::CharBufferResultStore* inverseInertiaResult9 =
+        IApp::CharBufferToReal(textBuffer9InverseInertiaTensor);
 
     if (!wantsStandardInverseInertiaValue) {
       if (!inverseInertiaResult1->isValid) {
@@ -743,7 +746,7 @@ static inline void AddObjectMenu() {
       Map.emplace(addObject, model);
 
       realGravity->AddObject(addObject);
-      world.AddForceRegistry(addObject, realGravity);
+      world.AddForceRegistration(addObject, realGravity);
       world.AddObject(addObject);
 
       // Reset everything.
@@ -934,9 +937,8 @@ static void ShowListView() {
     ClearBackground(backgroundColour);
     BeginMode3D(listViewCamera);
     DrawGrid(100, 1.0f);
-    IPhysics::World::Objects::iterator iterator = world.GetObjects().begin();
-    while (iterator != world.GetObjects().end()) {
-      IPhysics::Object* object = *iterator;
+    for (int i = 0; i < world.GetObjects().size(); ++i) {
+    IPhysics::Object* object =  world.GetObjects()[i];
       IPhysics::RigidBody* rigidbody =
           object->GetComponent<IPhysics::RigidBody>();
       IPhysics::Geometry* geometry = object->GetComponent<IPhysics::Geometry>();
@@ -975,7 +977,6 @@ static void ShowListView() {
 
         DrawLine3D(rayPosition, finalRayPosition, YELLOW);
       }
-      ++iterator;
     }
     EndMode3D();
     EndTextureMode();
@@ -1083,9 +1084,8 @@ static void Update() {
   BeginMode3D(camera);
   DrawGrid(100, 1.0f);
 
-  IPhysics::World::Objects::iterator iterator = world.GetObjects().begin();
-  while (iterator != world.GetObjects().end()) {
-    IPhysics::Object* object = *iterator;
+  for (int i = 0; i < world.GetObjects().size(); ++i) {
+    IPhysics::Object* object = world.GetObjects()[i];
     IPhysics::RigidBody* rigidbody =
         object->GetComponent<IPhysics::RigidBody>();
     IPhysics::Geometry* geometry = object->GetComponent<IPhysics::Geometry>();
@@ -1123,8 +1123,6 @@ static void Update() {
 
       DrawLine3D(rayPosition, finalRayPosition, YELLOW);
     }
-
-    ++iterator;
   }
 
   EndMode3D();
@@ -1316,8 +1314,8 @@ int main(void) {
 
   realGravity->AddObject(object1);
   realGravity->AddObject(object2);
-  world.AddForceRegistry(object1, realGravity);
-  world.AddForceRegistry(object2, realGravity);
+  world.AddForceRegistration(object1, realGravity);
+  world.AddForceRegistration(object2, realGravity);
   world.AddObject(object1);
   world.AddObject(object2);
 

@@ -40,27 +40,27 @@ target_include_directories(IPhysics PUBLIC
 )
 
 add_library(IApp STATIC
-        apps/appcore/source/meshmanager.cpp
-        apps/appcore/source/languagemanager.cpp
-        apps/appcore/source/errormanager.cpp
-        apps/appcore/source/rayguihelper.cpp
+        apps/AppCore/source/meshmanager.cpp
+        apps/AppCore/source/languagemanager.cpp
+        apps/AppCore/source/errormanager.cpp
+        apps/AppCore/source/rayguihelper.cpp
 )
 
 target_link_libraries(IApp PUBLIC IPhysics)
 
 target_include_directories(IApp PUBLIC
-        apps/appcore/include
+        apps/AppCore/include
 )
 
-#add_executable(IPlanetSimulator
-#       apps/IPlanetSimulator/main.cpp
-#)
+add_executable(IPlanetSimulator
+       apps/IPlanetSimulator/main.cpp
+)
 
-#target_link_libraries(IPlanetSimulator
-#        PRIVATE
-#        IPhysics
-#        IApp
-#)
+target_link_libraries(IPlanetSimulator
+        PRIVATE
+        IPhysics
+        IApp
+)
 
 add_executable(IGravity
         apps/IGravity/source/main.cpp
@@ -83,21 +83,21 @@ target_include_directories(IGravity PUBLIC
 if(NOT EMSCRIPTEN)
         find_package(raylib REQUIRED)
 
-        #target_link_libraries(IPlanetSimulator PRIVATE raylib)
+        target_link_libraries(IPlanetSimulator PRIVATE raylib)
         target_link_libraries(IGravity PRIVATE raylib)
 endif()
 
-#if(EMSCRIPTEN)
-#    target_link_libraries(IPlanetSimulator PRIVATE
-#        /Users/cold/Libraries/raylib/build-web/raylib/libraylib.a
-#    )
-#    target_compile_options(IPlanetSimulator PRIVATE -w)
-#    target_include_directories(IPlanetSimulator PRIVATE
-#        /Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot/include
-#        /Users/cold/Libraries/raylib/src
-#    )
-#    set_target_properties(IPlanetSimulator PROPERTIES
-#        SUFFIX ".html"
-#        LINK_FLAGS "-sUSE_GLFW=3 -sASYNCIFY -sALLOW_MEMORY_GROWTH=1 -sASSERTIONS=1 --preload-file ${CMAKE_SOURCE_DIR}/resources@resources --shell-file ${CMAKE_SOURCE_DIR}/apps/IPlanetSimulator/shell.html"
-#    )
-#endif()
+if(EMSCRIPTEN)
+    target_link_libraries(IPlanetSimulator PRIVATE
+        /Users/cold/Libraries/raylib/build-web/raylib/libraylib.a
+    )
+    target_compile_options(IPlanetSimulator PRIVATE -w)
+    target_include_directories(IPlanetSimulator PRIVATE
+        /Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot/include
+        /Users/cold/Libraries/raylib/src
+    )
+    set_target_properties(IPlanetSimulator PROPERTIES
+        SUFFIX ".html"
+        LINK_FLAGS "-sUSE_GLFW=3 -sASYNCIFY -sALLOW_MEMORY_GROWTH=1 -sASSERTIONS=1 --preload-file ${CMAKE_SOURCE_DIR}/resources@resources --shell-file ${CMAKE_SOURCE_DIR}/apps/IPlanetSimulator/shell.html"
+    )
+endif()
