@@ -254,7 +254,7 @@ static inline void InitialiseGUI() {
 static inline void AddObjectMenu() {
   if (GuiWindowBox(
           standardLeftBox,
-          IApp::LanguageManager::GetText("addobjectmenu.title").c_str())) {
+          "Add an object")) {
     leftHandGuiState = LeftHandSideGuiState::None;
   } else {
     leftHandGuiState = LeftHandSideGuiState::AddObjectBox;
@@ -266,7 +266,7 @@ static inline void AddObjectMenu() {
 
   GuiLabel(
       (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 24, 96, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.position.title").c_str());
+      "Position");
 
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
@@ -297,8 +297,7 @@ static inline void AddObjectMenu() {
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
   GuiLabel((Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 72, 96, 24},
-           IApp::LanguageManager::GetText("addobjectmenu.orientation.title")
-               .c_str());
+           "Orientation");
 
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
@@ -331,7 +330,7 @@ static inline void AddObjectMenu() {
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
   GuiLabel(
       (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 120, 168, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.name.title").c_str());
+      "Name");
   if (GuiTextBox(
           (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 144, 168, 24},
           textBufferName, 64, isBufferNameEdited)) {
@@ -340,7 +339,7 @@ static inline void AddObjectMenu() {
 
   GuiLabel(
       (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 120, 168, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.mass.title").c_str());
+      "Mass");
   if (GuiTextBox((Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 144,
                              168, 24},
                  textBufferMass, 64, isBufferMassEdited)) {
@@ -349,12 +348,10 @@ static inline void AddObjectMenu() {
 
   GuiLabel(
       (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 168, 168, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.lineardamping.title")
-          .c_str());
+      "Linear Damping");
   GuiLabel(
       (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 168, 168, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.angulardamping.title")
-          .c_str());
+      "Angular Damping");
 
   if (GuiTextBox(
           (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 192, 168, 24},
@@ -369,16 +366,14 @@ static inline void AddObjectMenu() {
 
   GuiLabel(
       (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 312, 148, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.inverseinertiatensor.title")
-          .c_str());
+      "Inverse Inertia Tensor");
   GuiCheckBox(
       (Rectangle){standardLeftBox.x + 364, standardLeftBox.y + 316, 16, 16}, "",
       &wantsStandardInverseInertiaValue);
 
   GuiLabel(
       (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 216, 168, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.inverseinertiatensor.title")
-          .c_str());
+      "Inverse Inertia Tensor");
   if (wantsStandardInverseInertiaValue) {
     GuiSetState(STATE_DISABLED);
   }
@@ -420,8 +415,7 @@ static inline void AddObjectMenu() {
   // Add Button
   if (GuiButton(
           (Rectangle){standardLeftBox.x + 300, standardLeftBox.y + 360, 84, 24},
-          IApp::LanguageManager::GetText("addobjectmenu.addbutton.title")
-              .c_str()) &&
+          "Add") &&
       !isColourDropDownActive && !isMeshDropDownActive) {
     // Assuming data is valid
     isValidData = true;
@@ -437,36 +431,24 @@ static inline void AddObjectMenu() {
     if (!xCoordinate->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.xcoordinate.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.xcoordinate.message")
-              .c_str(),
+          "X coordinate invalid",
+          "The X coordinate you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
     if (!yCoordinate->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.ycoordinate.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.ycoordinate.message")
-              .c_str(),
+          "Y coordinate invalid",
+          "The Y coordinate you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
     if (!zCoordinate->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.zcoordinate.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.zcoordinate.message")
-              .c_str(),
+          "Z coordinate invalid",
+          "The Z coordinate you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
@@ -480,36 +462,24 @@ static inline void AddObjectMenu() {
     if (!xOrientation->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.xorientation.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.xorientation.message")
-              .c_str(),
+          "X orientation invalid",
+          "The X orientation you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
     if (!yOrientation->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.yorientation.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.yorientation.message")
-              .c_str(),
+          "Y orientation invalid",
+          "The Y orientation you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
     if (!zOrientation->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.zorientation.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.zorientation.message")
-              .c_str(),
+          "Z orientation invalid",
+          "The Z orientation you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
@@ -517,10 +487,8 @@ static inline void AddObjectMenu() {
     if (name.empty()) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText("addobjectmenu.error.name.title")
-              .c_str(),
-          IApp::LanguageManager::GetText("addobjectmenu.error.name.message")
-              .c_str(),
+          "Name invalid",
+          "Please provide a name.",
           IApp::ErrorSeverity::NormalError);
     } else {
       for (IPhysics::Object* object : world.GetObjects()) {
@@ -529,12 +497,8 @@ static inline void AddObjectMenu() {
         if (information->GetName() == name) {
           isValidData = false;
           IApp::ErrorManager::AddError(
-              IApp::LanguageManager::GetText(
-                  "addobjectmenu.error.name.exists.title")
-                  .c_str(),
-              IApp::LanguageManager::GetText(
-                  "addobjectmenu.error.name.exists.message")
-                  .c_str(),
+              "Name invalid",
+              "Name already exists in world, please provide an alternative name.",
               IApp::ErrorSeverity::NormalError);
         }
       }
@@ -545,10 +509,8 @@ static inline void AddObjectMenu() {
     if (!massResult->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText("addobjectmenu.error.mass.title")
-              .c_str(),
-          IApp::LanguageManager::GetText("addobjectmenu.error.mass.message")
-              .c_str(),
+          "Mass invalid",
+          "The mass you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
@@ -557,12 +519,8 @@ static inline void AddObjectMenu() {
     if (!linearDampingResult->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.lineardamping.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.lineardamping.message")
-              .c_str(),
+          "Linear Damping invalid",
+          "The linear damping you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
@@ -571,12 +529,8 @@ static inline void AddObjectMenu() {
     if (!angularDampingResult->isValid) {
       isValidData = false;
       IApp::ErrorManager::AddError(
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.angulardamping.title")
-              .c_str(),
-          IApp::LanguageManager::GetText(
-              "addobjectmenu.error.angulardamping.message")
-              .c_str(),
+          "Angular Damping invalid",
+          "The angular damping you have provided is invalid.",
           IApp::ErrorSeverity::NormalError);
     }
 
@@ -603,100 +557,64 @@ static inline void AddObjectMenu() {
       if (!inverseInertiaResult1->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.topleft.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.topleft.message")
-                .c_str(),
+            "Top left Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult2->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.topmiddle.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.topmiddle.message")
-                .c_str(),
+            "Top middle Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult3->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.topright.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.topright.message")
-                .c_str(),
+            "Top right Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult4->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.centreleft.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.centreleft.message")
-                .c_str(),
+            "Centre left Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult5->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.centremiddle.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.centremiddle.message")
-                .c_str(),
+            "Centre middle Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult6->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.centreright.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.centreright.message")
-                .c_str(),
+            "Centre right Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult7->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.bottomleft.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.bottomleft.message")
-                .c_str(),
+            "Bottom left Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult8->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.bottommiddle.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.bottommiddle.message")
-                .c_str(),
+            "Bottom middle Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
       if (!inverseInertiaResult9->isValid) {
         isValidData = false;
         IApp::ErrorManager::AddError(
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.bottomright.title")
-                .c_str(),
-            IApp::LanguageManager::GetText(
-                "addobjectmenu.error.tensor.bottomright.message")
-                .c_str(),
+            "Bottom right Inverse Inertia result invalid",
+            "The value you have provided is invalid.",
             IApp::ErrorSeverity::NormalError);
       }
     }
@@ -759,7 +677,7 @@ static inline void AddObjectMenu() {
 
   GuiLabel(
       (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 264, 168, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.color.title").c_str());
+      "Colour");
   // We need to check for if the other drop down is active as it can click on
   // both with once click.
   if (GuiDropdownBox(
@@ -773,7 +691,7 @@ static inline void AddObjectMenu() {
 
   GuiLabel(
       (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 216, 168, 24},
-      IApp::LanguageManager::GetText("addobjectmenu.mesh.title").c_str());
+      "Mesh");
   if (GuiDropdownBox(
           {standardLeftBox.x + 216, standardLeftBox.y + 240, 168, 24},
           meshDropDownSelection.c_str(), &dropDownSelectedMesh,
@@ -790,7 +708,7 @@ static inline void ShowListMenu() {
 
   if (GuiWindowBox(
           standardLeftBox,
-          IApp::LanguageManager::GetText("showlistmenu.title").c_str())) {
+          "List")) {
     leftHandGuiState = LeftHandSideGuiState::None;
   } else {
     leftHandGuiState = LeftHandSideGuiState::ListObjectBox;
@@ -838,37 +756,36 @@ static inline void ShowListMenu() {
 static inline void ShowHelpMenu() {
   if (GuiWindowBox(
           standardLeftBox,
-          IApp::LanguageManager::GetText("showhelpmenu.title").c_str())) {
+          "Help")) {
     leftHandGuiState = LeftHandSideGuiState::None;
   } else {
     leftHandGuiState = LeftHandSideGuiState::HelpBox;
   }
   DrawText(
-      IApp::LanguageManager::GetText("showhelpmenu.tip.camera.toggle").c_str(),
+      "Press Z to toggle camera control on and off",
       standardLeftBox.x + 8, standardLeftBox.y + 32, 10, BLACK);
   DrawText(
-      IApp::LanguageManager::GetText("showhelpmenu.tip.camera.move").c_str(),
+      "Whilst camera is toggled use wasd to move around",
       standardLeftBox.x + 8, standardLeftBox.y + 52, 10, BLACK);
   DrawText(
-      IApp::LanguageManager::GetText("showhelpmenu.tip.physics.toggle").c_str(),
+      "Press P to toggle physics simulation on and off",
       standardLeftBox.x + 8, standardLeftBox.y + 72, 10, BLACK);
-  DrawText(IApp::LanguageManager::GetText("showhelpmenu.tip.addobject").c_str(),
+  DrawText("Add objects using the Add button",
            standardLeftBox.x + 8, standardLeftBox.y + 92, 10, BLACK);
   DrawText(
-      IApp::LanguageManager::GetText("showhelpmenu.tip.removeobject").c_str(),
+      "Remove objects in the list menu",
       standardLeftBox.x + 8, standardLeftBox.y + 112, 10, BLACK);
-  DrawText(IApp::LanguageManager::GetText("showhelpmenu.tip.mass.suggestion")
-               .c_str(),
+  DrawText("To see obvious change, we suggest a mass of:",
            standardLeftBox.x + 8, standardLeftBox.y + 132, 10, BLACK);
   DrawText(
-      IApp::LanguageManager::GetText("showhelpmenu.tip.mass.value").c_str(),
+      "100 trillion",
       standardLeftBox.x + 8, standardLeftBox.y + 152, 10, BLACK);
 }
 
 static inline void ShowSettingsMenu() {
   if (GuiWindowBox(
           standardRightBox,
-          IApp::LanguageManager::GetText("showsettingsmenu.title").c_str())) {
+          "Settings")) {
     rightHandGuiState = RightHandSideGuiState::None;
   } else {
     rightHandGuiState = RightHandSideGuiState::SettingsBox;
@@ -876,8 +793,7 @@ static inline void ShowSettingsMenu() {
 
   GuiLabel(
       (Rectangle){standardRightBox.x + 24, standardRightBox.y + 72, 336, 24},
-      IApp::LanguageManager::GetText("showsettingsmenu.lightmode.title")
-          .c_str());
+      "Use Light Mode");
   if (GuiCheckBox((Rectangle){standardRightBox.x + 364, standardRightBox.y + 76,
                               16, 16},
                   "", &lightModeEnabled)) {
@@ -886,25 +802,21 @@ static inline void ShowSettingsMenu() {
 
   GuiLabel(
       (Rectangle){standardRightBox.x + 24, standardRightBox.y + 96, 336, 24},
-      IApp::LanguageManager::GetText(
-          "showsettingsmenu.accelerationindicator.title")
-          .c_str());
+      "Use Acceleration indicator");
   GuiCheckBox(
       (Rectangle){standardRightBox.x + 364, standardRightBox.y + 100, 16, 16},
       "", &accelerationIndicatorEnabled);
 
   GuiLabel(
       (Rectangle){standardRightBox.x + 24, standardRightBox.y + 120, 336, 24},
-      IApp::LanguageManager::GetText("showsettingsmenu.velocityindicator.title")
-          .c_str());
+      "Use Velocity indicator");
   GuiCheckBox(
       (Rectangle){standardRightBox.x + 364, standardRightBox.y + 124, 16, 16},
       "", &velocityIndicatorEnabled);
 
   GuiLabel(
       (Rectangle){standardRightBox.x + 24, standardRightBox.y + 24, 168, 24},
-      IApp::LanguageManager::GetText("showsettingsmenu.language.title")
-          .c_str());
+      "Language");
   if (GuiDropdownBox(
           {standardRightBox.x + 24, standardRightBox.y + 48, 168, 24},
           languageDropDownSelection.c_str(), &dropDownSelectedLanguage,
@@ -988,7 +900,7 @@ static void ShowListView() {
   } else {
     // To achieve centred text.
     int textWidth = MeasureText(
-        IApp::LanguageManager::GetText("showlistview.message").c_str(), 10);
+        "No object selected", 10);
     int textHeight = 15;
 
     float x =
@@ -996,7 +908,7 @@ static void ShowListView() {
     float y = standardLeftViewbox.y +
               (standardLeftViewbox.height - textHeight) / 2.0f;
 
-    DrawText(IApp::LanguageManager::GetText("showlistview.message").c_str(),
+    DrawText("No object selected",
              (int)x, (int)y, 10, DARKGRAY);
   }
   DrawRectangleLines(standardLeftViewbox.x, standardLeftViewbox.y,
