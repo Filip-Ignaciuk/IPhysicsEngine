@@ -1,12 +1,11 @@
 #include "igravityview.hpp"
 
 #include <cmath>
+#include <iostream>
 
-#include "raylib.h"
-#define RAYGUI_ICONS
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
 #include "raymath.h"
+#include "raygui.h"
+
 
 IGravityView::IGravityView(IGravityModel* iGravityModel,
                            IGravityController* iGravityController,
@@ -115,7 +114,7 @@ void IGravityView::UpdateTopButtons(){
   }
 }
 
-void IGravityView::UpdateLeftHangGuiState(){
+void IGravityView::UpdateLeftHandGuiState(){
   if(leftHandSideGuiState == LeftHandSideGuiState::SettingsBox){
     DisplaySettingsMenu();
   }
@@ -142,8 +141,11 @@ void IGravityView::DisplaySettingsMenu(){
       (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 24, 96, 24},
       "CUDA Compatiblity");
 
-    if(m_iGravityModel->HasCUDA()){
-      
+    if(IApp::GPUInformation::HasCUDA()){
+      std::cout << "Device Name: " << IApp::GPUInformation::GetDeviceName() << std::endl;
+      std::cout << "Compute Capability: " << IApp::GPUInformation::GetComputeCapability() << std::endl;
+      std::cout << "Total Global Memory: " << IApp::GPUInformation::GetTotalGlobalMemory() << std::endl;
+      std::cout << "Multi Processor Count: " << IApp::GPUInformation::GetMultiProcessorCount() << std::endl;
     }
     else{
 

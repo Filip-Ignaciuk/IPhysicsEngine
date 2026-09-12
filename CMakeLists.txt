@@ -1,16 +1,19 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.26)
 
-set(CMAKE_CUDA_COMPILER clang++)
+option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" ON)
 
-project(IPhysics LANGUAGES CXX CUDA)
+if(IPHYSICS_USE_CUDA)
+        project(IPhysics LANGUAGES CXX CUDA)
+else()
+        project(IPhysics LANGUAGES CXX)
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CUDA_ARCHITECTURES 86)
 
-add_library(IPhysics STATIC
+set(IPHYSICS_SOURCES
         core/source/core.cpp
         core/source/object.cpp
         core/source/world.cpp
@@ -28,10 +31,16 @@ add_library(IPhysics STATIC
         core/source/forcegenerators/downwardgravity.cpp
         core/source/forcegenerators/gravity.cpp
         core/source/forcegenerators/barneshutgravity.cpp
+)
+
+if(IPHYSICS_USE_CUDA)
+    list(APPEND IPHYSICS_SOURCES
         core/source/forcegenerators/cudagravity.cu
         core/source/forcegenerators/cudabarneshutgravity.cu
+    )
+endif()
 
-)
+add_library(IPhysics STATIC ${IPHYSICS_SOURCES})
 
 target_include_directories(IPhysics PUBLIC
         core/include
@@ -39,11 +48,19 @@ target_include_directories(IPhysics PUBLIC
         core/include/forcegenerators
 )
 
-add_library(IApp STATIC
+set(IAPP_SOURCES
         apps/AppCore/source/meshmanager.cpp
         apps/AppCore/source/errormanager.cpp
         apps/AppCore/source/rayguihelper.cpp
 )
+
+if(IPHYSICS_USE_CUDA)
+    list(APPEND IAPP_SOURCES
+        apps/AppCore/source/gpuinformation.cu
+    )
+endif()
+
+add_library(IApp STATIC ${IAPP_SOURCES})
 
 target_link_libraries(IApp PUBLIC IPhysics)
 
@@ -61,7 +78,7 @@ target_link_libraries(IPlanetSimulator
         IApp
 )
 
-add_executable(IGravity
+set(IGRAVITY_SOURCES
         apps/IGravity/source/main.cpp
         apps/IGravity/source/igravity.cpp
         apps/IGravity/source/igravitymodel.cpp
@@ -69,14 +86,16 @@ add_executable(IGravity
         apps/IGravity/source/igravitycontroller.cpp
 )
 
+add_executable(IGravity ${IGRAVITY_SOURCES})
+
+target_include_directories(IGravity PUBLIC
+        apps/IGravity/include
+)
+
 target_link_libraries(IGravity
         PRIVATE
         IPhysics
         IApp
-)
-
-target_include_directories(IGravity PUBLIC
-        apps/IGravity/include
 )
 
 if(NOT EMSCRIPTEN)

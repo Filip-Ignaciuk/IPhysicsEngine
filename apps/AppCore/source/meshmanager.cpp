@@ -62,7 +62,7 @@ const Color& IApp::MeshManager::GetColor(std::string color) {
   if (mapIterator != meshColors.end()) {
     return mapIterator->second;
   }
-  return BLACK;
+  return Black;
 }
 
 std::vector<std::string> IApp::MeshManager::GetMeshStrings() {

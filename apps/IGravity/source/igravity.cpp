@@ -1,5 +1,7 @@
 #include "igravity.hpp"
 
+#include "gpuinformation.cuh"
+
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
@@ -17,6 +19,8 @@ void IGravity::Run() const {
   InitWindow(m_screenWidth, m_screenHeight, "IGravity");
   TraceLog(LOG_INFO, "window opened");
   SetTargetFPS(m_frameRate);
+
+  IApp::GPUInformation::Initialise();
 
   while (!WindowShouldClose()) {
     m_iGravityController->Update();

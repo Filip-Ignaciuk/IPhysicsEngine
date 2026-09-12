@@ -1,6 +1,9 @@
-#ifndef IPHYSICS_IGRAVITYMODEL_HPP
-#define IPHYSICS_IGRAVITYMODEL_HPP
+#ifndef IGRAVITY_IGRAVITYMODEL_HPP
+#define IGRAVITY_IGRAVITYMODEL_HPP
+
 #include "world.hpp"
+#include "gpuinformation.cuh"
+
 #include <string>
 
 enum class GravityAlgorithm { Naive, NaiveCuda, BarnesHut, BarnesHutCuda };
@@ -21,13 +24,6 @@ class IGravityModel {
   // Queries
   [[nodiscard]] const std::vector<IPhysics::Object*>& GetParticles();
   [[nodiscard]] bool IsSimulationPaused();
-
-  // CUDA
-  [[nodiscard]] bool HasCUDA();
-  [[nodiscard]] const std::string& GetDeviceName();
-  [[nodiscard]] const std::string& GetComputeCapability();
-  [[nodiscard]] const std::string& GetTotalGlobalMemory();
-  [[nodiscard]] const std::string& GetMultiProcessorCount();
   
 
  private:
@@ -41,12 +37,6 @@ class IGravityModel {
   int m_numberOfParticles = 0;
   GravityAlgorithm m_gravityAlgorithm = GravityAlgorithm::BarnesHut;
   std::shared_ptr<IPhysics::ForceGenerator> m_gravityForceGenerator;
-
-  bool hasCUDA = false;
-  std::string m_deviceName;
-  std::string m_computeCapability;
-  std::string m_totalGlobalMemory;
-  std::string m_multiProcessorCount;
 
   static IPhysics::Vector3 RandomGalaxyPosition();
 };

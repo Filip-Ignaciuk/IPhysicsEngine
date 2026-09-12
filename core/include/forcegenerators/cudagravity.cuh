@@ -3,6 +3,8 @@
 
 #include "gravity.hpp"
 
+#include "precision.hpp"
+
 namespace IPhysics {
     class CudaGravity : public Gravity {
     public:
@@ -21,7 +23,7 @@ namespace IPhysics {
 
         bool m_isCalculated = false;
 
-        real* m_positionsX = nullptr;
+        IPhysics::real* m_positionsX = nullptr;
         real* m_positionsY = nullptr;
         real* m_masses = nullptr;
         real* m_forcesX = nullptr;

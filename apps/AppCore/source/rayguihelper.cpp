@@ -1,13 +1,20 @@
 #include "rayguihelper.hpp"
 
+#include "raylib.h"
+#define RAYGUI_ICONS
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
+
 #include <string>
 
-IApp::CharBufferResultStore* IApp::CharBufferToReal(char buffer[64]) {
+
+
+IApp::CharBufferResultStore* IApp::CharBufferToReal(char buffer[textIntegerBufferLimit]) {
   auto* charBufferResultStore = new CharBufferResultStore();
   charBufferResultStore->isValid = true;
   std::string stringForm;
   // Check if is digit
-  for (size_t i = 0; i < 64; i++) {
+  for (size_t i = 0; i < textIntegerBufferLimit; i++) {
     if (buffer[i] == '\0') {
       break;
     }

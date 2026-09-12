@@ -28,6 +28,8 @@ class MeshManager final{
   typedef std::unordered_map<std::string, Model> ModelMap;
   typedef std::unordered_map<std::string, Color> MeshColors;
 
+  static constexpr Color Black = BLACK;
+
   // Statics
   static MeshMap meshes;
   static ModelMap models;

@@ -1,5 +1,5 @@
-#ifndef IPHYSICS_IGRAVITYVIEW_HPP
-#define IPHYSICS_IGRAVITYVIEW_HPP
+#ifndef IGRAVITY_IGRAVITYVIEW_HPP
+#define IGRAVITY_IGRAVITYVIEW_HPP
 
 #include <raylib.h>
 
@@ -31,6 +31,8 @@ class IGravityView {
 
   constexpr static Rectangle standardLeftBox = 
     {24, 72, 408, 408};
+
+  std::string pauseButtonText = "#132#";
 
   int numberOfParticlesDesired = 0;
   GravityAlgorithm gravityAlgorithmDesired = GravityAlgorithm::Naive;

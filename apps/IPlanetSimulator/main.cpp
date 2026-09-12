@@ -14,15 +14,11 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#define RAYGUI_ICONS
-#define RAYGUI_IMPLEMENTATION
-
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
 #include <raylib.h>
-#define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 
 #include <filesystem>
@@ -812,18 +808,6 @@ static inline void ShowSettingsMenu() {
   GuiCheckBox(
       (Rectangle){standardRightBox.x + 364, standardRightBox.y + 124, 16, 16},
       "", &velocityIndicatorEnabled);
-
-  GuiLabel(
-      (Rectangle){standardRightBox.x + 24, standardRightBox.y + 24, 168, 24},
-      "Language");
-  if (GuiDropdownBox(
-          {standardRightBox.x + 24, standardRightBox.y + 48, 168, 24},
-          languageDropDownSelection.c_str(), &dropDownSelectedLanguage,
-          isLanguageDropDownActive)) {
-    isLanguageDropDownActive = !isLanguageDropDownActive;
-    IApp::LanguageManager::LoadLanguage(
-        languageStrings[dropDownSelectedLanguage]);
-  }
 }
 
 static void ShowListView() {
@@ -1164,9 +1148,6 @@ static void Update() {
 }
 
 int main(void) {
-  IApp::LanguageManager::Initialise();
-  std::string initialLanguage = "English (UK)";
-  IApp::LanguageManager::LoadLanguage(initialLanguage);
   InitialiseGUI();
   ResetAddObject();
 
