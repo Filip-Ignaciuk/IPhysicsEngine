@@ -7,7 +7,7 @@ namespace IApp {
 
 enum class ErrorSeverity { FatalError, NormalError, Warning, Information };
 
-class Error {
+class Error final{
  private:
   ErrorSeverity m_errorSeverity;
   std::string m_errorTitle;
@@ -18,14 +18,14 @@ class Error {
         const std::string& errorMessage);
 
   ErrorSeverity GetErrorSeverity() const;
-  std::string GetErrorTitle() const;
-  std::string GetErrorMessage() const;
+  const std::string& GetErrorTitle() const;
+  const std::string& GetErrorMessage() const;
 
   bool operator<(const Error& other) const;
   bool operator==(const Error& other) const;
 };
 
-class ErrorManager {
+class ErrorManager final{
  private:
   static std::priority_queue<Error> m_errors;
 
@@ -34,7 +34,7 @@ class ErrorManager {
   static void AddError(const std::string& title, const std::string& message,
                        ErrorSeverity errorSeverity);
   static bool IsQueueNotEmpty();
-  static Error GetNextError();
+  static const Error& GetNextError();
 };
 }  // namespace IApp
 

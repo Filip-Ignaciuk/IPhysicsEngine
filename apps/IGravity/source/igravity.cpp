@@ -5,13 +5,12 @@
 #include "raygui.h"
 
 IGravity::IGravity() {
-  constexpr IPhysics::real timeStep = 1.0f / 60.0f;
+  const IPhysics::real timeStep = 1.0f / m_frameRate;
   m_iGravityModel = new IGravityModel(timeStep);
   m_iGravityController = new IGravityController();
   m_iGravityView = new IGravityView(m_iGravityModel, m_iGravityController,
                                     m_screenWidth, m_screenHeight);
 
-  m_iGravityModel->SetupSimulation();
 }
 
 void IGravity::Run() const {

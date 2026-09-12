@@ -41,7 +41,6 @@ target_include_directories(IPhysics PUBLIC
 
 add_library(IApp STATIC
         apps/AppCore/source/meshmanager.cpp
-        apps/AppCore/source/languagemanager.cpp
         apps/AppCore/source/errormanager.cpp
         apps/AppCore/source/rayguihelper.cpp
 )

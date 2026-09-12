@@ -23,6 +23,8 @@
 
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
+
 #include <filesystem>
 #include <iostream>
 
@@ -33,10 +35,8 @@
 #include "core.hpp"
 #include "errormanager.hpp"
 #include "forcegenerator.hpp"
-#include "languagemanager.hpp"
 #include "meshmanager.hpp"
 #include "object.hpp"
-#include "raygui.h"
 #include "world.hpp"
 #include "rayguihelper.hpp"
 
@@ -210,7 +210,6 @@ static inline void InitialiseGUI() {
   IApp::MeshManager::LoadDefaults();
   meshStrings = IApp::MeshManager::GetMeshStrings();
   colourStrings = IApp::MeshManager::GetColourStrings();
-  languageStrings = IApp::LanguageManager::GetLanguageStrings();
 
   camera.position = (Vector3){30.0f, 30.0f, 30.0f};
   camera.target = origin;

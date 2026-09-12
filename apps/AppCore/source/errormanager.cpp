@@ -10,9 +10,9 @@ IApp::ErrorSeverity IApp::Error::GetErrorSeverity() const {
   return m_errorSeverity;
 }
 
-std::string IApp::Error::GetErrorTitle() const { return m_errorTitle; }
+const std::string& IApp::Error::GetErrorTitle() const { return m_errorTitle; }
 
-std::string IApp::Error::GetErrorMessage() const { return m_errorMessage; }
+const std::string& IApp::Error::GetErrorMessage() const { return m_errorMessage; }
 
 bool IApp::Error::operator<(const Error& other) const {
   return this->m_errorSeverity < other.m_errorSeverity;
@@ -37,8 +37,8 @@ void IApp::ErrorManager::AddError(const std::string& title,
 
 bool IApp::ErrorManager::IsQueueNotEmpty() { return m_errors.size() != 0; }
 
-IApp::Error IApp::ErrorManager::GetNextError() {
-  IApp::Error error = m_errors.top();
+const IApp::Error& IApp::ErrorManager::GetNextError() {
+  const IApp::Error& error = m_errors.top();
   m_errors.pop();
   return error;
 }

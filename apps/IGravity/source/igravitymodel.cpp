@@ -3,20 +3,48 @@
 #include <chrono>
 #include <numbers>
 
-#include "barneshutgravity.hpp"
-#include "cudagravity.cuh"
+#include <cuda_runtime.h>
+
 #include "gravity.hpp"
+#include "cudagravity.cuh"
+
+#include "barneshutgravity.hpp"
+#include "cudabarneshutgravity.hpp"
 
 /*
  * IGravityModel
  */
 
 // Constructors
-IGravityModel::IGravityModel(IPhysics::real timeStep) : m_timeStep(timeStep) {}
+IGravityModel::IGravityModel(IPhysics::real timeStep) : m_timeStep(timeStep) {
+  // Start with an inital amount of particles
+  UpdateNumberOfParticles(100000);
+
+  // Detect if system is CUDA compatible.
+  int deviceCount = 0;
+  cudaError_t err = cudaGetDeviceCount(&deviceCount);
+
+  int currentDevice = 0;
+  cudaGetDevice(&currentDevice);
+
+  if (err != cudaSuccess || deviceCount == 0) {
+    return;
+  }
+  hasCUDA = true;
+  cudaDeviceProp properties;
+  cudaGetDeviceProperties(&properties, currentDevice);
+  m_deviceName = properties.name;
+
+  m_computeCapability = 
+  std::to_string(properties.major) + 
+  "." +  std::to_string(properties.minor);
+
+  m_totalGlobalMemory = properties.totalGlobalMem;
+  m_multiProcessorCount = properties.multiProcessorCount;
+
+}
 
 // Mutators
-void IGravityModel::SetupSimulation() { UpdateNumberOfParticles(100000); }
-
 void IGravityModel::UpdateSimulation() {
   m_world.StartFrame();
   if (m_world.GetPhysicsState()) {
@@ -100,3 +128,23 @@ IPhysics::Vector3 IGravityModel::RandomGalaxyPosition() {
 }
 
 bool IGravityModel::IsSimulationPaused() { return m_world.GetPhysicsState(); }
+
+bool IGravityModel::HasCUDA(){
+  return hasCUDA;
+}
+
+const std::string& IGravityModel::GetDeviceName(){
+  return m_deviceName;
+}
+
+const std::string& IGravityModel::GetComputeCapability(){
+  return m_computeCapability;
+}
+
+const std::string& IGravityModel::GetTotalGlobalMemory(){
+  return m_totalGlobalMemory;
+}
+
+const std::string& IGravityModel::GetMultiProcessorCount(){
+  return m_multiProcessorCount;
+}

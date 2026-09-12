@@ -7,24 +7,31 @@
 #include "raylib.h"
 
 namespace IApp {
-class MeshManager {
+class MeshManager final{
+ public:
+  // Statics
+  static void LoadDefaults();
+  static void Unload();
+
+  static Mesh* GetMesh(std::string meshName);
+  static Model* GetModel(std::string modelName);
+  static const Color& GetColor(std::string color);
+
+  static std::vector<std::string> GetMeshStrings();
+  static std::vector<std::string> GetColourStrings();
+
+  static void LoadMesh(const std::string& meshName, const Mesh& mesh);
+  static void LoadColour(const std::string& colourName, const Color& color);
+
  private:
   typedef std::unordered_map<std::string, Mesh> MeshMap;
   typedef std::unordered_map<std::string, Model> ModelMap;
-  typedef std::unordered_map<std::string, Color> MeshColours;
+  typedef std::unordered_map<std::string, Color> MeshColors;
+
+  // Statics
   static MeshMap meshes;
   static ModelMap models;
-  static MeshColours meshColours;
-
- public:
-  static void LoadDefaults();
-  static void Unload();
-  static Mesh* GetMesh(std::string meshName);
-  static Model* GetModel(std::string modelName);
-  static Color GetColor(std::string colour);
-  static std::vector<std::string> GetMeshStrings();
-  static std::vector<std::string> GetColourStrings();
-  static void SetMesh(std::string& meshName, Mesh* mesh);
+  static MeshColors meshColors;
 };
 }  // namespace IApp
 

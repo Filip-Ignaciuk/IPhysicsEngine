@@ -6,6 +6,8 @@
 #include "igravitycontroller.hpp"
 #include "igravitymodel.hpp"
 
+enum class LeftHandSideGuiState { None, SettingsBox, ParametersBox, HelpBox };
+
 class IGravityView {
  public:
   // Constructors
@@ -25,17 +27,30 @@ class IGravityView {
 
   Camera2D camera;
 
-  const static Rectangle standardLeftBox;
+  LeftHandSideGuiState leftHandSideGuiState = LeftHandSideGuiState::None;
+
+  constexpr static Rectangle standardLeftBox = 
+    {24, 72, 408, 408};
+
+  int numberOfParticlesDesired = 0;
+  GravityAlgorithm gravityAlgorithmDesired = GravityAlgorithm::Naive;
+  IPhysics::real barnesHutAccuracyDesired = 0.5;
+
+  void UpdateCamera();
 
   void UpdateControls();
-  void UpdateCamera();
-  void UpdateParticles() const;
 
-  static void ShowParticles();
-  static void ShowSettingsBox();
-  static void ShowParametersBox();
+  void UpdateUI();
+
+  // Related to UpdateUI
+  void UpdateErrorMessages();
+  void UpdateTopButtons();
+  void UpdateLeftHandGuiState();
+
+  void DisplaySettingsMenu();
+
+  void UpdateParticles() const;
 };
 
-enum class LeftHandSideGuiState { None, ParametersBox, SettingsBox };
 
 #endif
