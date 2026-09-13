@@ -20,6 +20,7 @@ class World {
   void AddObject(Object* object);
   void RemoveObject(Object* object);
   void RemoveLastObject();
+  void RemoveAllObjects();
 
   void AddForceRegistration(
       Object* object, const std::shared_ptr<ForceGenerator>& forceGenerator);
@@ -29,19 +30,18 @@ class World {
 
   // Queries
   [[nodiscard]] const std::vector<Object*>& GetObjects();
-
+  [[nodiscard]] Object* GetLastObject();
+  [[nodiscard]] const int GetNumberOfObjects() const;
   [[nodiscard]] const ForceRegistration& GetForceRegistration(
       Object* object) const;
-
   [[nodiscard]] const ForceRegistry& GetForceRegistry() const;
-
   [[nodiscard]] bool GetPhysicsState() const;
 
  protected:
   static constexpr unsigned MAX_CONTACTS = 256;
 
   std::vector<Object*> m_objects;
-  bool m_physicsState = false;
+  bool m_physicsState = true;
 
   BoundingVolumeHierarchyNode<BoundingSphere>* m_root = nullptr;
   ContactResolver m_contactResolver{};

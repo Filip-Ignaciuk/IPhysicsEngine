@@ -3,8 +3,6 @@
 #include <cuda_runtime.h>
 
 void IApp::GPUInformation::Initialise(){
-
-
   // Detect if system is CUDA compatible.
   int deviceCount = 0;
   cudaError_t err = cudaGetDeviceCount(&deviceCount);
@@ -24,8 +22,8 @@ void IApp::GPUInformation::Initialise(){
   std::to_string(properties.major) + 
   "." +  std::to_string(properties.minor);
 
-  totalGlobalMemory = properties.totalGlobalMem;
-  multiProcessorCount = properties.multiProcessorCount;
+  totalGlobalMemory = std::to_string(properties.totalGlobalMem);
+  multiProcessorCount = std::to_string(properties.multiProcessorCount);
 }
 
 bool IApp::GPUInformation::HasCUDA(){

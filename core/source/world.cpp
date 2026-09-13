@@ -1,4 +1,5 @@
 #include "world.hpp"
+#include "object.hpp"
 
 /*
  * World
@@ -88,9 +89,20 @@ void IPhysics::World::RemoveObject(Object* object) {
   RemoveForceRegistration(object);
   m_objects.erase(std::ranges::remove(m_objects, object).begin(),
                   m_objects.end());
+  delete object;
 }
 
-void IPhysics::World::RemoveLastObject() { m_objects.pop_back(); }
+void IPhysics::World::RemoveLastObject(){ 
+  delete m_objects.back();
+  m_objects.pop_back(); 
+}
+
+void IPhysics::World::RemoveAllObjects(){
+  for(IPhysics::Object* object : m_objects){
+    delete object;
+  }
+  m_objects.clear();
+}
 
 void IPhysics::World::AddForceRegistration(
     Object* object, const std::shared_ptr<ForceGenerator>& forceGenerator) {
@@ -106,6 +118,14 @@ void IPhysics::World::SetPhysicsState(bool state) { m_physicsState = state; }
 // Queries
 const std::vector<IPhysics::Object*>& IPhysics::World::GetObjects() {
   return m_objects;
+}
+
+IPhysics::Object* IPhysics::World::GetLastObject(){
+  return m_objects.back();
+}
+
+const int IPhysics::World::GetNumberOfObjects() const{
+  return m_objects.size();
 }
 
 const IPhysics::ForceRegistration& IPhysics::World::GetForceRegistration(

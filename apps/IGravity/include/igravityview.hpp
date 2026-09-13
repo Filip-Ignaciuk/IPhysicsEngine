@@ -15,6 +15,8 @@ class IGravityView {
                IGravityController* iGravityController, int screenWidth,
                int screenHeight);
 
+  ~IGravityView();
+
   // Mutators
   void Display();
 
@@ -34,6 +36,9 @@ class IGravityView {
 
   std::string pauseButtonText = "#132#";
 
+  int activeAlgorithmDropdownValue = 0;
+  bool dropdownIsEditMode = false;
+
   int numberOfParticlesDesired = 0;
   GravityAlgorithm gravityAlgorithmDesired = GravityAlgorithm::Naive;
   IPhysics::real barnesHutAccuracyDesired = 0.5;
@@ -44,12 +49,18 @@ class IGravityView {
 
   void UpdateUI();
 
+  void UpdateSimulationState(bool wantsPause);
+
   // Related to UpdateUI
   void UpdateErrorMessages();
   void UpdateTopButtons();
   void UpdateLeftHandGuiState();
 
   void DisplaySettingsMenu();
+  void DisplayParametersMenu();
+  void DisplayHelpMenu();
+
+  float parametersSliderValue = 100;
 
   void UpdateParticles() const;
 };

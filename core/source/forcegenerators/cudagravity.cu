@@ -2,6 +2,7 @@
 
 #include <cuda_runtime.h>
 #include <cuda/cmath>
+#include <iostream>
 #include "precision.hpp"
 
 __global__ void GravityCalculator2D(IPhysics::real* _positionsX,
@@ -105,6 +106,9 @@ void IPhysics::CudaGravity::EnsureCapacity(long long _size) {
 
 void IPhysics::CudaGravity::UpdateParameters() {
   m_rigidBodiesSize = m_rigidBodies.size();
+  if(m_rigidBodiesSize == 0){
+    return;
+  }
   m_totalThreads = m_rigidBodiesSize * m_rigidBodiesSize;
   m_blocks = cuda::ceil_div(m_totalThreads, m_rigidBodiesSize);
 }

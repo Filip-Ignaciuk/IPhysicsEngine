@@ -1,4 +1,5 @@
 #include "gravity.hpp"
+#include <iostream>
 
 // Constructors
 IPhysics::Gravity::Gravity(const real& gravityConstant) {

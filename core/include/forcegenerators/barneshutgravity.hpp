@@ -8,7 +8,7 @@ namespace IPhysics {
 class BarnesHutGravity : public Gravity {
  public:
   // Constructors
-  BarnesHutGravity(IPhysics::real gravityConstant,
+  explicit BarnesHutGravity(IPhysics::real gravityConstant,
                    IPhysics::real thresholdValue);
 
   // Mutators
