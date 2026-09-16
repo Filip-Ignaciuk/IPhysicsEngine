@@ -52,6 +52,7 @@ set(IAPP_SOURCES
         apps/AppCore/source/meshmanager.cpp
         apps/AppCore/source/errormanager.cpp
         apps/AppCore/source/rayguihelper.cpp
+
 )
 
 if(IPHYSICS_USE_CUDA)

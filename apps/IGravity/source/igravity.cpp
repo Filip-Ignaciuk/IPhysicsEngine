@@ -1,10 +1,14 @@
 #include "igravity.hpp"
 
-#include "gpuinformation.cuh"
+#include <chrono>
+#include <iostream>
 
 #include "raylib.h"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
+
+#include "gpuinformation.hpp"
+
 
 IGravity::IGravity() {
   const IPhysics::real timeStep = 1.0f / m_frameRate;

@@ -1,27 +1,25 @@
 #ifndef IGRAVITY_IGRAVITYMODEL_HPP
 #define IGRAVITY_IGRAVITYMODEL_HPP
 
+#include "core.hpp"
 #include "gravity.hpp"
 #include "world.hpp"
-#include "gpuinformation.cuh"
 
 #include <map>
 #include <string>
 
-enum class GravityAlgorithm { Naive, NaiveCuda, BarnesHut, BarnesHutCuda };
+enum class GravityAlgorithm { Naive, BarnesHut, NaiveCuda };
 
 static const std::vector<std::string> algorithmText ={
   "Naive Algorithm",
-  "Naive Cuda Algorithm",
   "Barnes Hut Algorithm",
-  "Barnes Hut Cuda Algorithm"
+  "Cuda Algorithm"
 };
 
 static std::map<std::string, GravityAlgorithm> GravityAlgorithmTextMap = {
   {algorithmText[0], GravityAlgorithm::Naive},
-  {algorithmText[1], GravityAlgorithm::NaiveCuda},
-  {algorithmText[2], GravityAlgorithm::BarnesHut},
-  {algorithmText[3], GravityAlgorithm::BarnesHutCuda}
+  {algorithmText[1], GravityAlgorithm::BarnesHut},
+  {algorithmText[2], GravityAlgorithm::NaiveCuda}
 };
 
 class IGravityModel {
@@ -47,7 +45,9 @@ class IGravityModel {
   
 
  private:
-  const int MAXIMUM_PARTICLE_COUNT = 100000;
+  static const int MAXIMUM_PARTICLE_COUNT = 100000;
+
+  const IPhysics::real GRAVITY_CONSTANT = 6.674 * pow(10, -11);
 
   bool hasForceReg = false;
 
@@ -58,6 +58,10 @@ class IGravityModel {
   std::shared_ptr<IPhysics::Gravity> m_gravityForceGenerator;
 
   static IPhysics::Vector3 RandomGalaxyPosition();
+
+  void CalculateParticleVelocities();
+
+  IPhysics::Vector3 GetGalaxyVelocity();
 
   bool IsUsingCUDAAlgorithm() const;
 };

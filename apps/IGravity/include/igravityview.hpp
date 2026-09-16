@@ -60,7 +60,7 @@ class IGravityView {
   void DisplayParametersMenu();
   void DisplayHelpMenu();
 
-  float parametersSliderValue = 100;
+  float parametersSliderValue = 1000;
 
   void UpdateParticles() const;
 };

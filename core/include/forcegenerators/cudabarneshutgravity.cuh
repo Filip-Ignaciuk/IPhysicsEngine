@@ -22,7 +22,6 @@ class CUDABarnesHutGravity : public Gravity {
     IPhysics::real m_thresholdValue;
 
 };
-
-}  // namespace IPhysics
+}
 
 #endif

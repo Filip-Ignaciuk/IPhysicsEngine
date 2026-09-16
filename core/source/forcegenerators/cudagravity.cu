@@ -26,7 +26,7 @@ __global__ void GravityCalculator2D(IPhysics::real* _positionsX,
         RealSqrt(distanceX * distanceX + distanceY * distanceY);
 
     const IPhysics::real forceMagnitude =
-        -1 * _gravityConstant * totalMass /
+        -1 * _gravityConstant * totalMass / 
         (distanceMagnitude * distanceMagnitude * distanceMagnitude);
 
     const IPhysics::real totalForceX = distanceX * forceMagnitude;

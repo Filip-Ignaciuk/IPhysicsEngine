@@ -1,17 +1,23 @@
 #include "igravitymodel.hpp"
 
+#include <algorithm>
 #include <chrono>
+#include <cmath>
+#include <iostream>
 #include <memory>
 #include <numbers>
+#include <vector>
 
 
+#include "core.hpp"
 #include "gravity.hpp"
 #include "cudagravity.cuh"
 
 #include "barneshutgravity.hpp"
-#include "cudabarneshutgravity.cuh"
 
 #include "object.hpp"
+#include "precision.hpp"
+#include "rigidbody.hpp"
 
 /*
  * IGravityModel
@@ -23,8 +29,7 @@ IGravityModel::IGravityModel(IPhysics::real timeStep) : m_timeStep(timeStep) {
     std::make_shared<IPhysics::Gravity>(6.674 * pow(10, -11));
   
   // Start with an inital amount of particles
-  UpdateNumberOfParticles(100);
-  
+  UpdateNumberOfParticles(1000);
 }
 
 // Mutators
@@ -75,11 +80,10 @@ void IGravityModel::UpdateNumberOfParticles(int count) {
     }
 
     for (int i = 0; i < boundedCount; ++i) {
-      
-
       // Creating object
       auto* object = new IPhysics::Object();
       auto* rigid_body = object->AddComponent<IPhysics::RigidBody>();
+      
       // Setting random location
       IPhysics::Vector3 random_position = RandomGalaxyPosition();
 
@@ -92,8 +96,12 @@ void IGravityModel::UpdateNumberOfParticles(int count) {
       m_gravityForceGenerator->AddObject(object);
       if(!IsUsingCUDAAlgorithm()){
         m_world.AddForceRegistration(object, m_gravityForceGenerator);
+      
       }
     }
+
+    // Setting correct velocities.
+    CalculateParticleVelocities();
 
     if(needsCudaAlgorithmOnFirstObject){
       m_world.AddForceRegistration(
@@ -113,22 +121,17 @@ void IGravityModel::UpdateAlgorithmType(GravityAlgorithm gravityAlgorithm){
 
   if(gravityAlgorithm == GravityAlgorithm::Naive){
     newGravityForceGenerator =
-      std::make_shared<IPhysics::Gravity>(6.674 * pow(10, -11));
+      std::make_shared<IPhysics::Gravity>(GRAVITY_CONSTANT);
   }
   else if(gravityAlgorithm == GravityAlgorithm::NaiveCuda){
     newGravityForceGenerator =
-      std::make_shared<IPhysics::CudaGravity>(6.674 * pow(10, -11));
+      std::make_shared<IPhysics::CudaGravity>(GRAVITY_CONSTANT);
+      std::cout << "CUDA" << std::endl;
   }
   else if(gravityAlgorithm == GravityAlgorithm::BarnesHut){
     newGravityForceGenerator =
       std::make_shared<IPhysics::BarnesHutGravity>(
-        6.674 * pow(10, -11),
-        0.5);
-  }
-  else if(gravityAlgorithm == GravityAlgorithm::BarnesHutCuda){
-    newGravityForceGenerator =
-      std::make_shared<IPhysics::CUDABarnesHutGravity>(
-        6.674 * pow(10, -11),
+        GRAVITY_CONSTANT,
         0.5);
   }
   else{
@@ -180,7 +183,7 @@ const std::vector<IPhysics::Object*>& IGravityModel::GetParticles() {
 }
 
 IPhysics::Vector3 IGravityModel::RandomGalaxyPosition() {
-  IPhysics::real scaleRadius = 40.0f;
+  IPhysics::real scaleRadius = 800.0;
 
   IPhysics::real randomNumber1 = IPhysics::RandomStore::RandomReal(0, 1);
   IPhysics::real randomNumber2 = IPhysics::RandomStore::RandomReal(0, 1);
@@ -194,6 +197,36 @@ IPhysics::Vector3 IGravityModel::RandomGalaxyPosition() {
   return {xPosition, yPosition, 0};
 }
 
+void IGravityModel::CalculateParticleVelocities(){
+  const IPhysics::Matrix3 rotationMatrix{
+    0, -1, 0,
+    1, 0, 0,
+    0, 0, 1
+  };
+  for(int i = 0; i < m_world.GetNumberOfObjects(); ++i){
+    IPhysics::RigidBody* rigidBody = m_world.GetObjects()[i]->
+    GetComponent<IPhysics::RigidBody>();
+
+    // We assume the galaxy is 0, 0 so far.
+    IPhysics::Vector3 displacementFromCentre = 
+    rigidBody->GetPosition() - IPhysics::Origin;
+    IPhysics::real distanceFromCentre = displacementFromCentre.Magnitude();
+
+    if(distanceFromCentre == 0){
+      continue;
+    }
+    IPhysics::real speed = 3 * distanceFromCentre / 
+    sqrt(distanceFromCentre * distanceFromCentre + 1000);
+
+
+
+    IPhysics::Vector3 velocity = rotationMatrix * (rigidBody->GetPosition() - IPhysics::Origin);
+    velocity.Normalise();
+    velocity = velocity * speed;
+    rigidBody->AddVelocity(velocity);
+  }
+}
+
 bool IGravityModel::IsSimulationPaused() const { 
   return m_world.GetPhysicsState(); 
 }
@@ -203,6 +236,5 @@ const int IGravityModel::GetMaximumParticleCount() const{
 }
 
 bool IGravityModel::IsUsingCUDAAlgorithm() const{
-  return m_gravityAlgorithm == GravityAlgorithm::BarnesHutCuda ||
-  m_gravityAlgorithm == GravityAlgorithm::NaiveCuda;
+  return m_gravityAlgorithm == GravityAlgorithm::NaiveCuda;
 }

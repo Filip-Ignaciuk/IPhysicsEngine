@@ -1,4 +1,5 @@
 #include "barneshutgravity.hpp"
+#include "core.hpp"
 
 IPhysics::BarnesHutGravity::BarnesHutGravity(IPhysics::real gravityConstant,
                                              IPhysics::real thresholdValue)
@@ -23,7 +24,6 @@ void IPhysics::BarnesHutGravity::UpdateForce(IPhysics::RigidBody* rigidBody,
   if (totalProcessedParticles == 0) {
     CreateTree();
   }
-
   rigidBody->AddForce(TraverseNode(root, rigidBody));
   ++totalProcessedParticles;
 }

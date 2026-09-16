@@ -3,10 +3,11 @@
 #include <cmath>
 #include <iostream>
 #include <raylib.h>
-
-#include "igravitymodel.hpp"
 #include "raymath.h"
 #include "raygui.h"
+
+#include "igravitymodel.hpp"
+#include "gpuinformation.hpp"
 
 
 IGravityView::IGravityView(IGravityModel* iGravityModel,
@@ -287,8 +288,7 @@ void IGravityView::DisplayParametersMenu(){
     std::string dropdownAlgorithmText = 
     algorithmText[0] + ";" +
     algorithmText[1] + ";" +
-    algorithmText[2] + ";" +
-    algorithmText[3];
+    algorithmText[2];
 
     GuiLabel(
       (Rectangle){
@@ -313,7 +313,7 @@ void IGravityView::DisplayParametersMenu(){
 
     if(previousAlgorithmDropdownValue != activeAlgorithmDropdownValue){
       std::cout <<algorithmText[activeAlgorithmDropdownValue] << std::endl;
-       m_iGravityModel->UpdateAlgorithmType(
+      m_iGravityModel->UpdateAlgorithmType(
         GravityAlgorithmTextMap[algorithmText[activeAlgorithmDropdownValue]]);
     }
 
@@ -345,6 +345,7 @@ void IGravityView::UpdateParticles() const {
     const auto* rigidBody = obj->GetComponent<IPhysics::RigidBody>();
     const Vector2 position{.x = static_cast<float>(rigidBody->GetPosition().x),
                            .y = static_cast<float>(rigidBody->GetPosition().y)};
+    //DrawPixel(position.x, position.y, RED);               
     DrawCircleV(position, 1.0f, RED);
   }
 }
