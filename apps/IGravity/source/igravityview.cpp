@@ -39,7 +39,9 @@ void IGravityView::Display() {
 
   UpdateUI();
 
-  UpdateCamera();
+  if(!isSliderInUse){
+    UpdateCamera();
+  }
 
   UpdateControls();
 
@@ -180,7 +182,7 @@ void IGravityView::DisplaySettingsMenu(){
     }
 
     // Change colour based on whether they have a CUDA capable card or not.
-    GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt(GREEN));
+    GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt(compatibilityColor));
 
     GuiLabel(
       (Rectangle){
@@ -264,6 +266,8 @@ void IGravityView::DisplayParametersMenu(){
         24},
       numberOfParticlesText.c_str());
 
+    isSliderInUse = false;
+
     GuiSlider((Rectangle){
         standardLeftBox.x + 24, 
         standardLeftBox.y + 48, 
@@ -277,6 +281,7 @@ void IGravityView::DisplayParametersMenu(){
 
     numberOfParticlesDesired = roundf(parametersSliderValue);
     if(numberOfParticlesDesired != m_iGravityModel->GetParticles().size()){
+      isSliderInUse = true;
       int newCount = numberOfParticlesDesired - m_iGravityModel->GetParticles().size();
       m_iGravityModel->UpdateNumberOfParticles(newCount);
     }
@@ -287,8 +292,11 @@ void IGravityView::DisplayParametersMenu(){
 
     std::string dropdownAlgorithmText = 
     algorithmText[0] + ";" +
-    algorithmText[1] + ";" +
-    algorithmText[2];
+    algorithmText[1];
+
+    if(IApp::GPUInformation::HasCUDA()){
+      dropdownAlgorithmText = dropdownAlgorithmText + ";" + algorithmText[2];
+    }
 
     GuiLabel(
       (Rectangle){
@@ -335,9 +343,52 @@ void IGravityView::DisplayHelpMenu(){
         256, 
         24},
       "Welcome to IGravity!");
+
+     GuiLabel(
+      (Rectangle){
+standardLeftBox.x + 24, 
+standardLeftBox.y + 48, 
+352, 
+48},
+"IGravity is a gravity particle simulator, that simulates\nas many particles as you want (or can!).");
+
+GuiLabel(
+      (Rectangle){
+standardLeftBox.x + 24, 
+standardLeftBox.y + 96, 
+352, 
+48},
+"The number of particles and the type of algorithm used\ncan be changed within the parameters menu.");
+
+GuiLabel(
+      (Rectangle){
+standardLeftBox.x + 24, 
+standardLeftBox.y + 144, 
+352, 
+48},
+"You can pause the simulation with spacebar or by\nclicking on the pause button.");
+
+GuiLabel(
+      (Rectangle){
+standardLeftBox.x + 24, 
+standardLeftBox.y + 192, 
+352, 
+48},
+"You can reset the simulation with the reset button.");
+
+GuiLabel(
+      (Rectangle){
+standardLeftBox.x + 24, 
+standardLeftBox.y + 240, 
+352, 
+48},
+"Lastly, if your computer contains a CUDA Capable device,\nthen a third algorithm that utilizes the device will be provided.");
+
+
   }
-  
 }
+  
+
 
 void IGravityView::UpdateParticles() const {
   for (int i = 0; i < m_iGravityModel->GetParticles().size(); ++i) {

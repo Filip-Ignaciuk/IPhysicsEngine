@@ -37,6 +37,8 @@ class IGravityView {
   std::string pauseButtonText = "#132#";
 
   int activeAlgorithmDropdownValue = 0;
+
+  bool isSliderInUse = false;
   bool dropdownIsEditMode = false;
 
   int numberOfParticlesDesired = 0;

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" ON)
+option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" OFF)
 
 if(IPHYSICS_USE_CUDA)
         project(IPhysics LANGUAGES CXX CUDA)
@@ -59,6 +59,10 @@ if(IPHYSICS_USE_CUDA)
     list(APPEND IAPP_SOURCES
         apps/AppCore/source/gpuinformation.cu
     )
+else()
+    list(APPEND IAPP_SOURCES
+        apps/AppCore/source/gpuinformation.cpp
+    )    
 endif()
 
 add_library(IApp STATIC ${IAPP_SOURCES})
@@ -88,6 +92,10 @@ set(IGRAVITY_SOURCES
 )
 
 add_executable(IGravity ${IGRAVITY_SOURCES})
+
+if(IPHYSICS_USE_CUDA)
+    target_compile_definitions(IGravity PRIVATE IPHYSICS_USE_CUDA)
+endif()
 
 target_include_directories(IGravity PUBLIC
         apps/IGravity/include

@@ -124,9 +124,10 @@ void IGravityModel::UpdateAlgorithmType(GravityAlgorithm gravityAlgorithm){
       std::make_shared<IPhysics::Gravity>(GRAVITY_CONSTANT);
   }
   else if(gravityAlgorithm == GravityAlgorithm::NaiveCuda){
+    #ifdef IPHYSICS_USE_CUDA
     newGravityForceGenerator =
       std::make_shared<IPhysics::CudaGravity>(GRAVITY_CONSTANT);
-      std::cout << "CUDA" << std::endl;
+    #endif
   }
   else if(gravityAlgorithm == GravityAlgorithm::BarnesHut){
     newGravityForceGenerator =
