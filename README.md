@@ -1,10 +1,23 @@
-#IPhysicsEngine
+# IPhysicsEngine
 IPhysicsEngine is a 3D rigid-body physics engine library written in c++. This engine was based upon the engine found in "Game physics engine development" by Ian Millington.
 
 ## Features
 It Features:
 - 3D rigid-body physics
 - Collision detection and response *(in progress)*
+
+## How to compile and run
+### Requirements
+The follow are required for the library and the apps to run:
+- CMAKE
+- Raylib
+IF YOU HAVE A CUDA CAPABLE DEVICE
+- CUDA Toolkit
+
+### Compiling
+When compiling its recommended to make a new build folder and preform the cmake build there.
+Before building its recommended to change the *Enable CUDA gravity backends* option in the CMakeLists.txt
+line to OFF or ON depending upon if your computer has a CUDA capable device or not.
 
 ## Apps
 The apps folder contains apps that showcase the features of the physics engine.
