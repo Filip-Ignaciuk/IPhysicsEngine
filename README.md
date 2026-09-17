@@ -11,6 +11,7 @@ It Features:
 The follow are required for the library and the apps to run:
 - CMAKE
 - Raylib
+
 IF YOU HAVE A CUDA CAPABLE DEVICE
 - CUDA Toolkit
 
