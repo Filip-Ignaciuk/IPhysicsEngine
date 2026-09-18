@@ -206,19 +206,19 @@ static inline void InitialiseGUI() {
   meshStrings = IApp::MeshManager::GetMeshStrings();
   colourStrings = IApp::MeshManager::GetColourStrings();
 
-  camera.position = (Vector3){30.0f, 30.0f, 30.0f};
+  camera.position = Vector3{30.0f, 30.0f, 30.0f};
   camera.target = origin;
-  camera.up = (Vector3){0.0f, 1.0f, 0.0f};
+  camera.up = Vector3{0.0f, 1.0f, 0.0f};
   camera.fovy = 45.0f;
   camera.projection = CAMERA_PERSPECTIVE;
 
-  addViewCamera.position = (Vector3){10.0f, 10.0f, 0.0f};
+  addViewCamera.position = Vector3{10.0f, 10.0f, 0.0f};
   addViewCamera.target = origin;
-  addViewCamera.up = (Vector3){0.0f, 1.0f, 0.0f};
+  addViewCamera.up = Vector3{0.0f, 1.0f, 0.0f};
   addViewCamera.fovy = 45.0f;
   addViewCamera.projection = CAMERA_PERSPECTIVE;
 
-  listViewCamera.up = (Vector3){0.0f, 1.0f, 0.0f};
+  listViewCamera.up = Vector3{0.0f, 1.0f, 0.0f};
   listViewCamera.fovy = 45.0f;
   listViewCamera.projection = CAMERA_PERSPECTIVE;
 
@@ -259,62 +259,62 @@ static inline void AddObjectMenu() {
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 24, 96, 24},
+      Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 24, 96, 24},
       "Position");
 
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
-  GuiLabel((Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 48, 24, 24},
+  GuiLabel(Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 48, 24, 24},
            "X");
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 48, standardLeftBox.y + 48, 96, 24},
+          Rectangle{standardLeftBox.x + 48, standardLeftBox.y + 48, 96, 24},
           textBufferXCoordinate, 64, isBufferXCoordinateEdited)) {
     isBufferXCoordinateEdited = !isBufferXCoordinateEdited;
   }
 
-  GuiLabel((Rectangle){standardLeftBox.x + 144, standardLeftBox.y + 48, 24, 24},
+  GuiLabel(Rectangle{standardLeftBox.x + 144, standardLeftBox.y + 48, 24, 24},
            "Y");
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 168, standardLeftBox.y + 48, 96, 24},
+          Rectangle{standardLeftBox.x + 168, standardLeftBox.y + 48, 96, 24},
           textBufferYCoordinate, 64, isBufferYCoordinateEdited)) {
     isBufferYCoordinateEdited = !isBufferYCoordinateEdited;
   }
 
-  GuiLabel((Rectangle){standardLeftBox.x + 264, standardLeftBox.y + 48, 24, 24},
+  GuiLabel(Rectangle{standardLeftBox.x + 264, standardLeftBox.y + 48, 24, 24},
            "Z");
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 288, standardLeftBox.y + 48, 96, 24},
+          Rectangle{standardLeftBox.x + 288, standardLeftBox.y + 48, 96, 24},
           textBufferZCoordinate, 64, isBufferZCoordinateEdited)) {
     isBufferZCoordinateEdited = !isBufferZCoordinateEdited;
   }
 
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
 
-  GuiLabel((Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 72, 96, 24},
+  GuiLabel(Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 72, 96, 24},
            "Orientation");
 
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
 
-  GuiLabel((Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 96, 24, 24},
+  GuiLabel(Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 96, 24, 24},
            "X");
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 48, standardLeftBox.y + 96, 96, 24},
+          Rectangle{standardLeftBox.x + 48, standardLeftBox.y + 96, 96, 24},
           textBufferXOrientation, 64, isBufferXOrientationEdited)) {
     isBufferXOrientationEdited = !isBufferXOrientationEdited;
   }
 
-  GuiLabel((Rectangle){standardLeftBox.x + 144, standardLeftBox.y + 96, 24, 24},
+  GuiLabel(Rectangle{standardLeftBox.x + 144, standardLeftBox.y + 96, 24, 24},
            "Y");
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 168, standardLeftBox.y + 96, 96, 24},
+          Rectangle{standardLeftBox.x + 168, standardLeftBox.y + 96, 96, 24},
           textBufferYOrientation, 64, isBufferYOrientationEdited)) {
     isBufferYOrientationEdited = !isBufferYOrientationEdited;
   }
 
-  GuiLabel((Rectangle){standardLeftBox.x + 264, standardLeftBox.y + 96, 24, 24},
+  GuiLabel(Rectangle{standardLeftBox.x + 264, standardLeftBox.y + 96, 24, 24},
            "Z");
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 288, standardLeftBox.y + 96, 96, 24},
+          Rectangle{standardLeftBox.x + 288, standardLeftBox.y + 96, 96, 24},
           textBufferZOrientation, 64, isBufferZOrientationEdited)) {
     isBufferZOrientationEdited = !isBufferZOrientationEdited;
   }
@@ -323,81 +323,81 @@ static inline void AddObjectMenu() {
 
   GuiSetStyle(LABEL, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT);
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 120, 168, 24},
+      Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 120, 168, 24},
       "Name");
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 144, 168, 24},
+          Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 144, 168, 24},
           textBufferName, 64, isBufferNameEdited)) {
     isBufferNameEdited = !isBufferNameEdited;
   }
 
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 120, 168, 24},
+      Rectangle{standardLeftBox.x + 216, standardLeftBox.y + 120, 168, 24},
       "Mass");
-  if (GuiTextBox((Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 144,
+  if (GuiTextBox(Rectangle{standardLeftBox.x + 216, standardLeftBox.y + 144,
                              168, 24},
                  textBufferMass, 64, isBufferMassEdited)) {
     isBufferMassEdited = !isBufferMassEdited;
   }
 
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 168, 168, 24},
+      Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 168, 168, 24},
       "Linear Damping");
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 168, 168, 24},
+      Rectangle{standardLeftBox.x + 216, standardLeftBox.y + 168, 168, 24},
       "Angular Damping");
 
   if (GuiTextBox(
-          (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 192, 168, 24},
+          Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 192, 168, 24},
           textBufferLinearDamping, 64, isBufferLinearDampingEdited)) {
     isBufferLinearDampingEdited = !isBufferLinearDampingEdited;
   }
-  if (GuiTextBox((Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 192,
+  if (GuiTextBox(Rectangle{standardLeftBox.x + 216, standardLeftBox.y + 192,
                              168, 24},
                  textBufferAngularDamping, 64, isBufferAngularDampingEdited)) {
     isBufferAngularDampingEdited = !isBufferAngularDampingEdited;
   }
 
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 312, 148, 24},
+      Rectangle{standardLeftBox.x + 216, standardLeftBox.y + 312, 148, 24},
       "Inverse Inertia Tensor");
   GuiCheckBox(
-      (Rectangle){standardLeftBox.x + 364, standardLeftBox.y + 316, 16, 16}, "",
+      Rectangle{standardLeftBox.x + 364, standardLeftBox.y + 316, 16, 16}, "",
       &wantsStandardInverseInertiaValue);
 
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 216, 168, 24},
+      Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 216, 168, 24},
       "Inverse Inertia Tensor");
   if (wantsStandardInverseInertiaValue) {
     GuiSetState(STATE_DISABLED);
   }
 
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 240, 24, 24},
+      Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 240, 24, 24},
       textBuffer1InverseInertiaTensor, 64, isBuffer1InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 72, standardLeftBox.y + 240, 24, 24},
+      Rectangle{standardLeftBox.x + 72, standardLeftBox.y + 240, 24, 24},
       textBuffer2InverseInertiaTensor, 64, isBuffer2InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 120, standardLeftBox.y + 240, 24, 24},
+      Rectangle{standardLeftBox.x + 120, standardLeftBox.y + 240, 24, 24},
       textBuffer3InverseInertiaTensor, 64, isBuffer3InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 288, 24, 24},
+      Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 288, 24, 24},
       textBuffer4InverseInertiaTensor, 64, isBuffer4InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 72, standardLeftBox.y + 288, 24, 24},
+      Rectangle{standardLeftBox.x + 72, standardLeftBox.y + 288, 24, 24},
       textBuffer5InverseInertiaTensor, 64, isBuffer5InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 120, standardLeftBox.y + 288, 24, 24},
+      Rectangle{standardLeftBox.x + 120, standardLeftBox.y + 288, 24, 24},
       textBuffer6InverseInertiaTensor, 64, isBuffer6InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 24, standardLeftBox.y + 336, 24, 24},
+      Rectangle{standardLeftBox.x + 24, standardLeftBox.y + 336, 24, 24},
       textBuffer7InverseInertiaTensor, 64, isBuffer7InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 72, standardLeftBox.y + 336, 24, 24},
+      Rectangle{standardLeftBox.x + 72, standardLeftBox.y + 336, 24, 24},
       textBuffer8InverseInertiaTensor, 64, isBuffer8InverseInertiaTensorEdited);
   GuiTextBox(
-      (Rectangle){standardLeftBox.x + 120, standardLeftBox.y + 336, 24, 24},
+      Rectangle{standardLeftBox.x + 120, standardLeftBox.y + 336, 24, 24},
       textBuffer9InverseInertiaTensor, 64, isBuffer9InverseInertiaTensorEdited);
 
   if (wantsStandardInverseInertiaValue) {
@@ -408,7 +408,7 @@ static inline void AddObjectMenu() {
 
   // Add Button
   if (GuiButton(
-          (Rectangle){standardLeftBox.x + 300, standardLeftBox.y + 360, 84, 24},
+          Rectangle{standardLeftBox.x + 300, standardLeftBox.y + 360, 84, 24},
           "Add") &&
       !isColourDropDownActive && !isMeshDropDownActive) {
     // Assuming data is valid
@@ -670,7 +670,7 @@ static inline void AddObjectMenu() {
   }
 
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 264, 168, 24},
+      Rectangle{standardLeftBox.x + 216, standardLeftBox.y + 264, 168, 24},
       "Colour");
   // We need to check for if the other drop down is active as it can click on
   // both with once click.
@@ -684,7 +684,7 @@ static inline void AddObjectMenu() {
   }
 
   GuiLabel(
-      (Rectangle){standardLeftBox.x + 216, standardLeftBox.y + 216, 168, 24},
+      Rectangle{standardLeftBox.x + 216, standardLeftBox.y + 216, 168, 24},
       "Mesh");
   if (GuiDropdownBox(
           {standardLeftBox.x + 216, standardLeftBox.y + 240, 168, 24},
@@ -786,26 +786,26 @@ static inline void ShowSettingsMenu() {
   }
 
   GuiLabel(
-      (Rectangle){standardRightBox.x + 24, standardRightBox.y + 72, 336, 24},
+      Rectangle{standardRightBox.x + 24, standardRightBox.y + 72, 336, 24},
       "Use Light Mode");
-  if (GuiCheckBox((Rectangle){standardRightBox.x + 364, standardRightBox.y + 76,
+  if (GuiCheckBox(Rectangle{standardRightBox.x + 364, standardRightBox.y + 76,
                               16, 16},
                   "", &lightModeEnabled)) {
     UpdateColourScheme();
   }
 
   GuiLabel(
-      (Rectangle){standardRightBox.x + 24, standardRightBox.y + 96, 336, 24},
+      Rectangle{standardRightBox.x + 24, standardRightBox.y + 96, 336, 24},
       "Use Acceleration indicator");
   GuiCheckBox(
-      (Rectangle){standardRightBox.x + 364, standardRightBox.y + 100, 16, 16},
+      Rectangle{standardRightBox.x + 364, standardRightBox.y + 100, 16, 16},
       "", &accelerationIndicatorEnabled);
 
   GuiLabel(
-      (Rectangle){standardRightBox.x + 24, standardRightBox.y + 120, 336, 24},
+      Rectangle{standardRightBox.x + 24, standardRightBox.y + 120, 336, 24},
       "Use Velocity indicator");
   GuiCheckBox(
-      (Rectangle){standardRightBox.x + 364, standardRightBox.y + 124, 16, 16},
+      Rectangle{standardRightBox.x + 364, standardRightBox.y + 124, 16, 16},
       "", &velocityIndicatorEnabled);
 }
 
@@ -817,7 +817,7 @@ static void ShowListView() {
                 Color(WHITE));
 
   if (listObject != nullptr) {
-    listViewCamera.position = (Vector3){10.0f, 10.0f, 0.0f};
+    listViewCamera.position = Vector3{10.0f, 10.0f, 0.0f};
     IPhysics::Vector3 cameraPositionTarget =
         listObject->GetComponent<IPhysics::RigidBody>()->GetPosition();
     Vector3 objectPosition = {(float)cameraPositionTarget.x,
@@ -848,7 +848,7 @@ static void ShowListView() {
 
       Model* model = Map[object];
       model->transform = MatrixMultiply(rotation, positionMatrix);
-      DrawModel(*model, (Vector3){0, 0, 0}, geometry->GetScale(),
+      DrawModel(*model, Vector3{0, 0, 0}, geometry->GetScale(),
                 geometry->GetColor());
 
       Vector3 rayPosition{(float)position.x, (float)position.y,
@@ -907,7 +907,7 @@ static void ShowAddView() {
                 standardLeftViewbox.width, standardLeftViewbox.height,
                 Color(WHITE));
 
-  addViewCamera.position = (Vector3){cosf(angle * PI / 180) * 2.0f, 2.0f,
+  addViewCamera.position = Vector3{cosf(angle * PI / 180) * 2.0f, 2.0f,
                                      sinf(angle * PI / 180) * 2.0f};
   angle = angle + 0.75;
 
@@ -922,7 +922,7 @@ static void ShowAddView() {
   DrawGrid(10, 1.0f);
   IPhysics::Geometry* geometry = addObject->GetComponent<IPhysics::Geometry>();
   Model* model = IApp::MeshManager::GetModel(meshStrings[dropDownSelectedMesh]);
-  DrawModel(*model, (Vector3){0, 0, 0}, geometry->GetScale(),
+  DrawModel(*model, Vector3{0, 0, 0}, geometry->GetScale(),
             geometry->GetColor());
   EndMode3D();
   EndTextureMode();
@@ -994,7 +994,7 @@ static void Update() {
 
     Model* model = Map[object];
     model->transform = MatrixMultiply(rotation, matrixPosition);
-    DrawModel(*model, (Vector3){0, 0, 0}, geometry->GetScale(),
+    DrawModel(*model, Vector3{0, 0, 0}, geometry->GetScale(),
               geometry->GetColor());
 
     Vector3 rayPosition{(float)position.x, (float)position.y,
@@ -1022,7 +1022,7 @@ static void Update() {
   EndMode3D();
 
   // List Button
-  if (GuiButton((Rectangle){24, 24, 24, 24}, "#214#")) {
+  if (GuiButton(Rectangle{24, 24, 24, 24}, "#214#")) {
     if (leftHandGuiState == LeftHandSideGuiState::ListObjectBox) {
       leftHandGuiState = LeftHandSideGuiState::None;
     } else {
@@ -1031,7 +1031,7 @@ static void Update() {
   }
 
   // Add Button
-  if (GuiButton((Rectangle){72, 24, 24, 24}, "#80#")) {
+  if (GuiButton(Rectangle{72, 24, 24, 24}, "#80#")) {
     if (leftHandGuiState == LeftHandSideGuiState::AddObjectBox) {
       leftHandGuiState = LeftHandSideGuiState::None;
     } else {
@@ -1040,7 +1040,7 @@ static void Update() {
   }
 
   // Help Button
-  if (GuiButton((Rectangle){120, 24, 24, 24}, "#193#")) {
+  if (GuiButton(Rectangle{120, 24, 24, 24}, "#193#")) {
     if (leftHandGuiState == LeftHandSideGuiState::HelpBox) {
       leftHandGuiState = LeftHandSideGuiState::None;
     } else {
@@ -1049,7 +1049,7 @@ static void Update() {
   }
 
   // Pause Button
-  if (GuiButton((Rectangle){168, 24, 24, 24}, pauseButtonText.c_str())) {
+  if (GuiButton(Rectangle{168, 24, 24, 24}, pauseButtonText.c_str())) {
     if (world.GetPhysicsState()) {
       pauseButtonText = "#131#";
       world.SetPhysicsState(false);
@@ -1060,7 +1060,7 @@ static void Update() {
   }
 
   // Settings Button
-  if (GuiButton((Rectangle){1224, 24, 24, 24}, "#142#")) {
+  if (GuiButton(Rectangle{1224, 24, 24, 24}, "#142#")) {
     if (rightHandGuiState == RightHandSideGuiState::SettingsBox) {
       rightHandGuiState = RightHandSideGuiState::None;
     } else {

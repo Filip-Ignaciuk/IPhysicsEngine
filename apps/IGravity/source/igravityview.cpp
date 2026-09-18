@@ -99,7 +99,7 @@ void IGravityView::UpdateErrorMessages(){
 
 void IGravityView::UpdateTopButtons(){
   // Settings Button
-  if (GuiButton((Rectangle){24, 24, 24, 24}, "#142#")) {
+  if (GuiButton(Rectangle{24, 24, 24, 24}, "#142#")) {
     if (leftHandSideGuiState == LeftHandSideGuiState::SettingsBox) {
       leftHandSideGuiState = LeftHandSideGuiState::None;
     } else {
@@ -108,7 +108,7 @@ void IGravityView::UpdateTopButtons(){
   }
 
   // Parameters Button
-  if (GuiButton((Rectangle){72, 24, 24, 24}, "#214#")) {
+  if (GuiButton(Rectangle{72, 24, 24, 24}, "#214#")) {
     if (leftHandSideGuiState == LeftHandSideGuiState::ParametersBox) {
       leftHandSideGuiState = LeftHandSideGuiState::None;
     } else {
@@ -117,12 +117,12 @@ void IGravityView::UpdateTopButtons(){
   }
 
   // Restart Button
-  if (GuiButton((Rectangle){120, 24, 24, 24}, "#58#")) {
+  if (GuiButton(Rectangle{120, 24, 24, 24}, "#58#")) {
     m_iGravityModel->Restart();
   }
 
   // Help Button
-  if (GuiButton((Rectangle){164, 24, 24, 24}, "#193#")) {
+  if (GuiButton(Rectangle{164, 24, 24, 24}, "#193#")) {
     if (leftHandSideGuiState == LeftHandSideGuiState::HelpBox) {
       leftHandSideGuiState = LeftHandSideGuiState::None;
     } else {
@@ -131,7 +131,7 @@ void IGravityView::UpdateTopButtons(){
   }
 
   // Pause Button
-  if (GuiButton((Rectangle){212, 24, 24, 24}, pauseButtonText.c_str())) {
+  if (GuiButton(Rectangle{212, 24, 24, 24}, pauseButtonText.c_str())) {
     if (m_iGravityModel->IsSimulationPaused()) {
       UpdateSimulationState(false);
     } else {
@@ -166,7 +166,7 @@ void IGravityView::DisplaySettingsMenu(){
 
     // CUDA
     GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 24, 
         96, 
@@ -190,7 +190,7 @@ void IGravityView::DisplaySettingsMenu(){
     GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt(compatibilityColor));
 
     GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 48, 
         256, 
@@ -203,7 +203,7 @@ void IGravityView::DisplaySettingsMenu(){
       IApp::GPUInformation::GetDeviceName();
 
       GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 72, 
         256, 
@@ -214,7 +214,7 @@ void IGravityView::DisplaySettingsMenu(){
       IApp::GPUInformation::GetComputeCapability();
 
       GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 96, 
         256, 
@@ -225,7 +225,7 @@ void IGravityView::DisplaySettingsMenu(){
       IApp::GPUInformation::GetTotalGlobalMemory();
 
       GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 120, 
         256, 
@@ -236,7 +236,7 @@ void IGravityView::DisplaySettingsMenu(){
       IApp::GPUInformation::GetMultiProcessorCount();
 
       GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 144, 
         256, 
@@ -264,7 +264,7 @@ void IGravityView::DisplayParametersMenu(){
       std::to_string(m_iGravityModel->GetParticles().size());
 
     GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 24, 
         256, 
@@ -273,7 +273,7 @@ void IGravityView::DisplayParametersMenu(){
 
     isSliderInUse = false;
 
-    GuiSlider((Rectangle){
+    GuiSlider(Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 48, 
         256, 
@@ -304,7 +304,7 @@ void IGravityView::DisplayParametersMenu(){
     }
 
     GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 72, 
         256, 
@@ -313,7 +313,7 @@ void IGravityView::DisplayParametersMenu(){
 
     int previousAlgorithmDropdownValue = activeAlgorithmDropdownValue;
 
-    if(GuiDropdownBox((Rectangle){
+    if(GuiDropdownBox(Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 96, 
         256, 
@@ -342,7 +342,7 @@ void IGravityView::DisplayHelpMenu(){
   else {
     leftHandSideGuiState = LeftHandSideGuiState::HelpBox;
     GuiLabel(
-      (Rectangle){
+      Rectangle{
         standardLeftBox.x + 24, 
         standardLeftBox.y + 24, 
         256, 
@@ -350,7 +350,7 @@ void IGravityView::DisplayHelpMenu(){
       "Welcome to IGravity!");
 
      GuiLabel(
-      (Rectangle){
+      Rectangle{
 standardLeftBox.x + 24, 
 standardLeftBox.y + 48, 
 352, 
@@ -358,7 +358,7 @@ standardLeftBox.y + 48,
 "IGravity is a gravity particle simulator, that simulates\nas many particles as you want (or can!).");
 
 GuiLabel(
-      (Rectangle){
+      Rectangle{
 standardLeftBox.x + 24, 
 standardLeftBox.y + 96, 
 352, 
@@ -366,7 +366,7 @@ standardLeftBox.y + 96,
 "The number of particles and the type of algorithm used\ncan be changed within the parameters menu.");
 
 GuiLabel(
-      (Rectangle){
+      Rectangle{
 standardLeftBox.x + 24, 
 standardLeftBox.y + 144, 
 352, 
@@ -374,7 +374,7 @@ standardLeftBox.y + 144,
 "You can pause the simulation with spacebar or by\nclicking on the pause button.");
 
 GuiLabel(
-      (Rectangle){
+      Rectangle{
 standardLeftBox.x + 24, 
 standardLeftBox.y + 192, 
 352, 
@@ -382,7 +382,7 @@ standardLeftBox.y + 192,
 "You can reset the simulation with the reset button.");
 
 GuiLabel(
-      (Rectangle){
+      Rectangle{
 standardLeftBox.x + 24, 
 standardLeftBox.y + 240, 
 352, 

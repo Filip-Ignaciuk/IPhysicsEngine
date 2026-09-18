@@ -15,7 +15,7 @@ class Object {
   Map components;
 
  public:
-  Object();
+  Object() = default;
 
   template <typename T>
   T* AddComponent() {

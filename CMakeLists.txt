@@ -15,7 +15,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(IPHYSICS_SOURCES
         core/source/core.cpp
-        core/source/object.cpp
         core/source/world.cpp
         core/source/forcegenerator.cpp
         core/source/contacts.cpp
@@ -115,5 +114,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(raylib)
 
+target_link_libraries(IPhysics PRIVATE raylib)
+target_link_libraries(IApp PRIVATE raylib)
 target_link_libraries(IPlanetSimulator PRIVATE raylib)
 target_link_libraries(IGravity PRIVATE raylib)
+
+if(MSVC)
+    target_compile_options(IPhysics PRIVATE
+        $<$<COMPILE_LANGUAGE:CXX>:/Zc:preprocessor>
+        $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=/Zc:preprocessor>
+    )
+endif()

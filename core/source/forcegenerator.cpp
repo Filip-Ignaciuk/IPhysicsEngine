@@ -3,7 +3,7 @@
 #include <iterator>
 
 IPhysics::ForceRegistry::ForceRegistry() {
-  constexpr std::vector<ForceRegistration> temporary;
+  const std::vector<ForceRegistration> temporary;
   registrations = temporary;
 }
 
