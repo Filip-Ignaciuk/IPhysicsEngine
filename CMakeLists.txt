@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" OFF)
+option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" ON)
 
 if(IPHYSICS_USE_CUDA)
         project(IPhysics LANGUAGES CXX CUDA)
@@ -107,24 +107,13 @@ target_link_libraries(IGravity
         IApp
 )
 
-if(NOT EMSCRIPTEN)
-        find_package(raylib REQUIRED)
+include(FetchContent)
+FetchContent_Declare(
+    raylib
+    GIT_REPOSITORY https://github.com/raysan5/raylib.git
+    GIT_TAG 6.0
+)
+FetchContent_MakeAvailable(raylib)
 
-        target_link_libraries(IPlanetSimulator PRIVATE raylib)
-        target_link_libraries(IGravity PRIVATE raylib)
-endif()
-
-if(EMSCRIPTEN)
-    target_link_libraries(IPlanetSimulator PRIVATE
-        /Users/cold/Libraries/raylib/build-web/raylib/libraylib.a
-    )
-    target_compile_options(IPlanetSimulator PRIVATE -w)
-    target_include_directories(IPlanetSimulator PRIVATE
-        /Users/cold/Libraries/emsdk/upstream/emscripten/cache/sysroot/include
-        /Users/cold/Libraries/raylib/src
-    )
-    set_target_properties(IPlanetSimulator PROPERTIES
-        SUFFIX ".html"
-        LINK_FLAGS "-sUSE_GLFW=3 -sASYNCIFY -sALLOW_MEMORY_GROWTH=1 -sASSERTIONS=1 --preload-file ${CMAKE_SOURCE_DIR}/resources@resources --shell-file ${CMAKE_SOURCE_DIR}/apps/IPlanetSimulator/shell.html"
-    )
-endif()
+target_link_libraries(IPlanetSimulator PRIVATE raylib)
+target_link_libraries(IGravity PRIVATE raylib)

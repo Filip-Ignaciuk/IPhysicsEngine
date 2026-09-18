@@ -8,6 +8,7 @@
 
 #include "igravitymodel.hpp"
 #include "gpuinformation.hpp"
+#include "rigidbody.hpp"
 
 
 IGravityView::IGravityView(IGravityModel* iGravityModel,
@@ -33,7 +34,7 @@ void IGravityView::Display() {
 
   BeginMode2D(camera);
 
-  UpdateParticles();
+  DisplayParticles();
 
   EndMode2D();
 
@@ -46,6 +47,10 @@ void IGravityView::Display() {
   UpdateControls();
 
   EndDrawing();
+}
+
+void IGravityView::InitialiseParticleCount(int count){
+  parametersSliderValue = count;
 }
 
 void IGravityView::UpdateCamera() {
@@ -320,7 +325,7 @@ void IGravityView::DisplayParametersMenu(){
     }
 
     if(previousAlgorithmDropdownValue != activeAlgorithmDropdownValue){
-      std::cout <<algorithmText[activeAlgorithmDropdownValue] << std::endl;
+      std::cout << algorithmText[activeAlgorithmDropdownValue] << std::endl;
       m_iGravityModel->UpdateAlgorithmType(
         GravityAlgorithmTextMap[algorithmText[activeAlgorithmDropdownValue]]);
     }
@@ -390,7 +395,7 @@ standardLeftBox.y + 240,
   
 
 
-void IGravityView::UpdateParticles() const {
+void IGravityView::DisplayParticles() const {
   for (int i = 0; i < m_iGravityModel->GetParticles().size(); ++i) {
     IPhysics::Object* obj = m_iGravityModel->GetParticles()[i];
     const auto* rigidBody = obj->GetComponent<IPhysics::RigidBody>();

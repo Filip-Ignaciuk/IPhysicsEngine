@@ -27,21 +27,13 @@
 IGravityModel::IGravityModel(IPhysics::real timeStep) : m_timeStep(timeStep) {
   m_gravityForceGenerator = 
     std::make_shared<IPhysics::Gravity>(6.674 * pow(10, -11));
-  
-  // Start with an inital amount of particles
-  UpdateNumberOfParticles(1000);
 }
 
 // Mutators
 void IGravityModel::UpdateSimulation() {
   m_world.StartFrame();
   if (m_world.GetPhysicsState()) {
-    auto start = std::chrono::high_resolution_clock::now();
     m_world.RunPhysics(m_timeStep);
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration =
-        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  } else {
   }
 }
 
@@ -50,9 +42,9 @@ void IGravityModel::UpdateSimulation() {
 void IGravityModel::UpdateNumberOfParticles(int count) {
   int boundedCount = 0;
   // Check if count is larger than maximum or smaller than minimum.
-  if (count > MAXIMUM_PARTICLE_COUNT - m_world.GetNumberOfObjects()) {
+  if (count > CURRENT_MAXIMUM_PARTICLE_COUNT - m_world.GetNumberOfObjects()) {
     // Bound to maximum allowed increase, AKA add maximum amount of particles.
-    boundedCount = MAXIMUM_PARTICLE_COUNT - m_world.GetNumberOfObjects();
+    boundedCount = CURRENT_MAXIMUM_PARTICLE_COUNT - m_world.GetNumberOfObjects();
   } else if (count < -m_world.GetNumberOfObjects()) {
     // Bound to minimum allowed decrease, AKA delete all particles.
     boundedCount = -m_world.GetNumberOfObjects();
@@ -96,7 +88,6 @@ void IGravityModel::UpdateNumberOfParticles(int count) {
       m_gravityForceGenerator->AddObject(object);
       if(!IsUsingCUDAAlgorithm()){
         m_world.AddForceRegistration(object, m_gravityForceGenerator);
-      
       }
     }
 
@@ -114,6 +105,8 @@ void IGravityModel::UpdateNumberOfParticles(int count) {
 
 void IGravityModel::UpdateAlgorithmType(GravityAlgorithm gravityAlgorithm){
   if(gravityAlgorithm == m_gravityAlgorithm){
+        std::cout << "te]he same" << std::endl;
+
     return;
   }
 
@@ -122,11 +115,13 @@ void IGravityModel::UpdateAlgorithmType(GravityAlgorithm gravityAlgorithm){
   if(gravityAlgorithm == GravityAlgorithm::Naive){
     newGravityForceGenerator =
       std::make_shared<IPhysics::Gravity>(GRAVITY_CONSTANT);
+      CURRENT_MAXIMUM_PARTICLE_COUNT = MAXIMUM_NAIVE_PARTICLE_COUNT;
   }
   else if(gravityAlgorithm == GravityAlgorithm::NaiveCuda){
     #ifdef IPHYSICS_USE_CUDA
     newGravityForceGenerator =
       std::make_shared<IPhysics::CudaGravity>(GRAVITY_CONSTANT);
+      CURRENT_MAXIMUM_PARTICLE_COUNT = MAXIMUM_NAIVECUDA_PARTICLE_COUNT;
     #endif
   }
   else if(gravityAlgorithm == GravityAlgorithm::BarnesHut){
@@ -134,15 +129,21 @@ void IGravityModel::UpdateAlgorithmType(GravityAlgorithm gravityAlgorithm){
       std::make_shared<IPhysics::BarnesHutGravity>(
         GRAVITY_CONSTANT,
         0.5);
+      CURRENT_MAXIMUM_PARTICLE_COUNT = MAXIMUM_BARNESHUT_PARTICLE_COUNT;
   }
   else{
+    std::cout << "null" << std::endl;
     // Somehow invalid
     return;
   }
 
   m_gravityAlgorithm = gravityAlgorithm;
-  
 
+  // Check if number of particles is more than the limit
+  if(m_world.GetNumberOfObjects() - CURRENT_MAXIMUM_PARTICLE_COUNT > 0){
+    UpdateNumberOfParticles(CURRENT_MAXIMUM_PARTICLE_COUNT - m_world.GetNumberOfObjects());
+  }
+  
   // Delete all objects in force generator and delete force registration.
   // Add the object to the new force generator and register it in the registry.
   // NOTE: CUDA algorithms only apply to one object so has a special case 
@@ -181,6 +182,39 @@ void IGravityModel::Restart(){
 // Queries
 const std::vector<IPhysics::Object*>& IGravityModel::GetParticles() {
   return m_world.GetObjects();
+}
+
+bool IGravityModel::IsSimulationPaused() const { 
+  return m_world.GetPhysicsState(); 
+}
+
+const int IGravityModel::GetMaximumParticleCount() const{
+  return CURRENT_MAXIMUM_PARTICLE_COUNT;
+}
+
+void IGravityModel::SetMaximumNaiveParticleCount(int count){
+  MAXIMUM_NAIVE_PARTICLE_COUNT = count;
+}
+
+void IGravityModel::SetMaximumBarnesHutParticleCount(int count){
+  MAXIMUM_BARNESHUT_PARTICLE_COUNT = count;
+}
+
+
+void IGravityModel::SetMaximumNaiveCUDAParticleCount(int count){
+  MAXIMUM_NAIVECUDA_PARTICLE_COUNT = count;
+}
+
+int IGravityModel::GetMaximumNaiveParticleCount(){
+  return MAXIMUM_NAIVE_PARTICLE_COUNT;
+}
+
+int IGravityModel::GetMaximumBarnesHutParticleCount(){
+  return MAXIMUM_BARNESHUT_PARTICLE_COUNT;
+}
+
+int IGravityModel::GetMaximumNaiveCUDAParticleCount(){
+  return MAXIMUM_NAIVECUDA_PARTICLE_COUNT;
 }
 
 IPhysics::Vector3 IGravityModel::RandomGalaxyPosition() {
@@ -228,14 +262,11 @@ void IGravityModel::CalculateParticleVelocities(){
   }
 }
 
-bool IGravityModel::IsSimulationPaused() const { 
-  return m_world.GetPhysicsState(); 
-}
-
-const int IGravityModel::GetMaximumParticleCount() const{
-  return MAXIMUM_PARTICLE_COUNT;
-}
-
 bool IGravityModel::IsUsingCUDAAlgorithm() const{
   return m_gravityAlgorithm == GravityAlgorithm::NaiveCuda;
 }
+
+int IGravityModel::CURRENT_MAXIMUM_PARTICLE_COUNT = 100000;
+int IGravityModel::MAXIMUM_NAIVE_PARTICLE_COUNT = 100000;
+int IGravityModel::MAXIMUM_BARNESHUT_PARTICLE_COUNT = 100000;
+int IGravityModel::MAXIMUM_NAIVECUDA_PARTICLE_COUNT = 100000;

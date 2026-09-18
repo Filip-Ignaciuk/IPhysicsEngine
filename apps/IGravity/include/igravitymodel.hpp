@@ -8,7 +8,7 @@
 #include <map>
 #include <string>
 
-enum class GravityAlgorithm { Naive, BarnesHut, NaiveCuda };
+enum class GravityAlgorithm { None, Naive, BarnesHut, NaiveCuda };
 
 static const std::vector<std::string> algorithmText ={
   "Naive Algorithm",
@@ -36,25 +36,35 @@ class IGravityModel {
 
   void SetSimulationPause(bool wantsPaused);
 
+
   void Restart();
 
   // Queries
   [[nodiscard]] const std::vector<IPhysics::Object*>& GetParticles();
   [[nodiscard]] bool IsSimulationPaused() const;
   [[nodiscard]] const int GetMaximumParticleCount() const;
+
+  static void SetMaximumNaiveParticleCount(int count);
+  static void SetMaximumBarnesHutParticleCount(int count);
+  static void SetMaximumNaiveCUDAParticleCount(int count);
+
+  static int GetMaximumNaiveParticleCount();
+  static int GetMaximumBarnesHutParticleCount();
+  static int GetMaximumNaiveCUDAParticleCount();
   
 
  private:
-  static const int MAXIMUM_PARTICLE_COUNT = 100000;
+  static int CURRENT_MAXIMUM_PARTICLE_COUNT;
+  static int MAXIMUM_NAIVE_PARTICLE_COUNT;
+  static int MAXIMUM_BARNESHUT_PARTICLE_COUNT;
+  static int MAXIMUM_NAIVECUDA_PARTICLE_COUNT;
 
   const IPhysics::real GRAVITY_CONSTANT = 6.674 * pow(10, -11);
-
-  bool hasForceReg = false;
 
   const IPhysics::real m_timeStep;
 
   IPhysics::World m_world{};
-  GravityAlgorithm m_gravityAlgorithm = GravityAlgorithm::Naive;
+  GravityAlgorithm m_gravityAlgorithm = GravityAlgorithm::None;
   std::shared_ptr<IPhysics::Gravity> m_gravityForceGenerator;
 
   static IPhysics::Vector3 RandomGalaxyPosition();

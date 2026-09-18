@@ -11,16 +11,21 @@ class IGravity final{
   IGravity();
 
   // Mutators
-  void Run() const;
+  void Run();
 
  private:
-  IGravityModel* m_iGravityModel;
-  IGravityView* m_iGravityView;
-  IGravityController* m_iGravityController;
+
 
   const int m_screenWidth = 1280;
   const int m_screenHeight = 720;
   const int m_frameRate = 60;
+  IPhysics::real m_timeStep;
+
+  IGravityModel* m_iGravityModel;
+  IGravityView* m_iGravityView;
+  IGravityController* m_iGravityController;
+
+  void Benchmark();
 };
 
 #endif

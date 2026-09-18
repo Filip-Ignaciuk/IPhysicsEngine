@@ -20,6 +20,8 @@ class IGravityView {
   // Mutators
   void Display();
 
+  void InitialiseParticleCount(int count);
+
  private:
   IGravityModel* m_iGravityModel;
   IGravityController* m_iGravityController;
@@ -62,9 +64,9 @@ class IGravityView {
   void DisplayParametersMenu();
   void DisplayHelpMenu();
 
-  float parametersSliderValue = 1000;
+  float parametersSliderValue = 0;
 
-  void UpdateParticles() const;
+  void DisplayParticles() const;
 };
 
 
