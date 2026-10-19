@@ -10,6 +10,7 @@ It Features:
 ### Requirements
 The follow are required for the library and the apps to run:
 - CMake
+
 If you have a CUDA capable device installed:
 - CUDA Toolkit
 
