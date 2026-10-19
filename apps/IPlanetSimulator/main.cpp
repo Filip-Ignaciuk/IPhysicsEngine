@@ -859,7 +859,7 @@ static void ShowListView() {
                                (float)velocity.z};
         Vector3 finalRayPosition = rayPosition + rayVelocity;
 
-        DrawLine3D(rayPosition, finalRayPosition, YELLOW);
+        DrawLine3D(rayPosition, finalRayPosition, GREEN);
       }
     }
     EndMode3D();
@@ -1005,7 +1005,7 @@ static void Update() {
                              (float)velocity.z};
       Vector3 finalRayPosition = rayPosition + rayVelocity;
 
-      DrawLine3D(rayPosition, finalRayPosition, YELLOW);
+      DrawLine3D(rayPosition, finalRayPosition, GREEN);
     }
   }
 
