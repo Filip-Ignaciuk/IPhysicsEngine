@@ -4,9 +4,6 @@
 #include <algorithm>
 #include <vector>
 
-#include "collidebroad.hpp"
-#include "collidenarrow.hpp"
-#include "contacts.hpp"
 #include "forcegenerator.hpp"
 #include "object.hpp"
 
@@ -43,8 +40,7 @@ class World {
   std::vector<Object*> m_objects;
   bool m_physicsState = true;
 
-  BoundingVolumeHierarchyNode<BoundingSphere>* m_root = nullptr;
-  ContactResolver m_contactResolver{};
+
   ForceRegistry m_registry;
 };
 }  // namespace IPhysics

@@ -18,9 +18,6 @@ set(IPHYSICS_SOURCES
         core/source/core.cpp
         core/source/world.cpp
         core/source/forcegenerator.cpp
-        core/source/contacts.cpp
-        core/source/collidebroad.cpp
-        core/source/collidenarrow.cpp
 
         core/source/components/geometry.cpp
         core/source/components/primitive.cpp
