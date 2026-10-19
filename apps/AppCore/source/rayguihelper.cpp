@@ -1,9 +1,9 @@
 #include "rayguihelper.hpp"
 
-#include "raylib.h"
+#include <raylib.h>
 #define RAYGUI_ICONS
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
+#include <raygui.h>
 
 #include <string>
 

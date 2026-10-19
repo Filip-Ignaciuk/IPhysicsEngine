@@ -42,7 +42,7 @@ class IGravityModel {
   // Queries
   [[nodiscard]] const std::vector<IPhysics::Object*>& GetParticles();
   [[nodiscard]] bool IsSimulationPaused() const;
-  [[nodiscard]] const int GetMaximumParticleCount() const;
+  [[nodiscard]] int GetMaximumParticleCount() const;
 
   static void SetMaximumNaiveParticleCount(int count);
   static void SetMaximumBarnesHutParticleCount(int count);
@@ -51,7 +51,7 @@ class IGravityModel {
   static int GetMaximumNaiveParticleCount();
   static int GetMaximumBarnesHutParticleCount();
   static int GetMaximumNaiveCUDAParticleCount();
-  
+
 
  private:
   static int CURRENT_MAXIMUM_PARTICLE_COUNT;
@@ -75,8 +75,5 @@ class IGravityModel {
 
   bool IsUsingCUDAAlgorithm() const;
 };
-
-//{static_cast<IPhysics::real>(1.0f)
-/// static_cast<IPhysics::real>(m_frameRate)};
 
 #endif

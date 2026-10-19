@@ -1,7 +1,6 @@
 #ifndef IPHYSICS_WORLD_HPP
 #define IPHYSICS_WORLD_HPP
 
-#include <algorithm>
 #include <vector>
 
 #include "forcegenerator.hpp"

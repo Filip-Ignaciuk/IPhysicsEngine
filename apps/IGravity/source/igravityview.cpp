@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <raylib.h>
+#include "precision.hpp"
 #include "raymath.h"
 #include "raygui.h"
 
@@ -18,8 +19,8 @@ IGravityView::IGravityView(IGravityModel* iGravityModel,
       m_iGravityController(iGravityController),
       m_screenWidth(screenWidth),
       m_screenHeight(screenHeight) {
-  camera = {static_cast<float>(m_screenWidth) / 2,
-            static_cast<float>(m_screenHeight) / 2};
+  Vector2 centre{static_cast<float>(m_screenWidth) / 2, static_cast<float>(m_screenHeight) / 2};
+  camera = {centre, {0,0}, 0.0, 1.0};
   camera.zoom = 1.0f;
 }
 
@@ -139,7 +140,7 @@ void IGravityView::UpdateTopButtons(){
     }
   }
 
-  
+
 }
 
 void IGravityView::UpdateLeftHandGuiState(){
@@ -160,16 +161,16 @@ void IGravityView::UpdateLeftHandGuiState(){
 void IGravityView::DisplaySettingsMenu(){
   if (GuiWindowBox(standardLeftBox, "Settings")) {
     leftHandSideGuiState = LeftHandSideGuiState::None;
-  } 
+  }
   else {
     leftHandSideGuiState = LeftHandSideGuiState::SettingsBox;
 
     // CUDA
     GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 24, 
-        96, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 24,
+        96,
         24},
       "CUDA Compatiblity");
 
@@ -191,55 +192,55 @@ void IGravityView::DisplaySettingsMenu(){
 
     GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 48, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 48,
+        256,
         24},
       hasCudaText.c_str());
 
     if(IApp::GPUInformation::HasCUDA()){
 
-      std::string deviceNameText = "Device Name: " + 
+      std::string deviceNameText = "Device Name: " +
       IApp::GPUInformation::GetDeviceName();
 
       GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 72, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 72,
+        256,
         24},
       deviceNameText.c_str());
 
-      std::string computeText = "Compute Capability: " + 
+      std::string computeText = "Compute Capability: " +
       IApp::GPUInformation::GetComputeCapability();
 
       GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 96, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 96,
+        256,
         24},
       computeText.c_str());
 
-      std::string memoryText = "Total Global Memory: " + 
+      std::string memoryText = "Total Global Memory: " +
       IApp::GPUInformation::GetTotalGlobalMemory();
 
       GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 120, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 120,
+        256,
         24},
       memoryText.c_str());
 
-      std::string ProcessorText = "Multi Processor Count: " + 
+      std::string ProcessorText = "Multi Processor Count: " +
       IApp::GPUInformation::GetMultiProcessorCount();
 
       GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 144, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 144,
+        256,
         24},
       ProcessorText.c_str());
     }
@@ -252,7 +253,7 @@ void IGravityView::DisplaySettingsMenu(){
 void IGravityView::DisplayParametersMenu(){
   if (GuiWindowBox(standardLeftBox, "Simulation Parameters")) {
     leftHandSideGuiState = LeftHandSideGuiState::None;
-  } 
+  }
   else {
     leftHandSideGuiState = LeftHandSideGuiState::ParametersBox;
 
@@ -265,27 +266,28 @@ void IGravityView::DisplayParametersMenu(){
 
     GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 24, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 24,
+        256,
         24},
       numberOfParticlesText.c_str());
 
     isSliderInUse = false;
 
     GuiSlider(Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 48, 
-        256, 
-        24}, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 48,
+        256,
+        24},
         "" ,
-        "", 
-        &parametersSliderValue, 
-        0, 
+        "",
+        &parametersSliderValue,
+        0,
         m_iGravityModel->GetMaximumParticleCount());
 
     numberOfParticlesDesired = roundf(parametersSliderValue);
-    if(numberOfParticlesDesired != m_iGravityModel->GetParticles().size()){
+    const int size = m_iGravityModel->GetParticles().size();
+    if(numberOfParticlesDesired != size){
       isSliderInUse = true;
       int newCount = numberOfParticlesDesired - m_iGravityModel->GetParticles().size();
       m_iGravityModel->UpdateNumberOfParticles(newCount);
@@ -295,7 +297,7 @@ void IGravityView::DisplayParametersMenu(){
       algorithmText[activeAlgorithmDropdownValue];
 
 
-    std::string dropdownAlgorithmText = 
+    std::string dropdownAlgorithmText =
     algorithmText[0] + ";" +
     algorithmText[1];
 
@@ -305,23 +307,23 @@ void IGravityView::DisplayParametersMenu(){
 
     GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 72, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 72,
+        256,
         24},
       currentAlgorithmText.c_str());
 
     int previousAlgorithmDropdownValue = activeAlgorithmDropdownValue;
 
     if(GuiDropdownBox(Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 96, 
-        256, 
-        24}, dropdownAlgorithmText.c_str(), 
-    &activeAlgorithmDropdownValue, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 96,
+        256,
+        24}, dropdownAlgorithmText.c_str(),
+    &activeAlgorithmDropdownValue,
     dropdownIsEditMode)){
       dropdownIsEditMode = !dropdownIsEditMode;
-     
+
     }
 
     if(previousAlgorithmDropdownValue != activeAlgorithmDropdownValue){
@@ -338,70 +340,71 @@ void IGravityView::DisplayParametersMenu(){
 void IGravityView::DisplayHelpMenu(){
   if (GuiWindowBox(standardLeftBox, "Simulation Parameters")) {
     leftHandSideGuiState = LeftHandSideGuiState::None;
-  } 
+  }
   else {
     leftHandSideGuiState = LeftHandSideGuiState::HelpBox;
     GuiLabel(
       Rectangle{
-        standardLeftBox.x + 24, 
-        standardLeftBox.y + 24, 
-        256, 
+        standardLeftBox.x + 24,
+        standardLeftBox.y + 24,
+        256,
         24},
       "Welcome to IGravity!");
 
      GuiLabel(
       Rectangle{
-standardLeftBox.x + 24, 
-standardLeftBox.y + 48, 
-352, 
+standardLeftBox.x + 24,
+standardLeftBox.y + 48,
+352,
 48},
 "IGravity is a gravity particle simulator, that simulates\nas many particles as you want (or can!).");
 
 GuiLabel(
       Rectangle{
-standardLeftBox.x + 24, 
-standardLeftBox.y + 96, 
-352, 
+standardLeftBox.x + 24,
+standardLeftBox.y + 96,
+352,
 48},
 "The number of particles and the type of algorithm used\ncan be changed within the parameters menu.");
 
 GuiLabel(
       Rectangle{
-standardLeftBox.x + 24, 
-standardLeftBox.y + 144, 
-352, 
+standardLeftBox.x + 24,
+standardLeftBox.y + 144,
+352,
 48},
 "You can pause the simulation with spacebar or by\nclicking on the pause button.");
 
 GuiLabel(
       Rectangle{
-standardLeftBox.x + 24, 
-standardLeftBox.y + 192, 
-352, 
+standardLeftBox.x + 24,
+standardLeftBox.y + 192,
+352,
 48},
 "You can reset the simulation with the reset button.");
 
 GuiLabel(
       Rectangle{
-standardLeftBox.x + 24, 
-standardLeftBox.y + 240, 
-352, 
+standardLeftBox.x + 24,
+standardLeftBox.y + 240,
+352,
 48},
 "Lastly, if your computer contains a CUDA Capable device,\nthen a third algorithm that utilizes the device will be provided.");
 
 
   }
 }
-  
+
 
 
 void IGravityView::DisplayParticles() const {
-  for (int i = 0; i < m_iGravityModel->GetParticles().size(); ++i) {
+  const int size = m_iGravityModel->GetParticles().size();
+  for (int i = 0; i < size; ++i) {
     IPhysics::Object* obj = m_iGravityModel->GetParticles()[i];
     const auto* rigidBody = obj->GetComponent<IPhysics::RigidBody>();
     const Vector2 position{.x = static_cast<float>(rigidBody->GetPosition().x),
                            .y = static_cast<float>(rigidBody->GetPosition().y)};
-    //DrawPixel(position.x, position.y, RED);               
+    //DrawPixel(position.x, position.y, RED);
     DrawCircleV(position, 1.0f, RED);
   }
 }

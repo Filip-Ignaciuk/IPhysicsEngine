@@ -14,7 +14,7 @@ IPhysics::Spring::Spring(const Vector3& localConnectionPoint, RigidBody* other,
 void IPhysics::Spring::UpdateForce(RigidBody* rigidBody, real duration) {
   const Vector3 lws = rigidBody->GetPointInWorldSpace(m_localConnectionPoint);
   const Vector3 ows =
-      rigidBody->GetPointInWorldSpace(m_localOtherConnectionPoint);
+      m_other->GetPointInWorldSpace(m_localOtherConnectionPoint);
 
   Vector3 force = lws - ows;
 

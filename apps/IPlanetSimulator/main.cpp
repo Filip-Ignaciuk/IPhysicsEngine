@@ -233,16 +233,6 @@ static inline void InitialiseGUI() {
   }
   colourDropDownSelection =
       colourDropDownSelection + colourStrings[colourStrings.size() - 1];
-
-  for (size_t i = 0; i < languageStrings.size() - 1; i++) {
-    languageDropDownSelection =
-        languageDropDownSelection + languageStrings[i] + ";";
-    if (languageStrings[i] == "English (UK)") {
-      dropDownSelectedLanguage = i;
-    }
-  }
-  languageDropDownSelection =
-      languageDropDownSelection + languageStrings[languageStrings.size() - 1];
 }
 
 static inline void AddObjectMenu() {
@@ -786,26 +776,26 @@ static inline void ShowSettingsMenu() {
   }
 
   GuiLabel(
-      Rectangle{standardRightBox.x + 24, standardRightBox.y + 72, 336, 24},
+      Rectangle{standardRightBox.x + 24, standardRightBox.y + 32, 336, 24},
       "Use Light Mode");
-  if (GuiCheckBox(Rectangle{standardRightBox.x + 364, standardRightBox.y + 76,
+  if (GuiCheckBox(Rectangle{standardRightBox.x + 364, standardRightBox.y + 36,
                               16, 16},
                   "", &lightModeEnabled)) {
     UpdateColourScheme();
   }
 
   GuiLabel(
-      Rectangle{standardRightBox.x + 24, standardRightBox.y + 96, 336, 24},
+      Rectangle{standardRightBox.x + 24, standardRightBox.y + 56, 336, 24},
       "Use Acceleration indicator");
   GuiCheckBox(
-      Rectangle{standardRightBox.x + 364, standardRightBox.y + 100, 16, 16},
+      Rectangle{standardRightBox.x + 364, standardRightBox.y + 60, 16, 16},
       "", &accelerationIndicatorEnabled);
 
   GuiLabel(
-      Rectangle{standardRightBox.x + 24, standardRightBox.y + 120, 336, 24},
+      Rectangle{standardRightBox.x + 24, standardRightBox.y + 80, 336, 24},
       "Use Velocity indicator");
   GuiCheckBox(
-      Rectangle{standardRightBox.x + 364, standardRightBox.y + 124, 16, 16},
+      Rectangle{standardRightBox.x + 364, standardRightBox.y + 84, 16, 16},
       "", &velocityIndicatorEnabled);
 }
 
@@ -1216,7 +1206,6 @@ int main(void) {
   while (!WindowShouldClose()) {
     Update();
   }
-  CloseWindow();
 #endif
 
   CloseWindow();

@@ -4,9 +4,9 @@
 #include <iostream>
 
 #include "igravitymodel.hpp"
-#include "raylib.h"
+#include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
-#include "raygui.h"
+#include <raygui.h>
 
 #include "gpuinformation.hpp"
 
@@ -29,7 +29,7 @@ void IGravity::Run() {
 
   // Benchmark to limit amount of particles based on system performance.
   Benchmark();
-  
+
   // Update to basic algorithm.
   m_iGravityModel->UpdateAlgorithmType(GravityAlgorithm::Naive);
 

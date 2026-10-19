@@ -33,7 +33,7 @@ class IGravityView {
 
   LeftHandSideGuiState leftHandSideGuiState = LeftHandSideGuiState::None;
 
-  constexpr static Rectangle standardLeftBox = 
+  constexpr static Rectangle standardLeftBox =
     {24, 72, 408, 408};
 
   std::string pauseButtonText = "#132#";
@@ -44,8 +44,7 @@ class IGravityView {
   bool dropdownIsEditMode = false;
 
   int numberOfParticlesDesired = 0;
-  GravityAlgorithm gravityAlgorithmDesired = GravityAlgorithm::Naive;
-  IPhysics::real barnesHutAccuracyDesired = 0.5;
+  //IPhysics::real barnesHutAccuracyDesired = 0.5;
 
   void UpdateCamera();
 

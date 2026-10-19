@@ -17,6 +17,7 @@ IPhysics::RigidBody::RigidBody(const Vector3& originalPosition,
       m_orientation(originalOrientation),
       m_inverseMass(inverseMass),
       m_linearDamping(linearDamping),
+      m_angularDamping(angularDamping),
       m_inverseInertiaTensor(inverseInertiaTensor) {}
 
 // Mutators

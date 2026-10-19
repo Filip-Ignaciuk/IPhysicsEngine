@@ -105,10 +105,16 @@ target_link_libraries(IGravity
 )
 
 include(FetchContent)
+
+set(FETCHCONTENT_QUIET OFF)
+
 FetchContent_Declare(
     raylib
     GIT_REPOSITORY https://github.com/raysan5/raylib.git
     GIT_TAG 6.0
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    SYSTEM
 )
 FetchContent_MakeAvailable(raylib)
 
@@ -116,6 +122,24 @@ target_link_libraries(IPhysics PRIVATE raylib)
 target_link_libraries(IApp PRIVATE raylib)
 target_link_libraries(IPlanetSimulator PRIVATE raylib)
 target_link_libraries(IGravity PRIVATE raylib)
+
+FetchContent_Declare(
+    raygui
+    GIT_REPOSITORY https://github.com/raysan5/raygui.git
+    GIT_TAG 5.0
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+    SYSTEM
+)
+FetchContent_MakeAvailable(raygui)
+
+add_library(raygui INTERFACE)
+target_include_directories(raygui SYSTEM INTERFACE ${raygui_SOURCE_DIR}/src)
+
+target_link_libraries(raygui INTERFACE raylib)
+target_link_libraries(IApp PRIVATE raygui)
+target_link_libraries(IGravity PRIVATE raygui)
+target_link_libraries(IPlanetSimulator PRIVATE raygui)
 
 if(MSVC)
     target_compile_options(IPhysics PRIVATE

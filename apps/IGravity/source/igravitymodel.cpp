@@ -1,7 +1,5 @@
 #include "igravitymodel.hpp"
 
-#include <algorithm>
-#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <memory>
@@ -25,7 +23,7 @@
 
 // Constructors
 IGravityModel::IGravityModel(IPhysics::real timeStep) : m_timeStep(timeStep) {
-  m_gravityForceGenerator = 
+  m_gravityForceGenerator =
     std::make_shared<IPhysics::Gravity>(6.674 * pow(10, -11));
 }
 
@@ -56,14 +54,14 @@ void IGravityModel::UpdateNumberOfParticles(int count) {
     boundedCount = -boundedCount;
     for (int i = 0; i < boundedCount; ++i) {
       IPhysics::Object* currentObject = m_world.GetLastObject();
-      
+
       // Remove object from vector in force generator
       m_gravityForceGenerator->RemoveObject(currentObject);
       m_world.RemoveForceRegistration(currentObject);
 
       m_world.RemoveLastObject();
     }
-  } 
+  }
   else {
     bool needsCudaAlgorithmOnFirstObject = false;
 
@@ -75,7 +73,7 @@ void IGravityModel::UpdateNumberOfParticles(int count) {
       // Creating object
       auto* object = new IPhysics::Object();
       auto* rigid_body = object->AddComponent<IPhysics::RigidBody>();
-      
+
       // Setting random location
       IPhysics::Vector3 random_position = RandomGalaxyPosition();
 
@@ -96,7 +94,7 @@ void IGravityModel::UpdateNumberOfParticles(int count) {
 
     if(needsCudaAlgorithmOnFirstObject){
       m_world.AddForceRegistration(
-        m_world.GetObjects()[0], 
+        m_world.GetObjects()[0],
         m_gravityForceGenerator);
     }
 
@@ -143,10 +141,10 @@ void IGravityModel::UpdateAlgorithmType(GravityAlgorithm gravityAlgorithm){
   if(m_world.GetNumberOfObjects() - CURRENT_MAXIMUM_PARTICLE_COUNT > 0){
     UpdateNumberOfParticles(CURRENT_MAXIMUM_PARTICLE_COUNT - m_world.GetNumberOfObjects());
   }
-  
+
   // Delete all objects in force generator and delete force registration.
   // Add the object to the new force generator and register it in the registry.
-  // NOTE: CUDA algorithms only apply to one object so has a special case 
+  // NOTE: CUDA algorithms only apply to one object so has a special case
   // of application
   for(IPhysics::Object* object : m_world.GetObjects()){
     m_gravityForceGenerator->RemoveObject(object);
@@ -184,11 +182,11 @@ const std::vector<IPhysics::Object*>& IGravityModel::GetParticles() {
   return m_world.GetObjects();
 }
 
-bool IGravityModel::IsSimulationPaused() const { 
-  return m_world.GetPhysicsState(); 
+bool IGravityModel::IsSimulationPaused() const {
+  return m_world.GetPhysicsState();
 }
 
-const int IGravityModel::GetMaximumParticleCount() const{
+int IGravityModel::GetMaximumParticleCount() const{
   return CURRENT_MAXIMUM_PARTICLE_COUNT;
 }
 
@@ -243,14 +241,14 @@ void IGravityModel::CalculateParticleVelocities(){
     GetComponent<IPhysics::RigidBody>();
 
     // We assume the galaxy is 0, 0 so far.
-    IPhysics::Vector3 displacementFromCentre = 
+    IPhysics::Vector3 displacementFromCentre =
     rigidBody->GetPosition() - IPhysics::Origin;
     IPhysics::real distanceFromCentre = displacementFromCentre.Magnitude();
 
     if(distanceFromCentre == 0){
       continue;
     }
-    IPhysics::real speed = 3 * distanceFromCentre / 
+    IPhysics::real speed = 3 * distanceFromCentre /
     sqrt(distanceFromCentre * distanceFromCentre + 1000);
 
 
