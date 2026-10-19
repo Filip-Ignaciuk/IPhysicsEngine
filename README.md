@@ -22,7 +22,7 @@ line to OFF or ON depending upon if your computer has a CUDA capable device.
 The apps folder contains apps that showcase the features of the physics engine.
 The apps provided so far are:
 - IGravity
-- IPlanetSimulator
+- IPlanetSimulator ([live demo](https://www.filipignaciuk.com/Projects/IPhysicsEngine/IPlanetSimulator/IPlanetSimulator.html))
 
 
 ## IGravity
@@ -44,6 +44,7 @@ To test the performance of these algorithms, I compared the median time per fram
 IPlanetSimulator is a 3D particle gravity simulator that simulates planet orbits.
 You can add as many planets as you want and change their parameters.
 
+**[Try it online](https://www.filipignaciuk.com/Projects/IPhysicsEngine/IPlanetSimulator/IPlanetSimulator.html)** (runs in your browser, no install needed)
+
 Example showcasing two planets orbiting with Forces (Blue) and velocity (Green) arrow indicators:
 <img width="2768" height="1728" alt="image" src="https://github.com/user-attachments/assets/a0dacf3d-2e35-440f-8d4c-1a9f3454702a" />
-
