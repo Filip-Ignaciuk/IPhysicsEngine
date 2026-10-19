@@ -31,7 +31,7 @@ class World {
   // Queries
   [[nodiscard]] const std::vector<Object*>& GetObjects();
   [[nodiscard]] Object* GetLastObject();
-  [[nodiscard]] const int GetNumberOfObjects() const;
+  [[nodiscard]] int GetNumberOfObjects() const;
   [[nodiscard]] const ForceRegistration& GetForceRegistration(
       Object* object) const;
   [[nodiscard]] const ForceRegistry& GetForceRegistry() const;

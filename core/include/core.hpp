@@ -53,15 +53,10 @@ struct Vector3 {
 // A Quaternion
 class Quaternion {
  public:
-  union {
-    struct {
-      real r;
-      real i;
-      real j;
-      real k;
-    };
-    real data[4]{};
-  };
+  real r;
+  real i;
+  real j;
+  real k;
 
   // Constructors
   Quaternion();
@@ -85,7 +80,6 @@ class Matrix3 {
 
   // Constructors
   Matrix3();
-  Matrix3(const Matrix3& other);
   Matrix3(real a1, real a2, real a3, real b1, real b2, real b3, real c1,
           real c2, real c3);
 
@@ -154,7 +148,7 @@ const inline static Vector3 GravityEarth(0, -9.81f, 0);
 struct RandomStore {
   static inline std::random_device randomDevice;
   static inline std::mt19937 generator{randomDevice()};
-  ;
+
 
   // Doesn't include upper bound.
   static real RandomReal(real lowerBound, real upperbound);

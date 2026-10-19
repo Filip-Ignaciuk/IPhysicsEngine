@@ -216,12 +216,6 @@ IPhysics::Matrix3::Matrix3() {
   }
 }
 
-IPhysics::Matrix3::Matrix3(const Matrix3& other) {
-  for (int i = 0; i < 9; i++) {
-    data[i] = other.data[i];
-  }
-}
-
 IPhysics::Matrix3::Matrix3(real a1, real a2, real a3, real b1, real b2, real b3,
                            real c1, real c2, real c3) {
   data[0] = a1;

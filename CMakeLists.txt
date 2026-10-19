@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" ON)
+option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" OFF)
 
 if(IPHYSICS_USE_CUDA)
         project(IPhysics LANGUAGES CXX CUDA)
@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_BUILD_TYPE debug)
 
 set(IPHYSICS_SOURCES
         core/source/core.cpp
@@ -61,7 +62,7 @@ if(IPHYSICS_USE_CUDA)
 else()
     list(APPEND IAPP_SOURCES
         apps/AppCore/source/gpuinformation.cpp
-    )    
+    )
 endif()
 
 add_library(IApp STATIC ${IAPP_SOURCES})

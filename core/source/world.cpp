@@ -92,9 +92,9 @@ void IPhysics::World::RemoveObject(Object* object) {
   delete object;
 }
 
-void IPhysics::World::RemoveLastObject(){ 
+void IPhysics::World::RemoveLastObject(){
   delete m_objects.back();
-  m_objects.pop_back(); 
+  m_objects.pop_back();
 }
 
 void IPhysics::World::RemoveAllObjects(){
@@ -124,7 +124,7 @@ IPhysics::Object* IPhysics::World::GetLastObject(){
   return m_objects.back();
 }
 
-const int IPhysics::World::GetNumberOfObjects() const{
+int IPhysics::World::GetNumberOfObjects() const{
   return m_objects.size();
 }
 
