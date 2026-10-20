@@ -1,6 +1,7 @@
 #include "world.hpp"
 #include "object.hpp"
 
+#include <algorithm>
 /*
  * World
  */
