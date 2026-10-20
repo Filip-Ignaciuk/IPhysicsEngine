@@ -18,6 +18,8 @@ If you have a CUDA capable device installed:
 When compiling its recommended to make a new build folder and preform the cmake build there.
 Before building its recommended to change the *Enable CUDA gravity backends* option in the CMakeLists.txt
 line to OFF or ON depending upon if your computer has a CUDA capable device.
+By default, only the IPhysics library is built. To also build the example apps change the *Enable building of apps*
+to ON before compilation.
 
 ## Apps
 The apps folder contains apps that showcase the features of the physics engine.
