@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 option(IPHYSICS_USE_CUDA "Enable CUDA gravity backends" OFF)
+option(IPHYSICS_BUILD_APPS "Enable building of apps" OFF)
 
 if(IPHYSICS_USE_CUDA)
         project(IPhysics LANGUAGES CXX CUDA)
@@ -19,7 +20,6 @@ set(IPHYSICS_SOURCES
         core/source/world.cpp
         core/source/forcegenerator.cpp
 
-        core/source/components/geometry.cpp
         core/source/components/primitive.cpp
         core/source/components/rigidbody.cpp
         core/source/components/information.cpp
@@ -37,6 +37,15 @@ if(IPHYSICS_USE_CUDA)
     )
 endif()
 
+
+if(IPHYSICS_BUILD_APPS)
+
+list(APPEND IPHYSICS_SOURCES
+        core/source/components/geometry.cpp
+)
+
+endif()
+
 add_library(IPhysics STATIC ${IPHYSICS_SOURCES})
 
 target_include_directories(IPhysics PUBLIC
@@ -44,6 +53,10 @@ target_include_directories(IPhysics PUBLIC
         core/include/components
         core/include/forcegenerators
 )
+
+
+
+if(IPHYSICS_BUILD_APPS)
 
 set(IAPP_SOURCES
         apps/AppCore/source/meshmanager.cpp
@@ -140,6 +153,8 @@ target_link_libraries(raygui INTERFACE raylib)
 target_link_libraries(IApp PRIVATE raygui)
 target_link_libraries(IGravity PRIVATE raygui)
 target_link_libraries(IPlanetSimulator PRIVATE raygui)
+
+endif()
 
 if(MSVC)
     target_compile_options(IPhysics PRIVATE
